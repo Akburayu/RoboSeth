@@ -5,7 +5,7 @@ import { RegisterModal } from '@/components/auth/RegisterModal';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { useAuth } from '@/hooks/useAuth';
 import { SEOHead } from '@/components/SEOHead';
-import { Building2, Users, Zap, Shield, MessageSquare, ArrowRight, LogOut, CreditCard, X } from 'lucide-react';
+import { Building2, Users, Zap, Shield, MessageSquare, ArrowRight, LogOut, CreditCard, Eye } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 // Credit packages for purchase
@@ -41,6 +41,7 @@ const Index = () => {
   const [registerOpen, setRegisterOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [creditModalOpen, setCreditModalOpen] = useState(false);
+  const [guestModalOpen, setGuestModalOpen] = useState(false);
   const { user, userRole, signOut, loading } = useAuth();
 
   // Redirect logged-in users to their dashboard
@@ -147,31 +148,40 @@ const Index = () => {
               Doğru iş ortağını bulun, projelerinizi hayata geçirin.
             </p>
 
-            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="mt-10 flex flex-col items-center justify-center gap-4">
               {user ? (
                 <Button size="lg" className="text-lg px-8 gradient-primary border-0">
                   Dashboard'a Git
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               ) : (
-                <>
+                <div className="flex flex-col items-center gap-3">
+                  <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <Button 
+                      size="lg" 
+                      onClick={() => setRegisterOpen(true)}
+                      className="text-lg px-8 gradient-primary border-0"
+                    >
+                      Hemen Başla
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                    <Button 
+                      size="lg" 
+                      variant="outline" 
+                      onClick={() => setLoginOpen(true)}
+                      className="text-lg px-8"
+                    >
+                      Giriş Yap
+                    </Button>
+                  </div>
                   <Button 
-                    size="lg" 
-                    onClick={() => setRegisterOpen(true)}
-                    className="text-lg px-8 gradient-primary border-0"
+                    variant="ghost" 
+                    onClick={() => setGuestModalOpen(true)}
+                    className="text-muted-foreground hover:text-foreground"
                   >
-                    Hemen Başla
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                    Üye olmadan devam et
                   </Button>
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
-                    onClick={() => setLoginOpen(true)}
-                    className="text-lg px-8"
-                  >
-                    Giriş Yap
-                  </Button>
-                </>
+                </div>
               )}
             </div>
           </div>
@@ -314,6 +324,52 @@ const Index = () => {
           </div>
           <p className="text-xs text-center text-muted-foreground">
             Ödeme işlemi için iletişime geçilecektir.
+          </p>
+        </DialogContent>
+      </Dialog>
+
+      {/* Guest Mode Selection Modal */}
+      <Dialog open={guestModalOpen} onOpenChange={setGuestModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Eye className="h-5 w-5 text-primary" />
+              Platformu İncele
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground text-center mb-4">
+            Hangi rolü görüntülemek istiyorsunuz? Misafir modunda sadece mevcut özellikleri inceleyebilirsiniz.
+          </p>
+          <div className="grid gap-4">
+            <Button
+              size="lg"
+              variant="outline"
+              className="h-auto p-6 flex flex-col items-center gap-2 hover:border-firma hover:bg-firma/5"
+              onClick={() => {
+                setGuestModalOpen(false);
+                navigate('/firma/dashboard?guest=true');
+              }}
+            >
+              <Building2 className="h-8 w-8 text-firma" />
+              <span className="font-semibold text-lg">Firma Olarak</span>
+              <span className="text-xs text-muted-foreground">Entegratörleri görüntüle, ilanları incele</span>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="h-auto p-6 flex flex-col items-center gap-2 hover:border-entegrator hover:bg-entegrator/5"
+              onClick={() => {
+                setGuestModalOpen(false);
+                navigate('/entegrator/dashboard?guest=true');
+              }}
+            >
+              <Users className="h-8 w-8 text-entegrator" />
+              <span className="font-semibold text-lg">Entegratör Olarak</span>
+              <span className="text-xs text-muted-foreground">İlanları görüntüle, piyasayı incele</span>
+            </Button>
+          </div>
+          <p className="text-xs text-center text-muted-foreground mt-4">
+            Misafir modunda değişiklik yapamazsınız. Tam erişim için üye olun.
           </p>
         </DialogContent>
       </Dialog>
