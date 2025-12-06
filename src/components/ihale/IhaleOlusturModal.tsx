@@ -17,13 +17,31 @@ interface IhaleOlusturModalProps {
   onBack: () => void;
 }
 
-const IHALE_TURU_LABELS: Record<string, string> = {
-  'acik_eksiltme': 'Açık Eksiltme Usulü E-İhale',
-  'ingiliz': 'İngiliz Usulü E-İhale',
-  'hollanda': 'Hollanda Usulü E-İhale',
-  'japon': 'Japon Usulü E-İhale',
-  'turlu_kapali': 'Turlu Kapalı Usulü E-İhale',
-  'muhurlu_kapali': 'Mühürlü Kapalı Usulü E-İhale',
+const IHALE_TURU_INFO: Record<string, { label: string; description: string }> = {
+  'acik_eksiltme': { 
+    label: 'Açık Eksiltme Usulü E-İhale',
+    description: 'Tüm teklifler görünür, en düşük fiyat kazanır'
+  },
+  'ingiliz': { 
+    label: 'İngiliz Usulü E-İhale',
+    description: 'Açık artırma, en yüksek teklif kazanır'
+  },
+  'hollanda': { 
+    label: 'Hollanda Usulü E-İhale',
+    description: 'Fiyat düşer, ilk kabul eden kazanır'
+  },
+  'japon': { 
+    label: 'Japon Usulü E-İhale',
+    description: 'Fiyat artar, devam etmeyenler elenir, son kalan kazanır'
+  },
+  'turlu_kapali': { 
+    label: 'Turlu Kapalı Usulü E-İhale',
+    description: 'Birden fazla turda kapalı teklifler, en düşük kazanır'
+  },
+  'muhurlu_kapali': { 
+    label: 'Mühürlü Kapalı Usulü E-İhale',
+    description: 'Tek seferlik gizli teklif, en düşük kazanır'
+  },
 };
 
 export function IhaleOlusturModal({ 
@@ -170,9 +188,14 @@ export function IhaleOlusturModal({
             <Button variant="ghost" size="icon" onClick={onBack}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <DialogTitle className="text-xl font-bold">
-              {IHALE_TURU_LABELS[ihaleTuru] || 'İhale Oluştur'}
-            </DialogTitle>
+            <div>
+              <DialogTitle className="text-xl font-bold">
+                {IHALE_TURU_INFO[ihaleTuru]?.label || 'İhale Oluştur'}
+              </DialogTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                {IHALE_TURU_INFO[ihaleTuru]?.description}
+              </p>
+            </div>
           </div>
         </DialogHeader>
 
