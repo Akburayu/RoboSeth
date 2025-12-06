@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import FirmaRegister from "./pages/FirmaRegister";
@@ -17,38 +18,42 @@ import EntegratorProfile from "./pages/EntegratorProfile";
 import FirmaIlanlar from "./pages/FirmaIlanlar";
 import FirmaIhaleler from "./pages/FirmaIhaleler";
 import IhaleDetay from "./pages/IhaleDetay";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/firma/register" element={<FirmaRegister />} />
-            <Route path="/firma/dashboard" element={<FirmaDashboard />} />
-            <Route path="/firma/ilan-olustur" element={<CreateIlan />} />
-            <Route path="/firma/ilanlarim" element={<FirmaIlanlar />} />
-            <Route path="/firma/ihalelerim" element={<FirmaIhaleler />} />
-            <Route path="/firma/profile" element={<FirmaProfile />} />
-            <Route path="/entegrator/register" element={<EntegratorRegister />} />
-            <Route path="/entegrator/dashboard" element={<EntegratorDashboard />} />
-            <Route path="/entegrator/profile" element={<EntegratorProfile />} />
-            <Route path="/ihale/:id" element={<IhaleDetay />} />
-            <Route path="/notifications" element={<Notifications />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/firma/register" element={<FirmaRegister />} />
+              <Route path="/firma/dashboard" element={<FirmaDashboard />} />
+              <Route path="/firma/ilan-olustur" element={<CreateIlan />} />
+              <Route path="/firma/ilanlarim" element={<FirmaIlanlar />} />
+              <Route path="/firma/ihalelerim" element={<FirmaIhaleler />} />
+              <Route path="/firma/profile" element={<FirmaProfile />} />
+              <Route path="/entegrator/register" element={<EntegratorRegister />} />
+              <Route path="/entegrator/dashboard" element={<EntegratorDashboard />} />
+              <Route path="/entegrator/profile" element={<EntegratorProfile />} />
+              <Route path="/ihale/:id" element={<IhaleDetay />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/notifications" element={<Notifications />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
 
 export default App;

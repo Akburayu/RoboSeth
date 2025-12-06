@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { z } from 'zod';
+import { ForgotPasswordModal } from './ForgotPasswordModal';
 
 interface LoginModalProps {
   open: boolean;
@@ -27,6 +28,7 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister }: LoginModa
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
   
   const { signIn, userRole } = useAuth();
   const { toast } = useToast();
@@ -105,63 +107,90 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister }: LoginModa
     onOpenChange(open);
   };
 
+  const handleForgotPassword = () => {
+    onOpenChange(false);
+    setForgotPasswordOpen(true);
+  };
+
+  const handleBackToLogin = () => {
+    setForgotPasswordOpen(false);
+    onOpenChange(true);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center">Giriş Yap</DialogTitle>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center">Giriş Yap</DialogTitle>
+          </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="login-email">Email</Label>
-            <Input
-              id="login-email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="ornek@email.com"
-              className={errors.email ? 'border-destructive' : ''}
-            />
-            {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="login-email">Email</Label>
+              <Input
+                id="login-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="ornek@email.com"
+                className={errors.email ? 'border-destructive' : ''}
+              />
+              {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="login-password">Şifre</Label>
-            <Input
-              id="login-password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className={errors.password ? 'border-destructive' : ''}
-            />
-            {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
-          </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="login-password">Şifre</Label>
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  className="text-sm text-primary hover:underline"
+                >
+                  Şifremi Unuttum
+                </button>
+              </div>
+              <Input
+                id="login-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className={errors.password ? 'border-destructive' : ''}
+              />
+              {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+            </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Giriş Yapılıyor...
-              </>
-            ) : (
-              'Giriş Yap'
-            )}
-          </Button>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Giriş Yapılıyor...
+                </>
+              ) : (
+                'Giriş Yap'
+              )}
+            </Button>
 
-          <div className="text-center text-sm text-muted-foreground">
-            Hesabınız yok mu?{' '}
-            <button
-              type="button"
-              onClick={onSwitchToRegister}
-              className="font-medium text-primary hover:underline"
-            >
-              Kayıt Ol
-            </button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+            <div className="text-center text-sm text-muted-foreground">
+              Hesabınız yok mu?{' '}
+              <button
+                type="button"
+                onClick={onSwitchToRegister}
+                className="font-medium text-primary hover:underline"
+              >
+                Kayıt Ol
+              </button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <ForgotPasswordModal 
+        open={forgotPasswordOpen} 
+        onOpenChange={setForgotPasswordOpen}
+        onBackToLogin={handleBackToLogin}
+      />
+    </>
   );
 }
