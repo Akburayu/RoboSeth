@@ -49,7 +49,6 @@ import { IhaleTuruModal } from '@/components/ihale/IhaleTuruModal';
 import { IhaleOlusturModal } from '@/components/ihale/IhaleOlusturModal';
 
 type Entegrator = Database['public']['Tables']['entegrator']['Row'];
-type EntegratorBuyuklugu = Database['public']['Enums']['entegrator_buyuklugu'];
 
 interface EntegratorRatings {
   kalite_avg: number;
@@ -153,12 +152,6 @@ const TECRUBE_OPTIONS = [
   '10+ yıl',
 ];
 
-const BUYUKLUK_LABELS: Record<EntegratorBuyuklugu, string> = {
-  kucuk: 'Küçük',
-  orta: 'Orta',
-  buyuk: 'Büyük',
-};
-
 // Fixed cost for revealing contacts
 const REVEAL_COST = 1;
 
@@ -188,7 +181,6 @@ interface Filters {
   sektorler: string[];
   iller: string[];
   tecrubeler: string[];
-  buyuklukler: EntegratorBuyuklugu[];
   minKisi: number;
   maxKisi: number;
   minPuan: number;
@@ -201,7 +193,6 @@ const initialFilters: Filters = {
   sektorler: [],
   iller: [],
   tecrubeler: [],
-  buyuklukler: [],
   minKisi: 0,
   maxKisi: 500,
   minPuan: 0,
@@ -625,14 +616,6 @@ export default function FirmaDashboard() {
     });
   };
 
-  const toggleBuyukluk = (value: EntegratorBuyuklugu) => {
-    setFilters((prev) => {
-      if (prev.buyuklukler.includes(value)) {
-        return { ...prev, buyuklukler: prev.buyuklukler.filter((v) => v !== value) };
-      }
-      return { ...prev, buyuklukler: [...prev.buyuklukler, value] };
-    });
-  };
 
   const clearFilters = () => {
     setFilters(initialFilters);
@@ -645,7 +628,7 @@ export default function FirmaDashboard() {
     if (filters.sektorler.length > 0) count++;
     if (filters.iller.length > 0) count++;
     if (filters.tecrubeler.length > 0) count++;
-    if (filters.buyuklukler.length > 0) count++;
+    if (filters.tecrubeler.length > 0) count++;
     if (filters.minPuan > 0) count++;
     if (filters.minKisi > 0 || filters.maxKisi < 500) count++;
     return count;
@@ -688,11 +671,6 @@ export default function FirmaDashboard() {
       // Tecrübe filter
       if (filters.tecrubeler.length > 0) {
         if (!e.tecrube || !filters.tecrubeler.includes(e.tecrube)) return false;
-      }
-
-      // Büyüklük filter
-      if (filters.buyuklukler.length > 0) {
-        if (!e.entegrator_buyuklugu || !filters.buyuklukler.includes(e.entegrator_buyuklugu)) return false;
       }
 
       // Kişi sayısı filter
@@ -794,20 +772,6 @@ export default function FirmaDashboard() {
         </div>
       </FilterSection>
 
-      {/* Büyüklük */}
-      <FilterSection title="Entegratör Büyüklüğü">
-        <div className="grid grid-cols-1 gap-2">
-          {(Object.keys(BUYUKLUK_LABELS) as EntegratorBuyuklugu[]).map((buyukluk) => (
-            <label key={buyukluk} className="flex items-center gap-2 cursor-pointer">
-              <Checkbox
-                checked={filters.buyuklukler.includes(buyukluk)}
-                onCheckedChange={() => toggleBuyukluk(buyukluk)}
-              />
-              <span className="text-sm">{BUYUKLUK_LABELS[buyukluk]}</span>
-            </label>
-          ))}
-        </div>
-      </FilterSection>
 
       {/* Minimum Puan */}
       <FilterSection title={`Minimum Puan: ${filters.minPuan}`}>
@@ -995,11 +959,6 @@ export default function FirmaDashboard() {
                           </div>
                           <div>
                             <h3 className="font-semibold text-lg">{maskName(entegrator.entegrator_adi)}</h3>
-                            {entegrator.entegrator_buyuklugu && (
-                              <Badge variant="outline" className="text-xs">
-                                {BUYUKLUK_LABELS[entegrator.entegrator_buyuklugu]}
-                              </Badge>
-                            )}
                           </div>
                         </div>
                         {/* Three category ratings */}
