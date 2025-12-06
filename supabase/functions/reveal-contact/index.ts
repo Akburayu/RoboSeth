@@ -5,12 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-// Cost based on entegrator size
-const REVEAL_COSTS: Record<string, number> = {
-  kucuk: 5,
-  orta: 15,
-  buyuk: 30,
-}
+// Fixed cost for all contacts
+const REVEAL_COST = 1;
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
@@ -135,10 +131,10 @@ Deno.serve(async (req) => {
       )
     }
 
-    // Get entegrator info to determine cost
+// Get entegrator info
     const { data: entegrator, error: entError } = await supabaseAdmin
       .from('entegrator')
-      .select('id, entegrator_adi, entegrator_buyuklugu, iletisim_sosyal_medya, konum')
+      .select('id, entegrator_adi, iletisim_sosyal_medya, konum')
       .eq('id', entegrator_id)
       .single()
 
@@ -150,7 +146,7 @@ Deno.serve(async (req) => {
       )
     }
 
-    const cost = REVEAL_COSTS[entegrator.entegrator_buyuklugu || 'kucuk'] || 5
+    const cost = REVEAL_COST
     console.log('Reveal cost:', cost, 'Firma credits:', firma.kredi)
 
     // Check if firma has enough credits

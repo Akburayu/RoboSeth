@@ -14,8 +14,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Users, FileText, ClipboardList, CreditCard, ArrowLeft, ArrowRight, Upload, Check, Loader2, X, Star } from 'lucide-react';
 import type { Database } from '@/integrations/supabase/types';
 
-type EntegratorBuyuklugu = Database['public']['Enums']['entegrator_buyuklugu'];
-
 interface PlanInfo {
   name: string;
   price: number;
@@ -35,12 +33,6 @@ const PLANS: Record<'basic' | 'premium', PlanInfo> = {
     features: ['Öne çıkan profil', 'Sınırsız teklif', 'Öncelikli listeleme', '7/24 destek', 'Rozet görünümü'],
     highlighted: true
   },
-};
-
-const BUYUKLUK_LABELS: Record<EntegratorBuyuklugu, string> = {
-  kucuk: 'Küçük',
-  orta: 'Orta',
-  buyuk: 'Büyük',
 };
 
 const FAALIYET_ALANLARI = [
@@ -143,9 +135,6 @@ export default function EntegratorRegister() {
 
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
-
-  // Step 1: Büyüklük
-  const [buyukluk, setBuyukluk] = useState<EntegratorBuyuklugu | null>(null);
 
   // Step 2: Belgeler (4 belge - firma ile aynı)
   const [documents, setDocuments] = useState<{
@@ -285,16 +274,6 @@ export default function EntegratorRegister() {
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1:
-        if (!buyukluk) {
-          toast({
-            title: 'Seçim Gerekli',
-            description: 'Lütfen firma büyüklüğünüzü seçin.',
-            variant: 'destructive',
-          });
-          return false;
-        }
-        return true;
-      case 2:
         const allDocsUploaded = Object.values(documents).every((doc) => doc.path !== null);
         if (!allDocsUploaded) {
           toast({
@@ -305,7 +284,7 @@ export default function EntegratorRegister() {
           return false;
         }
         return true;
-      case 3:
+      case 2:
         if (!entegratorAdi.trim() || entegratorAdi.length < 2) {
           toast({
             title: 'Geçersiz İsim',
@@ -362,7 +341,7 @@ export default function EntegratorRegister() {
 
   const handleNext = () => {
     if (validateStep(currentStep)) {
-      setCurrentStep((prev) => Math.min(prev + 1, 4));
+      setCurrentStep((prev) => Math.min(prev + 1, 3));
     }
   };
 
@@ -371,7 +350,7 @@ export default function EntegratorRegister() {
   };
 
   const handleComplete = async () => {
-    if (!user || !buyukluk) return;
+    if (!user) return;
 
     setLoading(true);
 
@@ -379,7 +358,6 @@ export default function EntegratorRegister() {
       const { error } = await supabase.from('entegrator').insert({
         user_id: user.id,
         entegrator_adi: entegratorAdi,
-        entegrator_buyuklugu: buyukluk,
         faaliyet_alanlari: faaliyetAlanlari.join(', '),
         uzmanlik_alani: uzmanlikAlanlari.join(', '),
         referans: referans || null,
@@ -403,7 +381,7 @@ export default function EntegratorRegister() {
         description: `Hoş geldiniz! ${selectedPlan === 'premium' ? 'Premium' : 'Basic'} üyeliğiniz aktif.`,
       });
 
-      navigate('/dashboard');
+      navigate('/entegrator/dashboard');
     } catch (error: any) {
       toast({
         title: 'Kayıt Hatası',
@@ -416,13 +394,12 @@ export default function EntegratorRegister() {
   };
 
   const steps = [
-    { number: 1, title: 'Büyüklük', icon: Users },
-    { number: 2, title: 'Belgeler', icon: FileText },
-    { number: 3, title: 'Bilgiler', icon: ClipboardList },
-    { number: 4, title: 'Plan', icon: CreditCard },
+    { number: 1, title: 'Belgeler', icon: FileText },
+    { number: 2, title: 'Bilgiler', icon: ClipboardList },
+    { number: 3, title: 'Plan', icon: CreditCard },
   ];
 
-  const progressValue = ((currentStep - 1) / 3) * 100;
+  const progressValue = ((currentStep - 1) / 2) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-entegrator/5 py-12 px-4">
@@ -479,35 +456,15 @@ export default function EntegratorRegister() {
               })()}
               {steps[currentStep - 1].title}
             </CardTitle>
-            <CardDescription>
-              {currentStep === 1 && 'Firmanızın büyüklüğünü seçin'}
-              {currentStep === 2 && 'Gerekli belgelerinizi yükleyin'}
-              {currentStep === 3 && 'Profil bilgilerinizi doldurun'}
-              {currentStep === 4 && 'Üyelik planınızı seçin'}
+<CardDescription>
+              {currentStep === 1 && 'Gerekli belgelerinizi yükleyin'}
+              {currentStep === 2 && 'Profil bilgilerinizi doldurun'}
+              {currentStep === 3 && 'Üyelik planınızı seçin'}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* Step 1: Büyüklük */}
+            {/* Step 1: Belgeler (4 belge - firma ile aynı) */}
             {currentStep === 1 && (
-              <div className="grid grid-cols-3 gap-4">
-                {(Object.keys(BUYUKLUK_LABELS) as EntegratorBuyuklugu[]).map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setBuyukluk(size)}
-                    className={`p-6 rounded-xl border-2 transition-all text-center ${
-                      buyukluk === size
-                        ? 'border-entegrator bg-entegrator/10 shadow-lg'
-                        : 'border-border hover:border-entegrator/50 hover:bg-entegrator/5'
-                    }`}
-                  >
-                    <div className="font-semibold text-lg">{BUYUKLUK_LABELS[size]}</div>
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Step 2: Belgeler (4 belge - firma ile aynı) */}
-            {currentStep === 2 && (
               <div className="space-y-4">
                 {[
                   { key: 'ticaret_sicil', label: 'Ticaret Sicil Gazetesi' },
@@ -559,8 +516,8 @@ export default function EntegratorRegister() {
               </div>
             )}
 
-            {/* Step 3: Bilgiler */}
-            {currentStep === 3 && (
+            {/* Step 2: Bilgiler */}
+            {currentStep === 2 && (
               <div className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="entegratorAdi">Entegratör Adı *</Label>
@@ -720,8 +677,8 @@ export default function EntegratorRegister() {
               </div>
             )}
 
-            {/* Step 4: Plan */}
-            {currentStep === 4 && (
+            {/* Step 3: Plan */}
+            {currentStep === 3 && (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   {(Object.keys(PLANS) as Array<'basic' | 'premium'>).map((planKey) => (
@@ -775,7 +732,7 @@ export default function EntegratorRegister() {
             Geri
           </Button>
 
-          {currentStep < 4 ? (
+          {currentStep < 3 ? (
             <Button onClick={handleNext} className="gap-2 bg-entegrator hover:bg-entegrator/90">
               İleri
               <ArrowRight className="h-4 w-4" />
