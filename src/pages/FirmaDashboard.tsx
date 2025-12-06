@@ -159,11 +159,8 @@ const BUYUKLUK_LABELS: Record<EntegratorBuyuklugu, string> = {
   buyuk: 'Büyük',
 };
 
-const REVEAL_COSTS: Record<EntegratorBuyuklugu, number> = {
-  kucuk: 5,
-  orta: 15,
-  buyuk: 30,
-};
+// Fixed cost for revealing contacts
+const REVEAL_COST = 1;
 
 // Completely mask name - show only asterisks
 function maskName(name: string): string {
@@ -611,8 +608,8 @@ export default function FirmaDashboard() {
     }
   };
 
-  const getRevealCost = (buyukluk: EntegratorBuyuklugu | null): number => {
-    return REVEAL_COSTS[buyukluk || 'kucuk'] || 5;
+  const getRevealCost = (): number => {
+    return REVEAL_COST;
   };
 
   const toggleFilter = (
@@ -1101,7 +1098,7 @@ export default function FirmaDashboard() {
                           ) : (
                             <>
                               <Eye className="h-4 w-4" />
-                              İletişimi Gör ({getRevealCost(entegrator.entegrator_buyuklugu)} Kredi)
+                              İletişimi Gör ({getRevealCost()} Kredi)
                             </>
                           )}
                         </Button>
@@ -1144,7 +1141,7 @@ export default function FirmaDashboard() {
             <DialogDescription>
               Bu entegratörün iletişim bilgilerini açmak için{' '}
               <span className="font-bold text-firma">
-                {selectedEntegrator ? getRevealCost(selectedEntegrator.entegrator_buyuklugu) : 0} kredi
+                {selectedEntegrator ? getRevealCost() : 0} kredi
               </span>{' '}
               harcayacaksınız.
             </DialogDescription>
@@ -1160,7 +1157,7 @@ export default function FirmaDashboard() {
                 <p className="text-sm text-muted-foreground">İşlem Sonrası</p>
                 <p className="text-2xl font-bold">
                   {selectedEntegrator 
-                    ? firmaCredits - getRevealCost(selectedEntegrator.entegrator_buyuklugu)
+                    ? firmaCredits - getRevealCost()
                     : firmaCredits
                   }
                 </p>
@@ -1174,7 +1171,7 @@ export default function FirmaDashboard() {
             </Button>
             <Button 
               onClick={confirmReveal} 
-              disabled={revealing || (selectedEntegrator && firmaCredits < getRevealCost(selectedEntegrator.entegrator_buyuklugu))}
+              disabled={revealing || (selectedEntegrator && firmaCredits < getRevealCost())}
               className="bg-firma hover:bg-firma/90"
             >
               {revealing ? (
