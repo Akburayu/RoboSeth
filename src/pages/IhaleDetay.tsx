@@ -252,21 +252,54 @@ export default function IhaleDetay() {
     if (!entegratorId || !ihale) return;
 
     try {
-      const { error } = await supabase
+      // Check if there's an existing bid for this round (for turlu_kapali) or auction
+      const existingBidQuery = supabase
         .from('ihale_teklifleri')
-        .insert({
-          ihale_id: ihale.id,
-          entegrator_id: entegratorId,
-          teklif_tutari: teklif,
-          tur_no: turNo || 1,
+        .select('id')
+        .eq('ihale_id', ihale.id)
+        .eq('entegrator_id', entegratorId);
+      
+      // For turlu_kapali, check same round; for others, check any existing bid
+      if (turNo && ihale.ihale_turu === 'turlu_kapali') {
+        existingBidQuery.eq('tur_no', turNo);
+      }
+
+      const { data: existingBid } = await existingBidQuery.maybeSingle();
+
+      if (existingBid && ihale.ihale_turu !== 'turlu_kapali') {
+        // Update existing bid (for acik_eksiltme, ingiliz)
+        const { error } = await supabase
+          .from('ihale_teklifleri')
+          .update({ teklif_tutari: teklif })
+          .eq('id', existingBid.id);
+
+        if (error) throw error;
+
+        toast({
+          title: "Başarılı",
+          description: "Teklifiniz güncellendi.",
         });
+      } else {
+        // Insert new bid
+        const { error } = await supabase
+          .from('ihale_teklifleri')
+          .insert({
+            ihale_id: ihale.id,
+            entegrator_id: entegratorId,
+            teklif_tutari: teklif,
+            tur_no: turNo || 1,
+          });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      toast({
-        title: "Başarılı",
-        description: "Teklifiniz başarıyla gönderildi.",
-      });
+        toast({
+          title: "Başarılı",
+          description: "Teklifiniz başarıyla gönderildi.",
+        });
+      }
+
+      // Refresh bids
+      fetchTeklifler();
     } catch (error: any) {
       toast({
         title: "Hata",

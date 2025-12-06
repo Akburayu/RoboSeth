@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, CheckCircle, XCircle, Trophy, Clock } from "lucide-react";
+import { Users, CheckCircle, XCircle, Trophy, Clock, SkipForward, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -25,11 +25,9 @@ interface Participant {
 
 export function JaponView({
   ihale,
-  teklifler,
   userRole,
   entegratorId,
   isFirmaOwner,
-  onTeklifSubmit,
   onRefresh,
 }: JaponViewProps) {
   const { toast } = useToast();
@@ -37,6 +35,8 @@ export function JaponView({
   const [loading, setLoading] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [withdrawing, setWithdrawing] = useState(false);
+  const [advancingRound, setAdvancingRound] = useState(false);
+  const [endingAuction, setEndingAuction] = useState(false);
 
   const currentRound = ihale.mevcut_tur || 1;
   const startingPrice = ihale.baslangic_fiyati || 50000;
@@ -82,6 +82,10 @@ export function JaponView({
   const myParticipation = participants.find(p => p.entegrator_id === entegratorId);
   const isParticipating = myParticipation?.aktif;
   const hasConfirmedThisRound = myParticipation?.son_onay_turu === currentRound;
+
+  // Check if all active participants confirmed this round
+  const allConfirmed = activeParticipants.length > 0 && 
+    activeParticipants.every(p => p.son_onay_turu === currentRound);
 
   const handleJoin = async () => {
     if (!entegratorId) return;
@@ -163,6 +167,13 @@ export function JaponView({
       });
 
       fetchParticipants();
+      
+      // Check if only one participant left after withdrawal
+      const remainingActive = activeParticipants.filter(p => p.id !== myParticipation.id);
+      if (remainingActive.length === 1 && participants.length > 1) {
+        // Auto-complete auction
+        await completeAuctionWithWinner(remainingActive[0].entegrator_id);
+      }
     } catch (error: any) {
       toast({
         title: "Hata",
@@ -174,25 +185,155 @@ export function JaponView({
     }
   };
 
+  const handleAdvanceRound = async () => {
+    setAdvancingRound(true);
+    try {
+      // Eliminate participants who didn't confirm
+      const toEliminate = activeParticipants.filter(p => p.son_onay_turu < currentRound);
+      
+      for (const p of toEliminate) {
+        await supabase
+          .from('ihale_katilimcilar')
+          .update({ aktif: false })
+          .eq('id', p.id);
+      }
+
+      // Calculate new active count
+      const newActiveCount = activeParticipants.length - toEliminate.length;
+      
+      if (newActiveCount === 1) {
+        // Find the winner
+        const winner = activeParticipants.find(p => p.son_onay_turu === currentRound);
+        if (winner) {
+          await completeAuctionWithWinner(winner.entegrator_id);
+        }
+      } else if (newActiveCount === 0) {
+        // No one left - close without winner
+        await supabase
+          .from('ihaleler')
+          .update({ durum: 'tamamlandi' })
+          .eq('id', ihale.id);
+        
+        toast({
+          title: "İhale Sonuçlandı",
+          description: "Tüm katılımcılar çekildi, kazanan yok.",
+        });
+        onRefresh();
+      } else {
+        // Advance to next round
+        const newPrice = currentPrice + priceStep;
+        await supabase
+          .from('ihaleler')
+          .update({ 
+            mevcut_tur: currentRound + 1,
+            mevcut_fiyat: newPrice
+          })
+          .eq('id', ihale.id);
+
+        toast({
+          title: "Tur İlerledi",
+          description: `${currentRound + 1}. tura geçildi. Yeni fiyat: ${newPrice.toLocaleString('tr-TR')} ₺`,
+        });
+        
+        fetchParticipants();
+        onRefresh();
+      }
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "Tur ilerletme başarısız oldu.",
+        variant: "destructive",
+      });
+    } finally {
+      setAdvancingRound(false);
+    }
+  };
+
+  const completeAuctionWithWinner = async (winnerId: string) => {
+    setEndingAuction(true);
+    try {
+      // Update auction with winner
+      await supabase
+        .from('ihaleler')
+        .update({
+          durum: 'tamamlandi',
+          kazanan_entegrator_id: winnerId,
+          kazanan_teklif: currentPrice,
+        })
+        .eq('id', ihale.id);
+
+      // Insert final bid record
+      await supabase
+        .from('ihale_teklifleri')
+        .insert({
+          ihale_id: ihale.id,
+          entegrator_id: winnerId,
+          teklif_tutari: currentPrice,
+          durum: 'kazandi',
+        });
+
+      toast({
+        title: "İhale Tamamlandı",
+        description: `Kazanan belirlendi: ${currentPrice.toLocaleString('tr-TR')} ₺`,
+      });
+
+      onRefresh();
+    } catch (error: any) {
+      toast({
+        title: "Hata",
+        description: error.message || "İhale kapatma başarısız oldu.",
+        variant: "destructive",
+      });
+    } finally {
+      setEndingAuction(false);
+    }
+  };
+
+  const handleEndAuctionManually = async () => {
+    if (activeParticipants.length === 1) {
+      await completeAuctionWithWinner(activeParticipants[0].entegrator_id);
+    } else if (activeParticipants.length > 1) {
+      // Multiple participants - pick the one with highest confirmed round
+      const sorted = [...activeParticipants].sort((a, b) => (b.son_onay_turu || 0) - (a.son_onay_turu || 0));
+      await completeAuctionWithWinner(sorted[0].entegrator_id);
+    } else {
+      // No participants
+      await supabase
+        .from('ihaleler')
+        .update({ durum: 'tamamlandi' })
+        .eq('id', ihale.id);
+      
+      toast({
+        title: "İhale Sonuçlandı",
+        description: "Kazanan bulunamadı.",
+      });
+      onRefresh();
+    }
+  };
+
   const isActive = ihale.durum === 'aktif';
+  const isCompleted = ihale.durum === 'tamamlandi';
   const canJoin = isActive && userRole === 'entegrator' && entegratorId && !myParticipation;
   const canConfirm = isActive && isParticipating && !hasConfirmedThisRound;
 
-  // Check for winner
-  const winner = activeParticipants.length === 1 && participants.length > 1 ? activeParticipants[0] : null;
+  // Check for winner (completed auction or single active participant)
+  const hasWinner = ihale.kazanan_entegrator_id || (activeParticipants.length === 1 && participants.length > 1);
+  const winner = hasWinner ? (activeParticipants[0] || null) : null;
 
   return (
     <div className="space-y-4">
       {/* Winner Banner */}
-      {winner && (
+      {(isCompleted || winner) && (
         <Card className="bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800">
           <CardContent className="py-6 text-center">
             <Trophy className="h-12 w-12 mx-auto text-green-500 mb-4" />
             <h3 className="text-xl font-bold text-green-600 mb-2">İhale Sonuçlandı!</h3>
-            <p className="text-lg">
-              Son kalan katılımcı ihaleyi kazandı!
-            </p>
-            {winner.entegrator_id === entegratorId && (
+            {ihale.kazanan_teklif && (
+              <p className="text-lg mb-2">
+                Kazanan Fiyat: <span className="font-bold">{ihale.kazanan_teklif.toLocaleString('tr-TR')} ₺</span>
+              </p>
+            )}
+            {(winner?.entegrator_id === entegratorId || ihale.kazanan_entegrator_id === entegratorId) && (
               <Badge className="mt-2" variant="default">Kazanan Sizsiniz!</Badge>
             )}
           </CardContent>
@@ -231,6 +372,54 @@ export function JaponView({
         </CardContent>
       </Card>
 
+      {/* Firma Controls - Advance Round */}
+      {isFirmaOwner && isActive && (
+        <Card className="border-primary">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <SkipForward className="h-5 w-5" />
+              İhale Yönetimi
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Round status info */}
+            <div className="p-3 bg-muted rounded-lg">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm">Bu tur onaylayan:</span>
+                <Badge variant={allConfirmed ? "default" : "secondary"}>
+                  {activeParticipants.filter(p => p.son_onay_turu === currentRound).length} / {activeParticipants.length}
+                </Badge>
+              </div>
+              {!allConfirmed && activeParticipants.length > 0 && (
+                <p className="text-xs text-muted-foreground">
+                  Onaylamayan katılımcılar bir sonraki turda elenecek
+                </p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                onClick={handleAdvanceRound}
+                disabled={advancingRound || activeParticipants.length === 0}
+                className="h-12"
+              >
+                <SkipForward className="h-4 w-4 mr-2" />
+                {advancingRound ? 'İşleniyor...' : 'Sonraki Tura Geç'}
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleEndAuctionManually}
+                disabled={endingAuction}
+                className="h-12"
+              >
+                <AlertCircle className="h-4 w-4 mr-2" />
+                {endingAuction ? 'Sonlandırılıyor...' : 'İhaleyi Bitir'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Join Button */}
       {canJoin && (
         <Card>
@@ -261,7 +450,7 @@ export function JaponView({
               <div className="text-center py-4">
                 <CheckCircle className="h-12 w-12 mx-auto text-green-500 mb-2" />
                 <p className="text-lg font-medium text-green-600">Bu tur için onayınız alındı</p>
-                <p className="text-sm text-muted-foreground">Diğer katılımcıların cevabı bekleniyor...</p>
+                <p className="text-sm text-muted-foreground">Firma yeni tura geçene kadar bekleyiniz...</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-4">
@@ -320,6 +509,9 @@ export function JaponView({
                       </p>
                       <p className="text-xs text-muted-foreground">
                         Son onay: {participant.son_onay_turu}. tur
+                        {participant.son_onay_turu === currentRound && participant.aktif && (
+                          <CheckCircle className="inline h-3 w-3 ml-1 text-green-500" />
+                        )}
                       </p>
                     </div>
                   </div>
@@ -353,7 +545,7 @@ export function JaponView({
             </li>
             <li className="flex items-start gap-2">
               <span className="text-yellow-500">•</span>
-              "Çekiliyorum" diyen katılımcılar elenir
+              Onaylamayan veya çekilen katılımcılar elenir
             </li>
             <li className="flex items-start gap-2">
               <span className="text-yellow-500">•</span>

@@ -34,6 +34,16 @@ export function HollandaView({
   const priceStep = ihale.fiyat_adimi || 100;
   const winner = teklifler.find(t => t.durum === 'kabul');
 
+  // Use mevcut_fiyat from DB if available, otherwise start from baslangic_fiyati
+  const [localPrice, setLocalPrice] = useState(ihale.mevcut_fiyat || ihale.baslangic_fiyati || 100000);
+
+  useEffect(() => {
+    // Sync with DB price when ihale updates
+    if (ihale.mevcut_fiyat) {
+      setLocalPrice(ihale.mevcut_fiyat);
+    }
+  }, [ihale.mevcut_fiyat]);
+
   useEffect(() => {
     if (ihale.durum !== 'aktif' || winner) return;
 
@@ -49,21 +59,31 @@ export function HollandaView({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [ihale, winner]);
+  }, [ihale.durum, winner, localPrice]);
 
   const decreasePrice = async () => {
-    if (currentPrice - priceStep < minimumPrice) {
+    const newPrice = localPrice - priceStep;
+    
+    if (newPrice < minimumPrice) {
       // End auction - no winner
       await supabase
         .from('ihaleler')
-        .update({ durum: 'tamamlandi' })
+        .update({ durum: 'tamamlandi', mevcut_fiyat: minimumPrice })
         .eq('id', ihale.id);
+      
+      toast({
+        title: "İhale Sonuçlandı",
+        description: "Fiyat minimum seviyeye ulaştı, kazanan yok.",
+      });
+      onRefresh();
       return;
     }
 
+    // Update both local and DB price
+    setLocalPrice(newPrice);
     await supabase
       .from('ihaleler')
-      .update({ mevcut_fiyat: currentPrice - priceStep })
+      .update({ mevcut_fiyat: newPrice })
       .eq('id', ihale.id);
   };
 
@@ -78,7 +98,7 @@ export function HollandaView({
         .insert({
           ihale_id: ihale.id,
           entegrator_id: entegratorId,
-          teklif_tutari: currentPrice,
+          teklif_tutari: localPrice,
           durum: 'kabul',
         });
 
@@ -90,7 +110,8 @@ export function HollandaView({
         .update({
           durum: 'tamamlandi',
           kazanan_entegrator_id: entegratorId,
-          kazanan_teklif: currentPrice,
+          kazanan_teklif: localPrice,
+          mevcut_fiyat: localPrice,
         })
         .eq('id', ihale.id);
 
@@ -98,7 +119,7 @@ export function HollandaView({
 
       toast({
         title: "Tebrikler!",
-        description: `İhaleyi ${currentPrice.toLocaleString('tr-TR')} ₺ ile kazandınız.`,
+        description: `İhaleyi ${localPrice.toLocaleString('tr-TR')} ₺ ile kazandınız.`,
       });
 
       onRefresh();
@@ -116,7 +137,7 @@ export function HollandaView({
   const isActive = ihale.durum === 'aktif' && !winner;
   const canAccept = isActive && userRole === 'entegrator' && entegratorId;
 
-  const progressPercent = ((ihale.baslangic_fiyati - currentPrice) / (ihale.baslangic_fiyati - minimumPrice)) * 100;
+  const progressPercent = ((ihale.baslangic_fiyati - localPrice) / (ihale.baslangic_fiyati - minimumPrice)) * 100;
 
   return (
     <div className="space-y-4">
@@ -142,7 +163,7 @@ export function HollandaView({
           <div className="text-center">
             <p className="text-sm text-muted-foreground mb-2">Mevcut Fiyat</p>
             <p className="text-5xl font-bold text-orange-600 dark:text-orange-400 mb-4">
-              {currentPrice.toLocaleString('tr-TR')} ₺
+              {localPrice.toLocaleString('tr-TR')} ₺
             </p>
             
             {isActive && (
@@ -181,7 +202,7 @@ export function HollandaView({
               disabled={accepting}
             >
               <CheckCircle className="h-6 w-6 mr-3" />
-              {accepting ? 'Kabul Ediliyor...' : `${currentPrice.toLocaleString('tr-TR')} ₺ ile Kabul Et`}
+              {accepting ? 'Kabul Ediliyor...' : `${localPrice.toLocaleString('tr-TR')} ₺ ile Kabul Et`}
             </Button>
             <p className="text-center text-sm text-muted-foreground mt-3">
               İlk kabul eden ihaleyi kazanır. Fiyat düşmeye devam edecek.
