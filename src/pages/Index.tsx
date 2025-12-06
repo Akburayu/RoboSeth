@@ -5,12 +5,42 @@ import { RegisterModal } from '@/components/auth/RegisterModal';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { useAuth } from '@/hooks/useAuth';
 import { SEOHead } from '@/components/SEOHead';
-import { Building2, Users, Zap, Shield, MessageSquare, ArrowRight, LogOut } from 'lucide-react';
+import { Building2, Users, Zap, Shield, MessageSquare, ArrowRight, LogOut, CreditCard, X } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+
+// Credit packages for purchase
+const CREDIT_PACKAGES = [
+  {
+    id: 'kobi',
+    name: 'KOBİ Paketi',
+    credits: 3,
+    price: 650,
+    description: 'Küçük ve orta ölçekli işletmeler için ideal başlangıç paketi.',
+    popular: false,
+  },
+  {
+    id: 'buyuk',
+    name: 'Büyük Paket',
+    credits: 10,
+    price: 1800,
+    description: 'Büyük ölçekli firmalar için. Çoklu proje ve yoğun entegratör araması.',
+    popular: true,
+  },
+  {
+    id: 'global',
+    name: 'Global Paket',
+    credits: 20,
+    price: 3000,
+    description: 'Kurumsal firmalar için. Maksimum esneklik ve en iyi değer.',
+    popular: false,
+  },
+];
 
 const Index = () => {
   const navigate = useNavigate();
   const [registerOpen, setRegisterOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [creditModalOpen, setCreditModalOpen] = useState(false);
   const { user, userRole, signOut, loading } = useAuth();
 
   // Redirect logged-in users to their dashboard
@@ -55,12 +85,23 @@ const Index = () => {
             <span className="text-xl font-bold">EntegraTR</span>
           </div>
           
-          <div className="flex items-center gap-3">
+<div className="flex items-center gap-3">
             {user ? (
               <>
                 <span className="text-sm text-muted-foreground">
                   {userRole === 'firma' ? '🏢 Firma' : '👥 Entegratör'}
                 </span>
+                {userRole === 'firma' && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setCreditModalOpen(true)}
+                    className="gap-2"
+                  >
+                    <CreditCard className="h-4 w-4" />
+                    Kredi Satın Al
+                  </Button>
+                )}
                 <Button variant="outline" size="sm" onClick={signOut}>
                   <LogOut className="h-4 w-4 mr-2" />
                   Çıkış
@@ -215,7 +256,7 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* Modals */}
+{/* Modals */}
       <RegisterModal 
         open={registerOpen} 
         onOpenChange={setRegisterOpen}
@@ -226,6 +267,56 @@ const Index = () => {
         onOpenChange={setLoginOpen}
         onSwitchToRegister={handleSwitchToRegister}
       />
+
+      {/* Credit Purchase Modal */}
+      <Dialog open={creditModalOpen} onOpenChange={setCreditModalOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <CreditCard className="h-5 w-5 text-firma" />
+              Kredi Satın Al
+            </DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            {CREDIT_PACKAGES.map((pkg) => (
+              <div
+                key={pkg.id}
+                className={`relative p-6 rounded-xl border-2 transition-all hover:border-firma/50 hover:bg-firma/5 ${
+                  pkg.popular ? 'border-firma bg-firma/5' : 'border-border'
+                }`}
+              >
+                {pkg.popular && (
+                  <div className="absolute -top-3 left-4 px-3 py-1 bg-firma text-white text-xs font-medium rounded-full">
+                    En Popüler
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-semibold text-lg">{pkg.name}</div>
+                    <div className="text-sm text-muted-foreground mt-1">{pkg.description}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-firma">€{pkg.price}</div>
+                    <div className="text-sm text-muted-foreground">{pkg.credits} Kredi</div>
+                  </div>
+                </div>
+                <Button 
+                  className="w-full mt-4 gradient-primary border-0"
+                  onClick={() => {
+                    // TODO: Implement payment flow
+                    setCreditModalOpen(false);
+                  }}
+                >
+                  Satın Al
+                </Button>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-center text-muted-foreground">
+            Ödeme işlemi için iletişime geçilecektir.
+          </p>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
