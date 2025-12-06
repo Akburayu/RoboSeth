@@ -295,7 +295,7 @@ export default function FirmaRegister() {
         description: `Hoş geldiniz! ${credits} kredi hesabınıza tanımlandı.`,
       });
 
-      navigate('/dashboard');
+      navigate('/firma/dashboard');
     } catch (error: any) {
       toast({
         title: 'Kayıt Hatası',
