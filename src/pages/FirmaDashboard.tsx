@@ -1,0 +1,1414 @@
+import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import NotificationBell from '@/components/NotificationBell';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { 
+  Star, 
+  Users, 
+  MapPin, 
+  Briefcase, 
+  Filter, 
+  Search,
+  ChevronDown,
+  Building2,
+  Award,
+  Clock,
+  Loader2,
+  X,
+  CreditCard,
+  CheckCircle2,
+  Eye,
+  Phone,
+  FileText,
+  User,
+  LogOut,
+  Gavel
+} from 'lucide-react';
+import type { Database } from '@/integrations/supabase/types';
+import { Textarea } from '@/components/ui/textarea';
+import { IhaleTuruModal } from '@/components/ihale/IhaleTuruModal';
+import { IhaleOlusturModal } from '@/components/ihale/IhaleOlusturModal';
+
+type Entegrator = Database['public']['Tables']['entegrator']['Row'];
+type EntegratorBuyuklugu = Database['public']['Enums']['entegrator_buyuklugu'];
+
+interface EntegratorRatings {
+  kalite_avg: number;
+  musteri_iliskisi_avg: number;
+  surec_yonetimi_avg: number;
+  rating_count: number;
+}
+
+interface RatingComment {
+  kalite_puan: number;
+  musteri_iliskisi_puan: number;
+  surec_yonetimi_puan: number;
+  yorum: string | null;
+  created_at: string;
+}
+
+const FAALIYET_ALANLARI = [
+  'Mekanik Tasarım',
+  'Mekanik Üretim',
+  'Elektrik İşçiliği',
+  'Elektrik İşleri',
+  'Elektrik Ekipmanları',
+  'Otomasyon Ekipmanları',
+  'Otomasyon İşleri',
+  'Robot Programlama',
+  'Robot Devreye Alma',
+  'Robot Kurulum',
+  'Robot Montaj',
+  'Robot Taşıma',
+  'Üretim Hattı Taşıma',
+  'PLC Programlama',
+  'Ark Kaynak Ekipmanı Devreye Alma',
+  'Ark Kaynak Ekipmanı Montajı',
+  'Punta Kaynak Ekipmanı Devreye Alma',
+  'Punta Kaynak Ekipmanı Montajı',
+  'Timer Ayarı',
+  'Ark Kaynak Kalitesi Çalışması',
+  'Punta Kaynak Kalitesi Çalışması',
+  'Robot Eğitimi',
+  'Robot Bakımı',
+  'Yedek Parça Satışı',
+  'Mekanik Arıza Robot Servisi',
+  'Elektrik Arıza Robot Servisi',
+  'Otomasyon Arıza Servisi',
+  'Robot Programlama Arıza Servisi',
+];
+
+const UZMANLIK_ALANLARI = [
+  'Ark Kaynağı',
+  'Punta Kaynağı',
+  'Sealing',
+  'Boya',
+  'Makine/Tezgah Besleme',
+  'Montaj',
+  'Vidalama',
+  'Al/Bırak (Pick&Place)',
+  'Paletleme',
+  'Kutulama',
+  'Su Jeti',
+  'Pres Besleme',
+];
+
+const SEKTORLER = [
+  'Otomotiv Ana Sanayi',
+  'Otomotiv Yan Sanayi (Tier 1)',
+  'Otomotiv Yan Sanayi (Tier 2)',
+  'Gıda',
+  'İlaç',
+  'İnşaat',
+  'Havacılık',
+  'Metal',
+  'Hızlı Tüketim Ürünleri (temizlik malzemeleri, bebek bezi, vs.)',
+  'Savunma Sanayi',
+];
+
+const MARKALAR = [
+  'ABB',
+  'Fanuc',
+  'Kuka',
+  'Yaskawa',
+  'Nachi',
+  'Dürr',
+  'Epson',
+  'Estun',
+  'Staubli',
+  'Universal',
+  'Diğer',
+];
+
+const ILLER = [
+  'İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya', 'Adana', 'Konya', 'Gaziantep',
+  'Mersin', 'Kayseri', 'Eskişehir', 'Trabzon', 'Samsun', 'Denizli', 'Sakarya',
+  'Kocaeli', 'Tekirdağ', 'Muğla', 'Balıkesir', 'Manisa', 'Tüm Türkiye',
+];
+
+const TECRUBE_OPTIONS = [
+  '1 yıldan az',
+  '1-3 yıl',
+  '3-5 yıl',
+  '5-10 yıl',
+  '10+ yıl',
+];
+
+const BUYUKLUK_LABELS: Record<EntegratorBuyuklugu, string> = {
+  kucuk: 'Küçük',
+  orta: 'Orta',
+  buyuk: 'Büyük',
+};
+
+const REVEAL_COSTS: Record<EntegratorBuyuklugu, number> = {
+  kucuk: 5,
+  orta: 15,
+  buyuk: 30,
+};
+
+// Completely mask name - show only asterisks
+function maskName(name: string): string {
+  if (!name) return '******';
+  return '******';
+}
+
+interface RevealedContact {
+  entegrator_adi: string;
+  iletisim: string | null;
+  konum: string | null;
+}
+
+interface RatingFormData {
+  kalite: number;
+  musteriIliskisi: number;
+  surecYonetimi: number;
+  yorum: string;
+}
+
+interface Filters {
+  search: string;
+  faaliyetAlanlari: string[];
+  uzmanlikAlanlari: string[];
+  sektorler: string[];
+  iller: string[];
+  tecrubeler: string[];
+  buyuklukler: EntegratorBuyuklugu[];
+  minKisi: number;
+  maxKisi: number;
+  minPuan: number;
+}
+
+const initialFilters: Filters = {
+  search: '',
+  faaliyetAlanlari: [],
+  uzmanlikAlanlari: [],
+  sektorler: [],
+  iller: [],
+  tecrubeler: [],
+  buyuklukler: [],
+  minKisi: 0,
+  maxKisi: 500,
+  minPuan: 0,
+};
+
+export default function FirmaDashboard() {
+  const navigate = useNavigate();
+  const { user, userRole, signOut, loading: authLoading } = useAuth();
+  const { toast } = useToast();
+
+  const [entegratorler, setEntegratorler] = useState<Entegrator[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState<Filters>(initialFilters);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  
+  // Credit and reveal state
+  const [firmaCredits, setFirmaCredits] = useState<number>(0);
+  const [revealedContacts, setRevealedContacts] = useState<Set<string>>(new Set());
+  const [revealModalOpen, setRevealModalOpen] = useState(false);
+  const [selectedEntegrator, setSelectedEntegrator] = useState<Entegrator | null>(null);
+  const [revealing, setRevealing] = useState(false);
+  const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [revealedContactInfo, setRevealedContactInfo] = useState<RevealedContact | null>(null);
+  
+  // Rating system state
+  const [entegratorRatings, setEntegratorRatings] = useState<Record<string, EntegratorRatings>>({});
+  const [firmaId, setFirmaId] = useState<string | null>(null);
+  const [ratingModalOpen, setRatingModalOpen] = useState(false);
+  const [ratingEntegrator, setRatingEntegrator] = useState<Entegrator | null>(null);
+  const [existingRating, setExistingRating] = useState<{ kalite: number; musteriIliskisi: number; surecYonetimi: number; yorum: string } | null>(null);
+  const [ratingForm, setRatingForm] = useState<RatingFormData>({ kalite: 0, musteriIliskisi: 0, surecYonetimi: 0, yorum: '' });
+  const [submittingRating, setSubmittingRating] = useState(false);
+  
+  // Comments modal state
+  const [commentsModalOpen, setCommentsModalOpen] = useState(false);
+  const [commentsEntegrator, setCommentsEntegrator] = useState<Entegrator | null>(null);
+  const [entegratorComments, setEntegratorComments] = useState<Record<string, RatingComment[]>>({});
+
+  // İhale modal state
+  const [ihaleTuruModalOpen, setIhaleTuruModalOpen] = useState(false);
+  const [ihaleOlusturModalOpen, setIhaleOlusturModalOpen] = useState(false);
+  const [selectedIhaleTuru, setSelectedIhaleTuru] = useState<string>('');
+
+  useEffect(() => {
+    if (authLoading) return;
+    
+    if (!user) {
+      navigate('/');
+      return;
+    }
+
+    if (userRole && userRole !== 'firma') {
+      toast({
+        title: 'Erişim Engellendi',
+        description: 'Bu sayfa sadece firma hesapları için.',
+        variant: 'destructive',
+      });
+      navigate('/');
+      return;
+    }
+
+    fetchEntegratorler();
+    fetchFirmaCredits();
+    fetchRevealedContacts();
+    fetchFirmaId();
+    fetchAllRatings();
+  }, [user, userRole, authLoading, navigate, toast]);
+
+  const fetchEntegratorler = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('entegrator')
+        .select('*')
+        .order('puan', { ascending: false });
+
+      if (error) throw error;
+      setEntegratorler(data || []);
+    } catch (error: any) {
+      toast({
+        title: 'Hata',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFirmaCredits = async () => {
+    if (!user) return;
+    try {
+      const { data, error } = await supabase
+        .from('firma')
+        .select('kredi')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+      setFirmaCredits(data?.kredi || 0);
+    } catch (error: any) {
+      console.error('Error fetching credits:', error);
+    }
+  };
+
+  const fetchRevealedContacts = async () => {
+    if (!user) return;
+    try {
+      // Get firma ID first
+      const { data: firma } = await supabase
+        .from('firma')
+        .select('id')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!firma) return;
+
+      const { data, error } = await supabase
+        .from('revealed_contacts')
+        .select('entegrator_id')
+        .eq('firma_id', firma.id);
+
+      if (error) throw error;
+      
+      const revealedIds = new Set(data?.map(r => r.entegrator_id) || []);
+      setRevealedContacts(revealedIds);
+    } catch (error: any) {
+      console.error('Error fetching revealed contacts:', error);
+    }
+  };
+
+  const fetchFirmaId = async () => {
+    if (!user) return;
+    try {
+      const { data, error } = await supabase
+        .from('firma')
+        .select('id')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      
+      if (error) throw error;
+      if (data) setFirmaId(data.id);
+    } catch (error: any) {
+      console.error('Error fetching firma ID:', error);
+    }
+  };
+
+  const fetchAllRatings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('firma_ratings')
+        .select('entegrator_id, kalite_puan, musteri_iliskisi_puan, surec_yonetimi_puan, yorum, created_at')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      if (!data) return;
+
+      // Calculate averages per entegrator and collect comments
+      const ratingsMap: Record<string, { kalite: number[]; musteri: number[]; surec: number[] }> = {};
+      const commentsMap: Record<string, RatingComment[]> = {};
+      
+      data.forEach((r) => {
+        if (!ratingsMap[r.entegrator_id]) {
+          ratingsMap[r.entegrator_id] = { kalite: [], musteri: [], surec: [] };
+          commentsMap[r.entegrator_id] = [];
+        }
+        ratingsMap[r.entegrator_id].kalite.push(r.kalite_puan);
+        ratingsMap[r.entegrator_id].musteri.push(r.musteri_iliskisi_puan);
+        ratingsMap[r.entegrator_id].surec.push(r.surec_yonetimi_puan);
+        
+        commentsMap[r.entegrator_id].push({
+          kalite_puan: r.kalite_puan,
+          musteri_iliskisi_puan: r.musteri_iliskisi_puan,
+          surec_yonetimi_puan: r.surec_yonetimi_puan,
+          yorum: r.yorum,
+          created_at: r.created_at,
+        });
+      });
+
+      const calculated: Record<string, EntegratorRatings> = {};
+      Object.entries(ratingsMap).forEach(([id, scores]) => {
+        calculated[id] = {
+          kalite_avg: scores.kalite.reduce((a, b) => a + b, 0) / scores.kalite.length,
+          musteri_iliskisi_avg: scores.musteri.reduce((a, b) => a + b, 0) / scores.musteri.length,
+          surec_yonetimi_avg: scores.surec.reduce((a, b) => a + b, 0) / scores.surec.length,
+          rating_count: scores.kalite.length,
+        };
+      });
+
+      setEntegratorRatings(calculated);
+      setEntegratorComments(commentsMap);
+    } catch (error: any) {
+      console.error('Error fetching ratings:', error);
+    }
+  };
+
+  const openCommentsModal = (entegrator: Entegrator) => {
+    setCommentsEntegrator(entegrator);
+    setCommentsModalOpen(true);
+  };
+
+  const openRatingModal = async (entegrator: Entegrator) => {
+    setRatingEntegrator(entegrator);
+    setRatingForm({ kalite: 0, musteriIliskisi: 0, surecYonetimi: 0, yorum: '' });
+    setExistingRating(null);
+
+    // Check if there's an existing rating
+    if (firmaId) {
+      const { data } = await supabase
+        .from('firma_ratings')
+        .select('kalite_puan, musteri_iliskisi_puan, surec_yonetimi_puan, yorum')
+        .eq('firma_id', firmaId)
+        .eq('entegrator_id', entegrator.id)
+        .maybeSingle();
+
+      if (data) {
+        setExistingRating({
+          kalite: data.kalite_puan,
+          musteriIliskisi: data.musteri_iliskisi_puan,
+          surecYonetimi: data.surec_yonetimi_puan,
+          yorum: data.yorum || '',
+        });
+        setRatingForm({
+          kalite: data.kalite_puan,
+          musteriIliskisi: data.musteri_iliskisi_puan,
+          surecYonetimi: data.surec_yonetimi_puan,
+          yorum: data.yorum || '',
+        });
+      }
+    }
+
+    setRatingModalOpen(true);
+  };
+
+  const submitRating = async () => {
+    if (!firmaId || !ratingEntegrator) return;
+    if (ratingForm.kalite === 0 || ratingForm.musteriIliskisi === 0 || ratingForm.surecYonetimi === 0) {
+      toast({
+        title: 'Eksik Değerlendirme',
+        description: 'Lütfen tüm kategorilere puan verin.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setSubmittingRating(true);
+    try {
+      if (existingRating) {
+        // Update existing rating
+        const { error } = await supabase
+          .from('firma_ratings')
+          .update({
+            kalite_puan: ratingForm.kalite,
+            musteri_iliskisi_puan: ratingForm.musteriIliskisi,
+            surec_yonetimi_puan: ratingForm.surecYonetimi,
+            yorum: ratingForm.yorum || null,
+          })
+          .eq('firma_id', firmaId)
+          .eq('entegrator_id', ratingEntegrator.id);
+
+        if (error) throw error;
+        toast({ title: 'Başarılı', description: 'Değerlendirmeniz güncellendi.' });
+      } else {
+        // Insert new rating
+        const { error } = await supabase
+          .from('firma_ratings')
+          .insert({
+            firma_id: firmaId,
+            entegrator_id: ratingEntegrator.id,
+            kalite_puan: ratingForm.kalite,
+            musteri_iliskisi_puan: ratingForm.musteriIliskisi,
+            surec_yonetimi_puan: ratingForm.surecYonetimi,
+            yorum: ratingForm.yorum || null,
+          });
+
+        if (error) throw error;
+        toast({ title: 'Başarılı', description: 'Değerlendirmeniz kaydedildi.' });
+      }
+
+      setRatingModalOpen(false);
+      fetchAllRatings();
+    } catch (error: any) {
+      toast({
+        title: 'Hata',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setSubmittingRating(false);
+    }
+  };
+
+  const StarRating = ({ value, onChange, label }: { value: number; onChange: (v: number) => void; label: string }) => (
+    <div className="space-y-1">
+      <Label className="text-sm">{label}</Label>
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            type="button"
+            onClick={() => onChange(star)}
+            className="p-1 hover:scale-110 transition-transform"
+          >
+            <Star
+              className={`h-6 w-6 ${star <= value ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`}
+            />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  const RatingDisplay = ({ avg, label }: { avg: number; label: string }) => (
+    <div className="flex items-center gap-1" title={label}>
+      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+      <span className="text-xs font-medium">{avg.toFixed(1)}</span>
+    </div>
+  );
+
+  const handleRevealClick = (entegrator: Entegrator) => {
+    // If already revealed, show contact info directly
+    if (revealedContacts.has(entegrator.id)) {
+      setRevealedContactInfo({
+        entegrator_adi: entegrator.entegrator_adi,
+        iletisim: entegrator.iletisim_sosyal_medya,
+        konum: entegrator.konum
+      });
+      setContactModalOpen(true);
+      return;
+    }
+    
+    // Otherwise show confirm modal
+    setSelectedEntegrator(entegrator);
+    setRevealModalOpen(true);
+  };
+
+  const confirmReveal = async () => {
+    if (!selectedEntegrator) return;
+    
+    setRevealing(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: 'Oturum Hatası',
+          description: 'Lütfen tekrar giriş yapın.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const response = await supabase.functions.invoke('reveal-contact', {
+        body: { entegrator_id: selectedEntegrator.id }
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      const result = response.data;
+      
+      if (result.error) {
+        if (result.error === 'Yetersiz kredi') {
+          toast({
+            title: 'Yetersiz Kredi',
+            description: `Bu işlem için ${result.required} kredi gerekli. Mevcut krediniz: ${result.available}`,
+            variant: 'destructive',
+          });
+        } else {
+          throw new Error(result.error);
+        }
+        return;
+      }
+
+      // Success!
+      setRevealedContacts(prev => new Set([...prev, selectedEntegrator.id]));
+      setFirmaCredits(result.remaining_credits);
+      setRevealModalOpen(false);
+      
+      // Show the contact info
+      setRevealedContactInfo(result.contact);
+      setContactModalOpen(true);
+
+      if (!result.already_revealed) {
+        toast({
+          title: 'İletişim Bilgisi Açıldı',
+          description: `${result.cost} kredi harcandı. Kalan: ${result.remaining_credits}`,
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Hata',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setRevealing(false);
+    }
+  };
+
+  const getRevealCost = (buyukluk: EntegratorBuyuklugu | null): number => {
+    return REVEAL_COSTS[buyukluk || 'kucuk'] || 5;
+  };
+
+  const toggleFilter = (
+    filterKey: keyof Pick<Filters, 'faaliyetAlanlari' | 'uzmanlikAlanlari' | 'sektorler' | 'iller' | 'tecrubeler'>,
+    value: string
+  ) => {
+    setFilters((prev) => {
+      const current = prev[filterKey];
+      if (current.includes(value)) {
+        return { ...prev, [filterKey]: current.filter((v) => v !== value) };
+      }
+      return { ...prev, [filterKey]: [...current, value] };
+    });
+  };
+
+  const toggleBuyukluk = (value: EntegratorBuyuklugu) => {
+    setFilters((prev) => {
+      if (prev.buyuklukler.includes(value)) {
+        return { ...prev, buyuklukler: prev.buyuklukler.filter((v) => v !== value) };
+      }
+      return { ...prev, buyuklukler: [...prev.buyuklukler, value] };
+    });
+  };
+
+  const clearFilters = () => {
+    setFilters(initialFilters);
+  };
+
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (filters.faaliyetAlanlari.length > 0) count++;
+    if (filters.uzmanlikAlanlari.length > 0) count++;
+    if (filters.sektorler.length > 0) count++;
+    if (filters.iller.length > 0) count++;
+    if (filters.tecrubeler.length > 0) count++;
+    if (filters.buyuklukler.length > 0) count++;
+    if (filters.minPuan > 0) count++;
+    if (filters.minKisi > 0 || filters.maxKisi < 500) count++;
+    return count;
+  }, [filters]);
+
+  const filteredEntegratorler = useMemo(() => {
+    return entegratorler.filter((e) => {
+      // Search filter
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        const nameMatch = e.entegrator_adi?.toLowerCase().includes(searchLower);
+        const uzmanlikMatch = e.uzmanlik_alani?.toLowerCase().includes(searchLower);
+        const faaliyetMatch = e.faaliyet_alanlari?.toLowerCase().includes(searchLower);
+        if (!nameMatch && !uzmanlikMatch && !faaliyetMatch) return false;
+      }
+
+      // Faaliyet alanları filter
+      if (filters.faaliyetAlanlari.length > 0) {
+        const eAlanlar = e.faaliyet_alanlari?.split(', ') || [];
+        if (!filters.faaliyetAlanlari.some((f) => eAlanlar.includes(f))) return false;
+      }
+
+      // Uzmanlık alanları filter
+      if (filters.uzmanlikAlanlari.length > 0) {
+        const eUzmanlik = e.uzmanlik_alani?.split(', ') || [];
+        if (!filters.uzmanlikAlanlari.some((u) => eUzmanlik.includes(u))) return false;
+      }
+
+      // Sektör filter
+      if (filters.sektorler.length > 0) {
+        if (!e.sektor || !filters.sektorler.includes(e.sektor)) return false;
+      }
+
+      // İller filter
+      if (filters.iller.length > 0) {
+        const eIller = e.hizmet_verilen_iller?.split(', ') || [];
+        if (!filters.iller.some((il) => eIller.includes(il))) return false;
+      }
+
+      // Tecrübe filter
+      if (filters.tecrubeler.length > 0) {
+        if (!e.tecrube || !filters.tecrubeler.includes(e.tecrube)) return false;
+      }
+
+      // Büyüklük filter
+      if (filters.buyuklukler.length > 0) {
+        if (!e.entegrator_buyuklugu || !filters.buyuklukler.includes(e.entegrator_buyuklugu)) return false;
+      }
+
+      // Kişi sayısı filter
+      if (filters.minKisi > 0 || filters.maxKisi < 500) {
+        const kisi = e.kac_kisi || 0;
+        if (kisi < filters.minKisi || kisi > filters.maxKisi) return false;
+      }
+
+      // Puan filter
+      if (filters.minPuan > 0) {
+        if ((e.puan || 0) < filters.minPuan) return false;
+      }
+
+      return true;
+    });
+  }, [entegratorler, filters]);
+
+  const FilterSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
+    <div className="space-y-2">
+      <Label className="text-sm font-medium">{title}</Label>
+      {children}
+    </div>
+  );
+
+  const FiltersContent = () => (
+    <div className="space-y-6">
+      {/* Faaliyet Alanları */}
+      <FilterSection title="Faaliyet Alanları">
+        <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
+          {FAALIYET_ALANLARI.map((alan) => (
+            <label key={alan} className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                checked={filters.faaliyetAlanlari.includes(alan)}
+                onCheckedChange={() => toggleFilter('faaliyetAlanlari', alan)}
+              />
+              <span className="text-sm">{alan}</span>
+            </label>
+          ))}
+        </div>
+      </FilterSection>
+
+      {/* Uzmanlık Alanları */}
+      <FilterSection title="Uzmanlık Alanları">
+        <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
+          {UZMANLIK_ALANLARI.map((alan) => (
+            <label key={alan} className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                checked={filters.uzmanlikAlanlari.includes(alan)}
+                onCheckedChange={() => toggleFilter('uzmanlikAlanlari', alan)}
+              />
+              <span className="text-sm">{alan}</span>
+            </label>
+          ))}
+        </div>
+      </FilterSection>
+
+      {/* Sektör */}
+      <FilterSection title="Sektör">
+        <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
+          {SEKTORLER.map((sektor) => (
+            <label key={sektor} className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                checked={filters.sektorler.includes(sektor)}
+                onCheckedChange={() => toggleFilter('sektorler', sektor)}
+              />
+              <span className="text-sm">{sektor}</span>
+            </label>
+          ))}
+        </div>
+      </FilterSection>
+
+      {/* İller */}
+      <FilterSection title="Hizmet Verilen İller">
+        <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
+          {ILLER.map((il) => (
+            <label key={il} className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                checked={filters.iller.includes(il)}
+                onCheckedChange={() => toggleFilter('iller', il)}
+              />
+              <span className="text-sm">{il}</span>
+            </label>
+          ))}
+        </div>
+      </FilterSection>
+
+      {/* Tecrübe */}
+      <FilterSection title="Tecrübe">
+        <div className="grid grid-cols-1 gap-2">
+          {TECRUBE_OPTIONS.map((tecrube) => (
+            <label key={tecrube} className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                checked={filters.tecrubeler.includes(tecrube)}
+                onCheckedChange={() => toggleFilter('tecrubeler', tecrube)}
+              />
+              <span className="text-sm">{tecrube}</span>
+            </label>
+          ))}
+        </div>
+      </FilterSection>
+
+      {/* Büyüklük */}
+      <FilterSection title="Entegratör Büyüklüğü">
+        <div className="grid grid-cols-1 gap-2">
+          {(Object.keys(BUYUKLUK_LABELS) as EntegratorBuyuklugu[]).map((buyukluk) => (
+            <label key={buyukluk} className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                checked={filters.buyuklukler.includes(buyukluk)}
+                onCheckedChange={() => toggleBuyukluk(buyukluk)}
+              />
+              <span className="text-sm">{BUYUKLUK_LABELS[buyukluk]}</span>
+            </label>
+          ))}
+        </div>
+      </FilterSection>
+
+      {/* Minimum Puan */}
+      <FilterSection title={`Minimum Puan: ${filters.minPuan}`}>
+        <Slider
+          value={[filters.minPuan]}
+          onValueChange={(v) => setFilters((prev) => ({ ...prev, minPuan: v[0] }))}
+          max={5}
+          step={0.5}
+          className="mt-2"
+        />
+      </FilterSection>
+
+      {/* Çalışan Sayısı */}
+      <FilterSection title={`Çalışan Sayısı: ${filters.minKisi} - ${filters.maxKisi}`}>
+        <Slider
+          value={[filters.minKisi, filters.maxKisi]}
+          onValueChange={(v) => setFilters((prev) => ({ ...prev, minKisi: v[0], maxKisi: v[1] }))}
+          max={500}
+          step={10}
+          className="mt-2"
+        />
+      </FilterSection>
+
+      {/* Clear Filters */}
+      <Button variant="outline" onClick={clearFilters} className="w-full">
+        <X className="h-4 w-4 mr-2" />
+        Filtreleri Temizle
+      </Button>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b bg-card">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-firma">Firma Paneli</h1>
+              <p className="text-sm text-muted-foreground">Entegratörleri keşfedin</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <NotificationBell />
+              <Button 
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate('/firma/profile')}
+                title="Profil"
+              >
+                <User className="h-5 w-5" />
+              </Button>
+              <Button 
+                variant="ghost"
+                size="icon"
+                onClick={async () => {
+                  await signOut();
+                  navigate('/');
+                }}
+                title="Çıkış Yap"
+              >
+                <LogOut className="h-5 w-5" />
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => navigate('/firma/ilanlarim')}
+                className="gap-2"
+              >
+                <FileText className="h-4 w-4" />
+                İlanlarım
+              </Button>
+              <Button 
+                onClick={() => navigate('/firma/ilan-olustur')}
+                className="bg-firma hover:bg-firma/90 gap-2"
+              >
+                <FileText className="h-4 w-4" />
+                İlan Oluştur
+              </Button>
+              <Button 
+                onClick={() => setIhaleTuruModalOpen(true)}
+                variant="outline"
+                className="gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+              >
+                <Gavel className="h-4 w-4" />
+                İhale Başlat
+              </Button>
+              <div className="flex items-center gap-2 px-4 py-2 bg-firma/10 rounded-lg border border-firma/20">
+                <CreditCard className="h-5 w-5 text-firma" />
+                <span className="font-semibold text-firma">{firmaCredits}</span>
+                <span className="text-sm text-muted-foreground">Kredi</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Desktop Filters Sidebar */}
+          <aside className="hidden lg:block w-80 shrink-0">
+            <Card className="sticky top-6">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Filter className="h-5 w-5" />
+                  Filtreler
+                  {activeFilterCount > 0 && (
+                    <Badge variant="secondary">{activeFilterCount}</Badge>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="max-h-[calc(100vh-200px)] overflow-y-auto">
+                <FiltersContent />
+              </CardContent>
+            </Card>
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1">
+            {/* Search and Mobile Filter */}
+            <div className="flex gap-4 mb-6">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Entegratör ara..."
+                  value={filters.search}
+                  onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
+                  className="pl-10"
+                />
+              </div>
+
+              {/* Mobile Filter Button */}
+              <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="lg:hidden gap-2">
+                    <Filter className="h-4 w-4" />
+                    Filtre
+                    {activeFilterCount > 0 && (
+                      <Badge variant="secondary" className="ml-1">{activeFilterCount}</Badge>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-80 overflow-y-auto">
+                  <SheetHeader>
+                    <SheetTitle className="flex items-center gap-2">
+                      <Filter className="h-5 w-5" />
+                      Filtreler
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6">
+                    <FiltersContent />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+
+            {/* Results Count */}
+            <div className="mb-4 text-sm text-muted-foreground">
+              {filteredEntegratorler.length} entegratör bulundu
+            </div>
+
+            {/* Entegrator Cards */}
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-firma" />
+              </div>
+            ) : filteredEntegratorler.length === 0 ? (
+              <Card className="p-12 text-center">
+                <p className="text-muted-foreground">Arama kriterlerinize uygun entegratör bulunamadı.</p>
+                <Button variant="link" onClick={clearFilters} className="mt-2">
+                  Filtreleri temizle
+                </Button>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filteredEntegratorler.map((entegrator) => (
+                  <Card 
+                    key={entegrator.id} 
+                    className="hover:shadow-lg transition-shadow cursor-pointer border-firma/10 hover:border-firma/30"
+                  >
+                    <CardContent className="p-5">
+                      {/* Header with masked name and ratings */}
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-entegrator/20 to-entegrator/40 flex items-center justify-center">
+                            <Building2 className="h-6 w-6 text-entegrator" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-lg">{maskName(entegrator.entegrator_adi)}</h3>
+                            {entegrator.entegrator_buyuklugu && (
+                              <Badge variant="outline" className="text-xs">
+                                {BUYUKLUK_LABELS[entegrator.entegrator_buyuklugu]}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        {/* Three category ratings */}
+                        <div className="flex flex-col gap-1 text-right">
+                          {entegratorRatings[entegrator.id] ? (
+                            <>
+                              <div className="flex items-center gap-1 justify-end" title="Kalite">
+                                <span className="text-xs text-muted-foreground">Kalite:</span>
+                                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                <span className="text-xs font-medium">{entegratorRatings[entegrator.id].kalite_avg.toFixed(1)}</span>
+                              </div>
+                              <div className="flex items-center gap-1 justify-end" title="Müşteri İlişkisi">
+                                <span className="text-xs text-muted-foreground">M.İlişki:</span>
+                                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                <span className="text-xs font-medium">{entegratorRatings[entegrator.id].musteri_iliskisi_avg.toFixed(1)}</span>
+                              </div>
+                              <div className="flex items-center gap-1 justify-end" title="Süreç Yönetimi">
+                                <span className="text-xs text-muted-foreground">Süreç:</span>
+                                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                <span className="text-xs font-medium">{entegratorRatings[entegrator.id].surec_yonetimi_avg.toFixed(1)}</span>
+                              </div>
+                            </>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">Henüz değerlendirme yok</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Uzmanlık */}
+                      {entegrator.uzmanlik_alani && (
+                        <div className="mb-3">
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
+                            <Award className="h-3 w-3" />
+                            Uzmanlık
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {entegrator.uzmanlik_alani.split(', ').slice(0, 3).map((u, i) => (
+                              <Badge key={i} variant="secondary" className="text-xs">
+                                {u}
+                              </Badge>
+                            ))}
+                            {entegrator.uzmanlik_alani.split(', ').length > 3 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{entegrator.uzmanlik_alani.split(', ').length - 3}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Info Row */}
+                      <div className="flex flex-wrap gap-3 text-xs text-muted-foreground mb-3">
+                        {entegrator.tecrube && (
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            {entegrator.tecrube}
+                          </div>
+                        )}
+                        {entegrator.kac_kisi && (
+                          <div className="flex items-center gap-1">
+                            <Users className="h-3 w-3" />
+                            {entegrator.kac_kisi} kişi
+                          </div>
+                        )}
+                        {entegrator.konum && (
+                          <div className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {entegrator.konum}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Referans - truncated */}
+                      {entegrator.referans && (
+                        <p className="text-xs text-muted-foreground line-clamp-2 border-t pt-3 mt-3">
+                          {entegrator.referans}
+                        </p>
+                      )}
+
+                      {/* CTA Buttons */}
+                      <div className="flex gap-2 mt-4">
+                        <Button 
+                          className={`flex-1 gap-2 ${
+                            revealedContacts.has(entegrator.id)
+                              ? 'bg-green-600 hover:bg-green-700'
+                              : 'bg-firma hover:bg-firma/90'
+                          }`}
+                          size="sm"
+                          onClick={() => handleRevealClick(entegrator)}
+                        >
+                          {revealedContacts.has(entegrator.id) ? (
+                            <>
+                              <CheckCircle2 className="h-4 w-4" />
+                              İletişimi Görüntüle
+                            </>
+                          ) : (
+                            <>
+                              <Eye className="h-4 w-4" />
+                              İletişimi Gör ({getRevealCost(entegrator.entegrator_buyuklugu)} Kredi)
+                            </>
+                          )}
+                        </Button>
+                        {entegratorRatings[entegrator.id] && entegratorRatings[entegrator.id].rating_count > 0 && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openCommentsModal(entegrator)}
+                            title="Yorumları Gör"
+                          >
+                            <FileText className="h-4 w-4" />
+                            <span className="text-xs ml-1">{entegratorRatings[entegrator.id].rating_count}</span>
+                          </Button>
+                        )}
+                        {revealedContacts.has(entegrator.id) && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openRatingModal(entegrator)}
+                            title="Değerlendir"
+                          >
+                            <Star className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
+
+      {/* Reveal Confirmation Modal */}
+      <Dialog open={revealModalOpen} onOpenChange={setRevealModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>İletişim Bilgisini Aç</DialogTitle>
+            <DialogDescription>
+              Bu entegratörün iletişim bilgilerini açmak için{' '}
+              <span className="font-bold text-firma">
+                {selectedEntegrator ? getRevealCost(selectedEntegrator.entegrator_buyuklugu) : 0} kredi
+              </span>{' '}
+              harcayacaksınız.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+              <div>
+                <p className="text-sm text-muted-foreground">Mevcut Krediniz</p>
+                <p className="text-2xl font-bold text-firma">{firmaCredits}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-muted-foreground">İşlem Sonrası</p>
+                <p className="text-2xl font-bold">
+                  {selectedEntegrator 
+                    ? firmaCredits - getRevealCost(selectedEntegrator.entegrator_buyuklugu)
+                    : firmaCredits
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRevealModalOpen(false)}>
+              İptal
+            </Button>
+            <Button 
+              onClick={confirmReveal} 
+              disabled={revealing || (selectedEntegrator && firmaCredits < getRevealCost(selectedEntegrator.entegrator_buyuklugu))}
+              className="bg-firma hover:bg-firma/90"
+            >
+              {revealing ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  İşleniyor...
+                </>
+              ) : (
+                'Onayla'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Contact Info Modal */}
+      <Dialog open={contactModalOpen} onOpenChange={setContactModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Phone className="h-5 w-5 text-green-600" />
+              İletişim Bilgileri
+            </DialogTitle>
+          </DialogHeader>
+          
+          {revealedContactInfo && (
+            <div className="space-y-4 py-4">
+              <div className="p-4 bg-muted rounded-lg">
+                <p className="text-sm text-muted-foreground mb-1">Entegratör</p>
+                <p className="font-semibold text-lg">{revealedContactInfo.entegrator_adi}</p>
+              </div>
+              
+              {revealedContactInfo.iletisim && (
+                <div className="p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground mb-1">İletişim / Sosyal Medya</p>
+                  <p className="font-medium">{revealedContactInfo.iletisim}</p>
+                </div>
+              )}
+              
+              {revealedContactInfo.konum && (
+                <div className="p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground mb-1">Konum</p>
+                  <p className="font-medium">{revealedContactInfo.konum}</p>
+                </div>
+              )}
+              
+              {!revealedContactInfo.iletisim && !revealedContactInfo.konum && (
+                <p className="text-center text-muted-foreground py-4">
+                  Bu entegratör henüz iletişim bilgisi eklememiş.
+                </p>
+              )}
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button onClick={() => setContactModalOpen(false)}>
+              Kapat
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Rating Modal - Only visible to Firma users */}
+      <Dialog open={ratingModalOpen} onOpenChange={setRatingModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Star className="h-5 w-5 text-amber-500" />
+              Entegratör Değerlendirmesi
+            </DialogTitle>
+            <DialogDescription>
+              Bu değerlendirme sadece diğer firmalara görünür. Entegratör bu puanlamayı göremez.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            <StarRating
+              label="Kalite"
+              value={ratingForm.kalite}
+              onChange={(v) => setRatingForm(prev => ({ ...prev, kalite: v }))}
+            />
+            <StarRating
+              label="Müşteri İlişkisi"
+              value={ratingForm.musteriIliskisi}
+              onChange={(v) => setRatingForm(prev => ({ ...prev, musteriIliskisi: v }))}
+            />
+            <StarRating
+              label="Süreç Yönetimi"
+              value={ratingForm.surecYonetimi}
+              onChange={(v) => setRatingForm(prev => ({ ...prev, surecYonetimi: v }))}
+            />
+            
+            <div className="space-y-2">
+              <Label>Yorum (Opsiyonel)</Label>
+              <Textarea
+                placeholder="Deneyiminizi paylaşın..."
+                value={ratingForm.yorum}
+                onChange={(e) => setRatingForm(prev => ({ ...prev, yorum: e.target.value }))}
+                rows={3}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRatingModalOpen(false)}>
+              İptal
+            </Button>
+            <Button 
+              onClick={submitRating}
+              disabled={submittingRating}
+              className="bg-amber-500 hover:bg-amber-600"
+            >
+              {submittingRating ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  Kaydediliyor...
+                </>
+              ) : existingRating ? (
+                'Güncelle'
+              ) : (
+                'Değerlendir'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Comments Modal - View all ratings/comments for an entegrator */}
+      <Dialog open={commentsModalOpen} onOpenChange={setCommentsModalOpen}>
+        <DialogContent className="sm:max-w-lg max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-muted-foreground" />
+              Firma Değerlendirmeleri
+            </DialogTitle>
+            <DialogDescription>
+              Bu entegratör hakkında diğer firmaların yaptığı değerlendirmeler
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            {commentsEntegrator && entegratorComments[commentsEntegrator.id]?.length > 0 ? (
+              entegratorComments[commentsEntegrator.id].map((comment, index) => (
+                <div key={index} className="p-4 bg-muted rounded-lg space-y-3">
+                  <div className="flex flex-wrap gap-4 text-sm">
+                    <div className="flex items-center gap-1">
+                      <span className="text-muted-foreground">Kalite:</span>
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`h-3 w-3 ${star <= comment.kalite_puan ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-muted-foreground">M.İlişki:</span>
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`h-3 w-3 ${star <= comment.musteri_iliskisi_puan ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-muted-foreground">Süreç:</span>
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`h-3 w-3 ${star <= comment.surec_yonetimi_puan ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  {comment.yorum && (
+                    <p className="text-sm text-foreground">{comment.yorum}</p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(comment.created_at).toLocaleDateString('tr-TR', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-muted-foreground py-4">
+                Henüz değerlendirme yapılmamış.
+              </p>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button onClick={() => setCommentsModalOpen(false)}>
+              Kapat
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* İhale Türü Seçim Modal */}
+      <IhaleTuruModal 
+        open={ihaleTuruModalOpen}
+        onOpenChange={setIhaleTuruModalOpen}
+        onSelect={(type) => {
+          setSelectedIhaleTuru(type);
+          setIhaleTuruModalOpen(false);
+          setIhaleOlusturModalOpen(true);
+        }}
+      />
+
+      {/* İhale Oluştur Modal */}
+      <IhaleOlusturModal
+        open={ihaleOlusturModalOpen}
+        onOpenChange={setIhaleOlusturModalOpen}
+        ihaleTuru={selectedIhaleTuru}
+        firmaId={firmaId || ''}
+        onSuccess={() => {
+          toast({
+            title: "Başarılı",
+            description: "İhale başarıyla oluşturuldu.",
+          });
+        }}
+        onBack={() => {
+          setIhaleOlusturModalOpen(false);
+          setIhaleTuruModalOpen(true);
+        }}
+      />
+    </div>
+  );
+}
