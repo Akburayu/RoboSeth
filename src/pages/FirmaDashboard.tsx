@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import NotificationBell from '@/components/NotificationBell';
 import { supabase } from '@/integrations/supabase/client';
@@ -41,7 +41,8 @@ import {
   FileText,
   User,
   LogOut,
-  Gavel
+  Gavel,
+  Lock
 } from 'lucide-react';
 import type { Database } from '@/integrations/supabase/types';
 import { Textarea } from '@/components/ui/textarea';
@@ -200,6 +201,8 @@ const initialFilters: Filters = {
 
 export default function FirmaDashboard() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isGuestMode = searchParams.get('guest') === 'true';
   const { user, userRole, signOut, loading: authLoading } = useAuth();
   const { toast } = useToast();
 
@@ -239,6 +242,13 @@ export default function FirmaDashboard() {
   useEffect(() => {
     if (authLoading) return;
     
+    // Allow guest mode without authentication
+    if (isGuestMode) {
+      fetchEntegratorler();
+      fetchAllRatings();
+      return;
+    }
+    
     if (!user) {
       navigate('/');
       return;
@@ -259,7 +269,7 @@ export default function FirmaDashboard() {
     fetchRevealedContacts();
     fetchFirmaId();
     fetchAllRatings();
-  }, [user, userRole, authLoading, navigate, toast]);
+  }, [user, userRole, authLoading, navigate, toast, isGuestMode]);
 
   const fetchEntegratorler = async () => {
     setLoading(true);
@@ -805,6 +815,26 @@ export default function FirmaDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Guest Mode Banner */}
+      {isGuestMode && (
+        <div className="bg-amber-500/10 border-b border-amber-500/30">
+          <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+              <Eye className="h-5 w-5" />
+              <span className="font-medium">Misafir Modu</span>
+              <span className="text-sm">- Sadece görüntüleme yapabilirsiniz</span>
+            </div>
+            <Button 
+              size="sm" 
+              onClick={() => navigate('/')}
+              className="bg-amber-500 hover:bg-amber-600 text-white"
+            >
+              Üye Ol
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
@@ -814,54 +844,66 @@ export default function FirmaDashboard() {
               <p className="text-sm text-muted-foreground">Entegratörleri keşfedin</p>
             </div>
             <div className="flex items-center gap-3">
-              <NotificationBell />
-              <Button 
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate('/firma/profile')}
-                title="Profil"
-              >
-                <User className="h-5 w-5" />
-              </Button>
-              <Button 
-                variant="ghost"
-                size="icon"
-                onClick={async () => {
-                  await signOut();
-                  navigate('/');
-                }}
-                title="Çıkış Yap"
-              >
-                <LogOut className="h-5 w-5" />
-              </Button>
-              <Button 
-                variant="outline"
-                onClick={() => navigate('/firma/ilanlarim')}
-                className="gap-2"
-              >
-                <FileText className="h-4 w-4" />
-                İlanlarım
-              </Button>
-              <Button 
-                onClick={() => navigate('/firma/ilan-olustur')}
-                className="bg-firma hover:bg-firma/90 gap-2"
-              >
-                <FileText className="h-4 w-4" />
-                İlan Oluştur
-              </Button>
-              <Button 
-                onClick={() => setIhaleTuruModalOpen(true)}
-                variant="outline"
-                className="gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-              >
-                <Gavel className="h-4 w-4" />
-                İhale Başlat
-              </Button>
-              <div className="flex items-center gap-2 px-4 py-2 bg-firma/10 rounded-lg border border-firma/20">
-                <CreditCard className="h-5 w-5 text-firma" />
-                <span className="font-semibold text-firma">{firmaCredits}</span>
-                <span className="text-sm text-muted-foreground">Kredi</span>
-              </div>
+              {!isGuestMode && (
+                <>
+                  <NotificationBell />
+                  <Button 
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => navigate('/firma/profile')}
+                    title="Profil"
+                  >
+                    <User className="h-5 w-5" />
+                  </Button>
+                  <Button 
+                    variant="ghost"
+                    size="icon"
+                    onClick={async () => {
+                      await signOut();
+                      navigate('/');
+                    }}
+                    title="Çıkış Yap"
+                  >
+                    <LogOut className="h-5 w-5" />
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => navigate('/firma/ilanlarim')}
+                    className="gap-2"
+                  >
+                    <FileText className="h-4 w-4" />
+                    İlanlarım
+                  </Button>
+                  <Button 
+                    onClick={() => navigate('/firma/ilan-olustur')}
+                    className="bg-firma hover:bg-firma/90 gap-2"
+                  >
+                    <FileText className="h-4 w-4" />
+                    İlan Oluştur
+                  </Button>
+                  <Button 
+                    onClick={() => setIhaleTuruModalOpen(true)}
+                    variant="outline"
+                    className="gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                  >
+                    <Gavel className="h-4 w-4" />
+                    İhale Başlat
+                  </Button>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-firma/10 rounded-lg border border-firma/20">
+                    <CreditCard className="h-5 w-5 text-firma" />
+                    <span className="font-semibold text-firma">{firmaCredits}</span>
+                    <span className="text-sm text-muted-foreground">Kredi</span>
+                  </div>
+                </>
+              )}
+              {isGuestMode && (
+                <Button 
+                  variant="ghost"
+                  onClick={() => navigate('/')}
+                >
+                  Ana Sayfa
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -1040,47 +1082,67 @@ export default function FirmaDashboard() {
 
                       {/* CTA Buttons */}
                       <div className="flex gap-2 mt-4">
-                        <Button 
-                          className={`flex-1 gap-2 ${
-                            revealedContacts.has(entegrator.id)
-                              ? 'bg-green-600 hover:bg-green-700'
-                              : 'bg-firma hover:bg-firma/90'
-                          }`}
-                          size="sm"
-                          onClick={() => handleRevealClick(entegrator)}
-                        >
-                          {revealedContacts.has(entegrator.id) ? (
-                            <>
-                              <CheckCircle2 className="h-4 w-4" />
-                              İletişimi Görüntüle
-                            </>
-                          ) : (
-                            <>
-                              <Eye className="h-4 w-4" />
-                              İletişimi Gör ({getRevealCost()} Kredi)
-                            </>
-                          )}
-                        </Button>
-                        {entegratorRatings[entegrator.id] && entegratorRatings[entegrator.id].rating_count > 0 && (
-                          <Button
-                            variant="outline"
+                        {isGuestMode ? (
+                          <Button 
+                            className="flex-1 gap-2"
                             size="sm"
-                            onClick={() => openCommentsModal(entegrator)}
-                            title="Yorumları Gör"
-                          >
-                            <FileText className="h-4 w-4" />
-                            <span className="text-xs ml-1">{entegratorRatings[entegrator.id].rating_count}</span>
-                          </Button>
-                        )}
-                        {revealedContacts.has(entegrator.id) && (
-                          <Button
                             variant="outline"
-                            size="sm"
-                            onClick={() => openRatingModal(entegrator)}
-                            title="Değerlendir"
+                            onClick={() => {
+                              toast({
+                                title: 'Üyelik Gerekli',
+                                description: 'İletişim bilgilerini görmek için üye olmanız gerekmektedir.',
+                              });
+                              navigate('/');
+                            }}
                           >
-                            <Star className="h-4 w-4" />
+                            <Lock className="h-4 w-4" />
+                            İletişimi Gör (Üyelik Gerekli)
                           </Button>
+                        ) : (
+                          <>
+                            <Button 
+                              className={`flex-1 gap-2 ${
+                                revealedContacts.has(entegrator.id)
+                                  ? 'bg-green-600 hover:bg-green-700'
+                                  : 'bg-firma hover:bg-firma/90'
+                              }`}
+                              size="sm"
+                              onClick={() => handleRevealClick(entegrator)}
+                            >
+                              {revealedContacts.has(entegrator.id) ? (
+                                <>
+                                  <CheckCircle2 className="h-4 w-4" />
+                                  İletişimi Görüntüle
+                                </>
+                              ) : (
+                                <>
+                                  <Eye className="h-4 w-4" />
+                                  İletişimi Gör ({getRevealCost()} Kredi)
+                                </>
+                              )}
+                            </Button>
+                            {entegratorRatings[entegrator.id] && entegratorRatings[entegrator.id].rating_count > 0 && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openCommentsModal(entegrator)}
+                                title="Yorumları Gör"
+                              >
+                                <FileText className="h-4 w-4" />
+                                <span className="text-xs ml-1">{entegratorRatings[entegrator.id].rating_count}</span>
+                              </Button>
+                            )}
+                            {revealedContacts.has(entegrator.id) && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openRatingModal(entegrator)}
+                                title="Değerlendir"
+                              >
+                                <Star className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </>
                         )}
                       </div>
                     </CardContent>

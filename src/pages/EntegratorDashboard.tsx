@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -47,7 +47,8 @@ import {
   TrendingUp,
   Users,
   Lock,
-  Shield
+  Shield,
+  Eye
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -151,6 +152,8 @@ interface Teklif {
 
 export default function EntegratorDashboard() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isGuestMode = searchParams.get('guest') === 'true';
   const { user, userRole, signOut, loading: authLoading } = useAuth();
   const { toast } = useToast();
 
@@ -182,6 +185,13 @@ export default function EntegratorDashboard() {
   useEffect(() => {
     if (authLoading) return;
     
+    // Allow guest mode without authentication
+    if (isGuestMode) {
+      fetchIlanlar();
+      fetchIhaleler();
+      return;
+    }
+    
     if (!user) {
       navigate('/');
       return;
@@ -200,7 +210,7 @@ export default function EntegratorDashboard() {
     fetchEntegratorId();
     fetchIlanlar();
     fetchIhaleler();
-  }, [user, userRole, authLoading, navigate, toast]);
+  }, [user, userRole, authLoading, navigate, toast, isGuestMode]);
 
   useEffect(() => {
     if (entegratorId) {
@@ -436,6 +446,26 @@ export default function EntegratorDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Guest Mode Banner */}
+      {isGuestMode && (
+        <div className="bg-amber-500/10 border-b border-amber-500/30">
+          <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+              <Eye className="h-5 w-5" />
+              <span className="font-medium">Misafir Modu</span>
+              <span className="text-sm">- Sadece görüntüleme yapabilirsiniz</span>
+            </div>
+            <Button 
+              size="sm" 
+              onClick={() => navigate('/')}
+              className="bg-amber-500 hover:bg-amber-600 text-white"
+            >
+              Üye Ol
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
@@ -445,31 +475,43 @@ export default function EntegratorDashboard() {
               <p className="text-sm text-muted-foreground">Açık ilanları görüntüleyin ve teklif verin</p>
             </div>
             <div className="flex items-center gap-3">
-              <NotificationBell />
-              <Button 
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate('/entegrator/profile')}
-                title="Profil"
-              >
-                <User className="h-5 w-5" />
-              </Button>
-              <Button 
-                variant="ghost"
-                size="icon"
-                onClick={async () => {
-                  await signOut();
-                  navigate('/');
-                }}
-                title="Çıkış Yap"
-              >
-                <LogOut className="h-5 w-5" />
-              </Button>
-              {entegratorId && (
-                <Badge variant="secondary" className="gap-1">
-                  <CheckCircle2 className="h-3 w-3" />
-                  Profil Aktif
-                </Badge>
+              {!isGuestMode && (
+                <>
+                  <NotificationBell />
+                  <Button 
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => navigate('/entegrator/profile')}
+                    title="Profil"
+                  >
+                    <User className="h-5 w-5" />
+                  </Button>
+                  <Button 
+                    variant="ghost"
+                    size="icon"
+                    onClick={async () => {
+                      await signOut();
+                      navigate('/');
+                    }}
+                    title="Çıkış Yap"
+                  >
+                    <LogOut className="h-5 w-5" />
+                  </Button>
+                  {entegratorId && (
+                    <Badge variant="secondary" className="gap-1">
+                      <CheckCircle2 className="h-3 w-3" />
+                      Profil Aktif
+                    </Badge>
+                  )}
+                </>
+              )}
+              {isGuestMode && (
+                <Button 
+                  variant="ghost"
+                  onClick={() => navigate('/')}
+                >
+                  Ana Sayfa
+                </Button>
               )}
             </div>
           </div>
@@ -746,27 +788,44 @@ export default function EntegratorDashboard() {
 
                     {/* Action Button */}
                     <div className="lg:w-40 shrink-0">
-                      <Button
-                        className={`w-full gap-2 ${
-                          myTeklifler.has(ilan.id)
-                            ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                            : 'bg-entegrator hover:bg-entegrator/90'
-                        }`}
-                        onClick={() => handleTeklifClick(ilan)}
-                        disabled={myTeklifler.has(ilan.id)}
-                      >
-                        {myTeklifler.has(ilan.id) ? (
-                          <>
-                            <CheckCircle2 className="h-4 w-4" />
-                            Teklif Verildi
-                          </>
-                        ) : (
-                          <>
-                            <Send className="h-4 w-4" />
-                            Teklif Ver
-                          </>
-                        )}
-                      </Button>
+                      {isGuestMode ? (
+                        <Button
+                          className="w-full gap-2"
+                          variant="outline"
+                          onClick={() => {
+                            toast({
+                              title: 'Üyelik Gerekli',
+                              description: 'Teklif vermek için üye olmanız gerekmektedir.',
+                            });
+                            navigate('/');
+                          }}
+                        >
+                          <Lock className="h-4 w-4" />
+                          Üyelik Gerekli
+                        </Button>
+                      ) : (
+                        <Button
+                          className={`w-full gap-2 ${
+                            myTeklifler.has(ilan.id)
+                              ? 'bg-muted text-muted-foreground cursor-not-allowed'
+                              : 'bg-entegrator hover:bg-entegrator/90'
+                          }`}
+                          onClick={() => handleTeklifClick(ilan)}
+                          disabled={myTeklifler.has(ilan.id)}
+                        >
+                          {myTeklifler.has(ilan.id) ? (
+                            <>
+                              <CheckCircle2 className="h-4 w-4" />
+                              Teklif Verildi
+                            </>
+                          ) : (
+                            <>
+                              <Send className="h-4 w-4" />
+                              Teklif Ver
+                            </>
+                          )}
+                        </Button>
+                      )}
                       <p className="text-xs text-center text-muted-foreground mt-2">
                         {formatDate(ilan.created_at)}
                       </p>
