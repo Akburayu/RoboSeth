@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { RegisterModal } from '@/components/auth/RegisterModal';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { useAuth } from '@/hooks/useAuth';
+import { SEOHead } from '@/components/SEOHead';
 import { Building2, Users, Zap, Shield, MessageSquare, ArrowRight, LogOut } from 'lucide-react';
 
 const Index = () => {
@@ -43,6 +44,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead />
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
