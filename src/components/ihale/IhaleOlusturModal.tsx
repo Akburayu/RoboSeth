@@ -107,6 +107,13 @@ export function IhaleOlusturModal({
         insertData.mevcut_fiyat = insertData.baslangic_fiyati;
       }
 
+      if (ihaleTuru === 'japon') {
+        insertData.baslangic_fiyati = parseInt(formData.baslangicFiyati) || 50000;
+        insertData.fiyat_adimi = parseInt(formData.fiyatAdimi) || 1000;
+        insertData.mevcut_fiyat = insertData.baslangic_fiyati;
+        insertData.mevcut_tur = 1;
+      }
+
       if (ihaleTuru === 'turlu_kapali') {
         insertData.toplam_tur = parseInt(formData.toplamTur) || 3;
         insertData.mevcut_tur = 1;
@@ -152,6 +159,7 @@ export function IhaleOlusturModal({
   };
 
   const showHollandaFields = ihaleTuru === 'hollanda';
+  const showJaponFields = ihaleTuru === 'japon';
   const showTurluFields = ihaleTuru === 'turlu_kapali';
 
   return (
@@ -260,6 +268,32 @@ export function IhaleOlusturModal({
                 </div>
               </div>
             </>
+          )}
+
+          {showJaponFields && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="baslangicFiyati">Başlangıç Fiyatı (₺)</Label>
+                <Input
+                  id="baslangicFiyati"
+                  type="number"
+                  value={formData.baslangicFiyati}
+                  onChange={(e) => setFormData({ ...formData, baslangicFiyati: e.target.value })}
+                  placeholder="50000"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="fiyatAdimi">Her Turda Fiyat Değişimi (₺)</Label>
+                <Input
+                  id="fiyatAdimi"
+                  type="number"
+                  value={formData.fiyatAdimi}
+                  onChange={(e) => setFormData({ ...formData, fiyatAdimi: e.target.value })}
+                  placeholder="1000"
+                />
+                <p className="text-xs text-muted-foreground">Her turda fiyat bu kadar artacak</p>
+              </div>
+            </div>
           )}
 
           {showTurluFields && (

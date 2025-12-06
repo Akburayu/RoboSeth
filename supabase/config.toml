@@ -1,1 +1,13 @@
 project_id = "hxezddtbcuwdtisgnybv"
+
+[api]
+enabled = true
+
+[functions.reveal-contact]
+verify_jwt = true
+
+[functions.send-proposal-notification]
+verify_jwt = true
+
+[functions.complete-expired-auctions]
+verify_jwt = false

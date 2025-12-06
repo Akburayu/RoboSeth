@@ -39,7 +39,9 @@ export function JaponView({
   const [withdrawing, setWithdrawing] = useState(false);
 
   const currentRound = ihale.mevcut_tur || 1;
-  const currentPrice = ihale.mevcut_fiyat || ihale.baslangic_fiyati || 50000;
+  const startingPrice = ihale.baslangic_fiyati || 50000;
+  const priceStep = ihale.fiyat_adimi || 1000;
+  const currentPrice = startingPrice + ((currentRound - 1) * priceStep);
 
   useEffect(() => {
     fetchParticipants();
@@ -214,10 +216,16 @@ export function JaponView({
           </div>
           
           {isActive && (
-            <div className="mt-4 p-3 bg-yellow-100 dark:bg-yellow-900 rounded-lg text-center">
-              <p className="text-sm font-medium">
-                Mevcut Fiyat: <span className="font-bold">{currentPrice.toLocaleString('tr-TR')} ₺</span>
-              </p>
+            <div className="mt-4 p-3 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+              <div className="text-center mb-2">
+                <p className="text-sm font-medium">
+                  Mevcut Fiyat: <span className="font-bold text-lg">{currentPrice.toLocaleString('tr-TR')} ₺</span>
+                </p>
+              </div>
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>Başlangıç: {startingPrice.toLocaleString('tr-TR')} ₺</span>
+                <span>Her turda +{priceStep.toLocaleString('tr-TR')} ₺</span>
+              </div>
             </div>
           )}
         </CardContent>
@@ -337,6 +345,10 @@ export function JaponView({
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-start gap-2">
               <span className="text-yellow-500">•</span>
+              Her turda fiyat {priceStep.toLocaleString('tr-TR')} ₺ artar
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-yellow-500">•</span>
               Her turda katılımcılardan devam edip etmeyecekleri sorulur
             </li>
             <li className="flex items-start gap-2">
@@ -345,11 +357,7 @@ export function JaponView({
             </li>
             <li className="flex items-start gap-2">
               <span className="text-yellow-500">•</span>
-              Son kalan katılımcı ihaleyi kazanır
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-yellow-500">•</span>
-              Her turda fiyat değişebilir, stratejik düşünün!
+              Son kalan katılımcı ihaleyi o anki fiyattan kazanır
             </li>
           </ul>
         </CardContent>
