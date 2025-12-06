@@ -68,13 +68,43 @@ interface Teklif {
   };
 }
 
-const IHALE_TURU_CONFIG: Record<string, { label: string; icon: any; color: string }> = {
-  'acik_eksiltme': { label: 'Açık Eksiltme Usulü E-İhale', icon: TrendingDown, color: 'bg-blue-500' },
-  'ingiliz': { label: 'İngiliz Usulü E-İhale', icon: TrendingUp, color: 'bg-green-500' },
-  'hollanda': { label: 'Hollanda Usulü E-İhale', icon: Gavel, color: 'bg-orange-500' },
-  'japon': { label: 'Japon Usulü E-İhale', icon: Users, color: 'bg-yellow-500' },
-  'turlu_kapali': { label: 'Turlu Kapalı Usulü E-İhale', icon: Lock, color: 'bg-red-500' },
-  'muhurlu_kapali': { label: 'Mühürlü Kapalı Usulü E-İhale', icon: Shield, color: 'bg-purple-500' },
+const IHALE_TURU_CONFIG: Record<string, { label: string; description: string; icon: any; color: string }> = {
+  'acik_eksiltme': { 
+    label: 'Açık Eksiltme Usulü E-İhale', 
+    description: 'Tüm teklifler görünür, en düşük fiyat kazanır',
+    icon: TrendingDown, 
+    color: 'bg-blue-500' 
+  },
+  'ingiliz': { 
+    label: 'İngiliz Usulü E-İhale', 
+    description: 'Açık artırma, en yüksek teklif kazanır',
+    icon: TrendingUp, 
+    color: 'bg-green-500' 
+  },
+  'hollanda': { 
+    label: 'Hollanda Usulü E-İhale', 
+    description: 'Fiyat düşer, ilk kabul eden kazanır',
+    icon: Gavel, 
+    color: 'bg-orange-500' 
+  },
+  'japon': { 
+    label: 'Japon Usulü E-İhale', 
+    description: 'Fiyat artar, devam etmeyenler elenir, son kalan kazanır',
+    icon: Users, 
+    color: 'bg-yellow-500' 
+  },
+  'turlu_kapali': { 
+    label: 'Turlu Kapalı Usulü E-İhale', 
+    description: 'Birden fazla turda kapalı teklifler, en düşük kazanır',
+    icon: Lock, 
+    color: 'bg-red-500' 
+  },
+  'muhurlu_kapali': { 
+    label: 'Mühürlü Kapalı Usulü E-İhale', 
+    description: 'Tek seferlik gizli teklif, en düşük kazanır',
+    icon: Shield, 
+    color: 'bg-purple-500' 
+  },
 };
 
 export default function IhaleDetay() {
@@ -377,6 +407,7 @@ export default function IhaleDetay() {
                 <div>
                   <h1 className="text-xl font-bold">{ihale.baslik}</h1>
                   <p className="text-sm text-muted-foreground">{config.label}</p>
+                  <p className="text-xs text-muted-foreground/70">{config.description}</p>
                 </div>
               </div>
             </div>
