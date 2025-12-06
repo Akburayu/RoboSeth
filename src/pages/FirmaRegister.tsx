@@ -21,12 +21,13 @@ interface PlanInfo {
   features: string[];
 }
 
-// Only 3 packages available for selection
-type AvailablePackage = 'orta' | 'buyuk' | 'global';
+// Only 2 packages available for registration (Global is only for purchase)
+type AvailablePackage = 'orta' | 'buyuk';
 
 interface PackageInfo {
   name: string;
   credits: number;
+  price: number;
   description: string;
   dbValue: FirmaOlcegi;
 }
@@ -34,30 +35,26 @@ interface PackageInfo {
 const PACKAGES: Record<AvailablePackage, PackageInfo> = {
   orta: { 
     name: 'KOBİ Paketi', 
-    credits: 30, 
-    description: 'Küçük ve orta ölçekli işletmeler için ideal. Aylık 2-3 entegratör iletişimi için yeterli.',
+    credits: 3, 
+    price: 650,
+    description: 'Küçük ve orta ölçekli işletmeler için ideal başlangıç paketi.',
     dbValue: 'orta'
   },
   buyuk: { 
     name: 'Büyük Paket', 
-    credits: 80, 
+    credits: 10, 
+    price: 1800,
     description: 'Büyük ölçekli firmalar için. Çoklu proje ve yoğun entegratör araması için uygun.',
     dbValue: 'buyuk'
-  },
-  global: { 
-    name: 'Global Paket', 
-    credits: 200, 
-    description: 'Kurumsal firmalar için. Sınırsız proje kapasitesi ve maksimum esneklik.',
-    dbValue: 'global'
   },
 };
 
 // Keep PLANS for backward compatibility
 const PLANS: Record<FirmaOlcegi, { credits: number }> = {
-  kucuk: { credits: 10 },
-  orta: { credits: 30 },
-  buyuk: { credits: 80 },
-  global: { credits: 200 },
+  kucuk: { credits: 1 },
+  orta: { credits: 3 },
+  buyuk: { credits: 10 },
+  global: { credits: 20 },
 };
 
 interface UploadedFile {
@@ -310,8 +307,8 @@ export default function FirmaRegister() {
     }
   };
 
-  const steps = [
-    { number: 1, title: 'Firma Ölçeği', icon: Building2 },
+const steps = [
+    { number: 1, title: 'Firma Paketi', icon: Building2 },
     { number: 2, title: 'Firma Bilgileri', icon: FileText },
     { number: 3, title: 'Hakkında', icon: Info },
     { number: 4, title: 'Üyelik Planı', icon: CreditCard },
@@ -383,15 +380,15 @@ export default function FirmaRegister() {
               })()}
               {steps[currentStep - 1].title}
             </CardTitle>
-            <CardDescription>
-              {currentStep === 1 && 'Firmanızın büyüklüğünü seçin'}
+<CardDescription>
+              {currentStep === 1 && 'Firmanız için uygun paketi seçin'}
               {currentStep === 2 && 'Firma bilgilerinizi ve belgelerinizi girin'}
               {currentStep === 3 && 'Firmanızı tanıtan bir yazı ekleyin'}
               {currentStep === 4 && 'Size önerilen üyelik planını onaylayın'}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* Step 1: Firma Ölçeği */}
+{/* Step 1: Firma Paketi */}
             {currentStep === 1 && (
               <div className="grid gap-4">
                 {(Object.keys(PACKAGES) as AvailablePackage[]).map((pkg) => (
@@ -405,10 +402,15 @@ export default function FirmaRegister() {
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="font-semibold text-lg">{PACKAGES[pkg].name}</div>
-                      <div className="text-firma font-bold">{PACKAGES[pkg].credits} Kredi</div>
+                      <div>
+                        <div className="font-semibold text-lg">{PACKAGES[pkg].name}</div>
+                        <div className="text-2xl font-bold text-firma mt-1">€{PACKAGES[pkg].price}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-firma font-bold text-xl">{PACKAGES[pkg].credits} Kredi</div>
+                      </div>
                     </div>
-                    <div className="text-sm text-muted-foreground mt-2">
+                    <div className="text-sm text-muted-foreground mt-3">
                       {PACKAGES[pkg].description}
                     </div>
                   </button>
