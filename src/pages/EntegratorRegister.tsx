@@ -544,6 +544,21 @@ export default function EntegratorRegister() {
                 </div>
 
                 <div className="space-y-2">
+                  <Label>Markalar</Label>
+                  <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border rounded-lg">
+                    {MARKALAR.map((marka) => (
+                      <label key={marka} className="flex items-center gap-2 cursor-pointer">
+                        <Checkbox
+                          checked={markalar.includes(marka)}
+                          onCheckedChange={() => toggleArrayItem(markalar, setMarkalar, marka)}
+                        />
+                        <span className="text-sm">{marka}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
                   <Label>Faaliyet Alanları *</Label>
                   <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border rounded-lg">
                     {FAALIYET_ALANLARI.map((alan) => (
@@ -624,21 +639,6 @@ export default function EntegratorRegister() {
                           onCheckedChange={() => toggleArrayItem(hizmetVerilenIller, setHizmetVerilenIller, il)}
                         />
                         <span className="text-sm">{il}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Markalar</Label>
-                  <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border rounded-lg">
-                    {MARKALAR.map((marka) => (
-                      <label key={marka} className="flex items-center gap-2 cursor-pointer">
-                        <Checkbox
-                          checked={markalar.includes(marka)}
-                          onCheckedChange={() => toggleArrayItem(markalar, setMarkalar, marka)}
-                        />
-                        <span className="text-sm">{marka}</span>
                       </label>
                     ))}
                   </div>
