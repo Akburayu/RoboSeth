@@ -24,7 +24,7 @@ export const YetkinlikChatbot = ({
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const PRESET_MESSAGES = [
+  const getPresetMessages = () => [
     t('chatbot.welcome'),
     t('chatbot.intro'),
     t('chatbot.ready'),
@@ -40,13 +40,14 @@ export const YetkinlikChatbot = ({
   };
 
   useEffect(() => {
-    if (isOpen && currentMessageIndex < PRESET_MESSAGES.length) {
+    const presetMessages = getPresetMessages();
+    if (isOpen && currentMessageIndex < presetMessages.length) {
       setIsTyping(true);
       const typingTimeout = setTimeout(() => {
         setIsTyping(false);
         setMessages(prev => [...prev, {
           id: currentMessageIndex,
-          content: PRESET_MESSAGES[currentMessageIndex]
+          content: presetMessages[currentMessageIndex]
         }]);
         const nextMessageTimeout = setTimeout(() => {
           setCurrentMessageIndex(prev => prev + 1);
@@ -55,7 +56,7 @@ export const YetkinlikChatbot = ({
       }, 700);
       return () => clearTimeout(typingTimeout);
     }
-  }, [isOpen, currentMessageIndex, PRESET_MESSAGES]);
+  }, [isOpen, currentMessageIndex]);
 
   useEffect(() => {
     scrollToBottom();
