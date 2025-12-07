@@ -10,7 +10,7 @@ interface YetkinlikChatbotProps {
   isOpen: boolean;
   onClose: () => void;
 }
-const PRESET_MESSAGES = ["Yetkinlik doğrulayıcıya hoş geldiniz.", "Ben bu alanda kişiselleştirilmiş bir yapay zekayım ve sizi doğrulamak için buradayım.", "Hazırsanız başlıyoruz.", `*Temel Robot Bakım Bilgisi (Markadan Bağımsız)*
+const PRESET_MESSAGES = ["TechVerify'a hoş geldiniz.", "Ben bu alanda kişiselleştirilmiş bir yapay zekayım ve sizi doğrulamak için buradayım.", "Hazırsanız başlıyoruz.", `*Temel Robot Bakım Bilgisi (Markadan Bağımsız)*
 
 Bir endüstriyel robotta 'preventive bakım' ile 'corrective bakım' arasındaki farkı açıklayın.
 Gerçek bir örnekle anlatın.`];
