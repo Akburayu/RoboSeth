@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -152,6 +153,7 @@ interface Teklif {
 
 export default function EntegratorDashboard() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const isGuestMode = searchParams.get('guest') === 'true';
   const { user, userRole, signOut, loading: authLoading } = useAuth();
@@ -199,8 +201,8 @@ export default function EntegratorDashboard() {
 
     if (userRole && userRole !== 'entegrator') {
       toast({
-        title: 'Erişim Engellendi',
-        description: 'Bu sayfa sadece entegratör hesapları için.',
+        title: t('auth.accessDenied'),
+        description: t('auth.entegratorOnly'),
         variant: 'destructive',
       });
       navigate('/');
@@ -452,15 +454,15 @@ export default function EntegratorDashboard() {
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
               <Eye className="h-5 w-5" />
-              <span className="font-medium">Misafir Modu</span>
-              <span className="text-sm">- Sadece görüntüleme yapabilirsiniz</span>
+              <span className="font-medium">{t('index.guestMode')}</span>
+              <span className="text-sm">- {t('index.guestModeDesc')}</span>
             </div>
             <Button 
               size="sm" 
               onClick={() => navigate('/')}
               className="bg-amber-500 hover:bg-amber-600 text-white"
             >
-              Üye Ol
+              {t('auth.register')}
             </Button>
           </div>
         </div>
@@ -471,8 +473,8 @@ export default function EntegratorDashboard() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-entegrator">Entegratör Paneli</h1>
-              <p className="text-sm text-muted-foreground">Açık ilanları görüntüleyin ve teklif verin</p>
+              <h1 className="text-2xl font-bold text-entegrator">{t('dashboard.entegratorTitle')}</h1>
+              <p className="text-sm text-muted-foreground">{t('dashboard.entegratorSubtitle')}</p>
             </div>
             <div className="flex items-center gap-3">
               {!isGuestMode && (
@@ -482,7 +484,7 @@ export default function EntegratorDashboard() {
                     variant="ghost"
                     size="icon"
                     onClick={() => navigate('/entegrator/profile')}
-                    title="Profil"
+                    title={t('nav.profile')}
                   >
                     <User className="h-5 w-5" />
                   </Button>
@@ -493,14 +495,14 @@ export default function EntegratorDashboard() {
                       await signOut();
                       navigate('/');
                     }}
-                    title="Çıkış Yap"
+                    title={t('auth.logout')}
                   >
                     <LogOut className="h-5 w-5" />
                   </Button>
                   {entegratorId && (
                     <Badge variant="secondary" className="gap-1">
                       <CheckCircle2 className="h-3 w-3" />
-                      Profil Aktif
+                      {t('common.profileActive')}
                     </Badge>
                   )}
                 </>
@@ -510,7 +512,7 @@ export default function EntegratorDashboard() {
                   variant="ghost"
                   onClick={() => navigate('/')}
                 >
-                  Ana Sayfa
+                  {t('nav.home')}
                 </Button>
               )}
             </div>

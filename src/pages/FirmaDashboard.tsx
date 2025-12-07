@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import NotificationBell from '@/components/NotificationBell';
 import { supabase } from '@/integrations/supabase/client';
@@ -201,6 +202,7 @@ const initialFilters: Filters = {
 
 export default function FirmaDashboard() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const isGuestMode = searchParams.get('guest') === 'true';
   const { user, userRole, signOut, loading: authLoading } = useAuth();
@@ -259,8 +261,8 @@ export default function FirmaDashboard() {
 
     if (userRole && userRole !== 'firma') {
       toast({
-        title: 'Erişim Engellendi',
-        description: 'Bu sayfa sadece firma hesapları için.',
+        title: t('auth.accessDenied'),
+        description: t('auth.firmaOnly'),
         variant: 'destructive',
       });
       navigate('/');
@@ -711,7 +713,7 @@ export default function FirmaDashboard() {
   const FiltersContent = () => (
     <div className="space-y-6">
       {/* Faaliyet Alanları */}
-      <FilterSection title="Faaliyet Alanları">
+      <FilterSection title={t('filters.activityAreas')}>
         <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
           {FAALIYET_ALANLARI.map((alan) => (
             <label key={alan} className="flex items-center gap-2 cursor-pointer">
@@ -726,7 +728,7 @@ export default function FirmaDashboard() {
       </FilterSection>
 
       {/* Uzmanlık Alanları */}
-      <FilterSection title="Uzmanlık Alanları">
+      <FilterSection title={t('filters.expertiseAreas')}>
         <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
           {UZMANLIK_ALANLARI.map((alan) => (
             <label key={alan} className="flex items-center gap-2 cursor-pointer">
@@ -741,7 +743,7 @@ export default function FirmaDashboard() {
       </FilterSection>
 
       {/* Sektör */}
-      <FilterSection title="Sektör">
+      <FilterSection title={t('filters.sector')}>
         <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
           {SEKTORLER.map((sektor) => (
             <label key={sektor} className="flex items-center gap-2 cursor-pointer">
@@ -756,7 +758,7 @@ export default function FirmaDashboard() {
       </FilterSection>
 
       {/* İller */}
-      <FilterSection title="Hizmet Verilen İller">
+      <FilterSection title={t('filters.serviceProvinces')}>
         <div className="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto">
           {ILLER.map((il) => (
             <label key={il} className="flex items-center gap-2 cursor-pointer">
@@ -771,7 +773,7 @@ export default function FirmaDashboard() {
       </FilterSection>
 
       {/* Tecrübe */}
-      <FilterSection title="Tecrübe">
+      <FilterSection title={t('filters.experience')}>
         <div className="grid grid-cols-1 gap-2">
           {TECRUBE_OPTIONS.map((tecrube) => (
             <label key={tecrube} className="flex items-center gap-2 cursor-pointer">
@@ -787,7 +789,7 @@ export default function FirmaDashboard() {
 
 
       {/* Minimum Puan */}
-      <FilterSection title={`Minimum Puan: ${filters.minPuan}`}>
+      <FilterSection title={`${t('filters.minScore')}: ${filters.minPuan}`}>
         <Slider
           value={[filters.minPuan]}
           onValueChange={(v) => setFilters((prev) => ({ ...prev, minPuan: v[0] }))}
@@ -798,7 +800,7 @@ export default function FirmaDashboard() {
       </FilterSection>
 
       {/* Çalışan Sayısı */}
-      <FilterSection title={`Çalışan Sayısı: ${filters.minKisi} - ${filters.maxKisi}`}>
+      <FilterSection title={`${t('filters.employeeCount')}: ${filters.minKisi} - ${filters.maxKisi}`}>
         <Slider
           value={[filters.minKisi, filters.maxKisi]}
           onValueChange={(v) => setFilters((prev) => ({ ...prev, minKisi: v[0], maxKisi: v[1] }))}
@@ -811,7 +813,7 @@ export default function FirmaDashboard() {
       {/* Clear Filters */}
       <Button variant="outline" onClick={clearFilters} className="w-full">
         <X className="h-4 w-4 mr-2" />
-        Filtreleri Temizle
+        {t('common.clearFilters')}
       </Button>
     </div>
   );
@@ -824,15 +826,15 @@ export default function FirmaDashboard() {
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
               <Eye className="h-5 w-5" />
-              <span className="font-medium">Misafir Modu</span>
-              <span className="text-sm">- Sadece görüntüleme yapabilirsiniz</span>
+              <span className="font-medium">{t('index.guestMode')}</span>
+              <span className="text-sm">- {t('index.guestModeDesc')}</span>
             </div>
             <Button 
               size="sm" 
               onClick={() => navigate('/')}
               className="bg-amber-500 hover:bg-amber-600 text-white"
             >
-              Üye Ol
+              {t('auth.register')}
             </Button>
           </div>
         </div>
@@ -843,8 +845,8 @@ export default function FirmaDashboard() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-firma">Firma Paneli</h1>
-              <p className="text-sm text-muted-foreground">Entegratörleri keşfedin</p>
+              <h1 className="text-2xl font-bold text-firma">{t('dashboard.firmaTitle')}</h1>
+              <p className="text-sm text-muted-foreground">{t('dashboard.firmaSubtitle')}</p>
             </div>
             <div className="flex items-center gap-3">
               {!isGuestMode && (
