@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -65,6 +66,7 @@ interface UploadedFile {
 
 export default function FirmaRegister() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, userRole, loading: authLoading } = useAuth();
   const { toast } = useToast();
 
@@ -101,8 +103,8 @@ export default function FirmaRegister() {
     
     if (!user) {
       toast({
-        title: 'Giriş Gerekli',
-        description: 'Bu sayfaya erişmek için giriş yapmalısınız.',
+        title: t('auth.loginRequired'),
+        description: t('auth.loginRequiredDesc'),
         variant: 'destructive',
       });
       navigate('/');
@@ -111,13 +113,13 @@ export default function FirmaRegister() {
 
     if (userRole && userRole !== 'firma') {
       toast({
-        title: 'Erişim Engellendi',
-        description: 'Bu sayfa sadece firma hesapları için.',
+        title: t('auth.accessDenied'),
+        description: t('auth.firmaOnly'),
         variant: 'destructive',
       });
       navigate('/');
     }
-  }, [user, userRole, authLoading, navigate, toast]);
+  }, [user, userRole, authLoading, navigate, toast, t]);
 
   // Set default plan based on firma ölçeği
   useEffect(() => {
@@ -331,10 +333,10 @@ const steps = [
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-firma to-firma/70 bg-clip-text text-transparent">
-            Firma Kaydı
+            {t('register.firmaTitle')}
           </h1>
           <p className="text-muted-foreground mt-2">
-            Hesabınızı tamamlamak için aşağıdaki adımları izleyin
+            {t('register.completeSteps')}
           </p>
         </div>
 

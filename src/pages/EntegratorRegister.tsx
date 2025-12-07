@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -139,6 +140,7 @@ interface UploadedFile {
 
 export default function EntegratorRegister() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, userRole, loading: authLoading } = useAuth();
   const { toast } = useToast();
 
@@ -185,8 +187,8 @@ export default function EntegratorRegister() {
     
     if (!user) {
       toast({
-        title: 'Giriş Gerekli',
-        description: 'Bu sayfaya erişmek için giriş yapmalısınız.',
+        title: t('auth.loginRequired'),
+        description: t('auth.loginRequiredDesc'),
         variant: 'destructive',
       });
       navigate('/');
@@ -195,13 +197,13 @@ export default function EntegratorRegister() {
 
     if (userRole && userRole !== 'entegrator') {
       toast({
-        title: 'Erişim Engellendi',
-        description: 'Bu sayfa sadece entegratör hesapları için.',
+        title: t('auth.accessDenied'),
+        description: t('auth.entegratorOnly'),
         variant: 'destructive',
       });
       navigate('/');
     }
-  }, [user, userRole, authLoading, navigate, toast]);
+  }, [user, userRole, authLoading, navigate, toast, t]);
 
   const handleFileUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -213,8 +215,8 @@ export default function EntegratorRegister() {
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
     if (!allowedTypes.includes(file.type)) {
       toast({
-        title: 'Geçersiz Dosya Türü',
-        description: 'Sadece PDF, JPG ve PNG dosyaları yükleyebilirsiniz.',
+        title: t('register.invalidFileType'),
+        description: t('register.invalidFileTypeDesc'),
         variant: 'destructive',
       });
       return;
@@ -222,8 +224,8 @@ export default function EntegratorRegister() {
 
     if (file.size > 10 * 1024 * 1024) {
       toast({
-        title: 'Dosya Çok Büyük',
-        description: 'Dosya boyutu 10MB\'dan küçük olmalıdır.',
+        title: t('register.fileTooLarge'),
+        description: t('register.fileTooLargeDesc'),
         variant: 'destructive',
       });
       return;
@@ -243,7 +245,7 @@ export default function EntegratorRegister() {
 
     if (error) {
       toast({
-        title: 'Yükleme Hatası',
+        title: t('register.uploadError'),
         description: error.message,
         variant: 'destructive',
       });
@@ -260,8 +262,8 @@ export default function EntegratorRegister() {
     }));
 
     toast({
-      title: 'Dosya Yüklendi',
-      description: `${file.name} başarıyla yüklendi.`,
+      title: t('register.fileUploaded'),
+      description: `${file.name} ${t('register.fileUploadedDesc')}`,
     });
   };
 
@@ -290,8 +292,8 @@ export default function EntegratorRegister() {
         const allDocsUploaded = Object.values(documents).every((doc) => doc.path !== null);
         if (!allDocsUploaded) {
           toast({
-            title: 'Belgeler Eksik',
-            description: 'Lütfen tüm belgeleri yükleyin.',
+            title: t('register.missingDocuments'),
+            description: t('register.missingDocumentsDesc'),
             variant: 'destructive',
           });
           return false;
@@ -300,48 +302,48 @@ export default function EntegratorRegister() {
       case 2:
         if (!entegratorAdi.trim() || entegratorAdi.length < 2) {
           toast({
-            title: 'Geçersiz İsim',
-            description: 'Entegratör adı en az 2 karakter olmalıdır.',
+            title: t('register.invalidName'),
+            description: t('register.invalidNameDesc'),
             variant: 'destructive',
           });
           return false;
         }
         if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           toast({
-            title: 'Geçersiz E-posta',
-            description: 'Lütfen geçerli bir e-posta adresi girin.',
+            title: t('register.invalidEmail'),
+            description: t('register.invalidEmailDesc'),
             variant: 'destructive',
           });
           return false;
         }
         if (faaliyetAlanlari.length === 0) {
           toast({
-            title: 'Faaliyet Alanı Seçin',
-            description: 'En az bir faaliyet alanı seçmelisiniz.',
+            title: t('register.selectActivity'),
+            description: t('register.selectActivityDesc'),
             variant: 'destructive',
           });
           return false;
         }
         if (uzmanlikAlanlari.length === 0) {
           toast({
-            title: 'Uzmanlık Alanı Seçin',
-            description: 'En az bir uzmanlık alanı seçmelisiniz.',
+            title: t('register.selectExpertise'),
+            description: t('register.selectExpertiseDesc'),
             variant: 'destructive',
           });
           return false;
         }
         if (!tecrube) {
           toast({
-            title: 'Tecrübe Seçin',
-            description: 'Lütfen tecrübe sürenizi seçin.',
+            title: t('register.selectExperience'),
+            description: t('register.selectExperienceDesc'),
             variant: 'destructive',
           });
           return false;
         }
         if (hizmetVerilenIller.length === 0) {
           toast({
-            title: 'İl Seçin',
-            description: 'En az bir hizmet verilen il seçmelisiniz.',
+            title: t('register.selectProvince'),
+            description: t('register.selectProvinceDesc'),
             variant: 'destructive',
           });
           return false;
@@ -390,14 +392,14 @@ export default function EntegratorRegister() {
       if (error) throw error;
 
       toast({
-        title: 'Kayıt Tamamlandı!',
-        description: `Hoş geldiniz! ${selectedPlan === 'premium' ? 'Premium' : 'Basic'} üyeliğiniz aktif.`,
+        title: t('register.registrationComplete'),
+        description: `${t('register.welcomeMessage')} ${selectedPlan === 'premium' ? 'Premium' : 'Basic'} ${t('register.membershipActive')}`,
       });
 
       navigate('/entegrator/dashboard');
     } catch (error: any) {
       toast({
-        title: 'Kayıt Hatası',
+        title: t('register.registrationError'),
         description: error.message,
         variant: 'destructive',
       });
@@ -407,9 +409,9 @@ export default function EntegratorRegister() {
   };
 
   const steps = [
-    { number: 1, title: 'Belgeler', icon: FileText },
-    { number: 2, title: 'Bilgiler', icon: ClipboardList },
-    { number: 3, title: 'Plan', icon: CreditCard },
+    { number: 1, title: t('register.documents'), icon: FileText },
+    { number: 2, title: t('register.information'), icon: ClipboardList },
+    { number: 3, title: t('register.plan'), icon: CreditCard },
   ];
 
   const progressValue = ((currentStep - 1) / 2) * 100;
@@ -420,10 +422,10 @@ export default function EntegratorRegister() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-entegrator to-entegrator/70 bg-clip-text text-transparent">
-            Entegratör Kaydı
+            {t('register.entegratorTitle')}
           </h1>
           <p className="text-muted-foreground mt-2">
-            Profilininizi tamamlamak için aşağıdaki adımları izleyin
+            {t('register.completeProfile')}
           </p>
         </div>
 
@@ -470,9 +472,9 @@ export default function EntegratorRegister() {
               {steps[currentStep - 1].title}
             </CardTitle>
 <CardDescription>
-              {currentStep === 1 && 'Gerekli belgelerinizi yükleyin'}
-              {currentStep === 2 && 'Profil bilgilerinizi doldurun'}
-              {currentStep === 3 && 'Üyelik planınızı seçin'}
+              {currentStep === 1 && t('register.uploadDocuments')}
+              {currentStep === 2 && t('register.fillProfile')}
+              {currentStep === 3 && t('register.selectPlan')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -480,10 +482,10 @@ export default function EntegratorRegister() {
             {currentStep === 1 && (
               <div className="space-y-4">
                 {[
-                  { key: 'ticaret_sicil', label: 'Ticaret Sicil Gazetesi' },
-                  { key: 'faaliyet_belgesi', label: 'Faaliyet Belgesi' },
-                  { key: 'imza_sirkuleri', label: 'İmza Sirküleri' },
-                  { key: 'vergi_levhasi', label: 'Vergi Levhası' },
+                  { key: 'ticaret_sicil', label: t('register.ticaretSicil') },
+                  { key: 'faaliyet_belgesi', label: t('register.faaliyetBelgesi') },
+                  { key: 'imza_sirkuleri', label: t('register.imzaSirkuleri') },
+                  { key: 'vergi_levhasi', label: t('register.vergiLevhasi') },
                 ].map(({ key, label }) => (
                   <div key={key} className="flex items-center gap-4 p-4 border rounded-lg">
                     <div className="flex-1">
@@ -493,12 +495,12 @@ export default function EntegratorRegister() {
                           <Check className="h-3 w-3 text-green-500" />
                           {documents[key as keyof typeof documents].file?.name}
                         </div>
-                      ) : (
-                        <div className="text-xs text-muted-foreground mt-1">
-                          PDF, JPG veya PNG (max 10MB)
-                        </div>
-                      )}
-                    </div>
+                        ) : (
+                          <div className="text-xs text-muted-foreground mt-1">
+                            {t('register.fileFormats')}
+                          </div>
+                        )}
+                      </div>
                     
                     {documents[key as keyof typeof documents].uploading ? (
                       <Loader2 className="h-5 w-5 animate-spin text-entegrator" />
@@ -511,18 +513,18 @@ export default function EntegratorRegister() {
                         <X className="h-4 w-4 text-destructive" />
                       </Button>
                     ) : (
-                      <label className="cursor-pointer">
-                        <input
-                          type="file"
-                          accept=".pdf,.jpg,.jpeg,.png"
-                          onChange={(e) => handleFileUpload(e, key as keyof typeof documents)}
-                          className="hidden"
-                        />
-                        <div className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg hover:bg-muted transition-colors">
-                          <Upload className="h-4 w-4" />
-                          Yükle
-                        </div>
-                      </label>
+                        <label className="cursor-pointer">
+                          <input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={(e) => handleFileUpload(e, key as keyof typeof documents)}
+                            className="hidden"
+                          />
+                          <div className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg hover:bg-muted transition-colors">
+                            <Upload className="h-4 w-4" />
+                            {t('register.upload')}
+                          </div>
+                        </label>
                     )}
                   </div>
                 ))}
@@ -533,17 +535,17 @@ export default function EntegratorRegister() {
             {currentStep === 2 && (
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="entegratorAdi">Entegratör Adı *</Label>
+                  <Label htmlFor="entegratorAdi">{t('entegratorRegister.entegratorName')} *</Label>
                   <Input
                     id="entegratorAdi"
                     value={entegratorAdi}
                     onChange={(e) => setEntegratorAdi(e.target.value)}
-                    placeholder="Şirketinizin tam adı"
+                    placeholder={t('entegratorRegister.entegratorNamePlaceholder')}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">E-posta Adresi *</Label>
+                  <Label htmlFor="email">{t('register.emailLabel')} *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -552,12 +554,12 @@ export default function EntegratorRegister() {
                     placeholder="entegrator@ornek.com"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Bildirimler bu e-posta adresine gönderilecektir.
+                    {t('register.emailNote')}
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Markalar</Label>
+                  <Label>{t('entegratorRegister.brands')}</Label>
                   <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border rounded-lg">
                     {MARKALAR.map((marka) => (
                       <label key={marka} className="flex items-center gap-2 cursor-pointer">
@@ -572,7 +574,7 @@ export default function EntegratorRegister() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Faaliyet Alanları *</Label>
+                  <Label>{t('entegratorRegister.activityAreas')} *</Label>
                   <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border rounded-lg">
                     {FAALIYET_ALANLARI.map((alan) => (
                       <label key={alan} className="flex items-center gap-2 cursor-pointer">
@@ -592,7 +594,7 @@ export default function EntegratorRegister() {
                 )}
 
                 <div className="space-y-2">
-                  <Label>Uzmanlık Alanları *</Label>
+                  <Label>{t('entegratorRegister.expertiseAreas')} *</Label>
                   <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border rounded-lg">
                     {UZMANLIK_ALANLARI.map((alan) => (
                       <label key={alan} className="flex items-center gap-2 cursor-pointer">
@@ -608,21 +610,21 @@ export default function EntegratorRegister() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="kacKisi">Çalışan Sayısı</Label>
+                    <Label htmlFor="kacKisi">{t('register.employeeCount')}</Label>
                     <Input
                       id="kacKisi"
                       type="number"
                       value={kacKisi}
                       onChange={(e) => setKacKisi(e.target.value ? Number(e.target.value) : '')}
-                      placeholder="Örn: 15"
+                      placeholder={t('register.employeeCountPlaceholder')}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="tecrube">Tecrübe *</Label>
+                    <Label htmlFor="tecrube">{t('entegratorRegister.experience')} *</Label>
                     <Select value={tecrube} onValueChange={setTecrube}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Seçin" />
+                        <SelectValue placeholder={t('entegratorRegister.selectExperience')} />
                       </SelectTrigger>
                       <SelectContent>
                         {TECRUBE_OPTIONS.map((opt) => (
@@ -634,10 +636,10 @@ export default function EntegratorRegister() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="sektor">Sektör</Label>
+                  <Label htmlFor="sektor">{t('entegratorRegister.sector')}</Label>
                   <Select value={sektor} onValueChange={setSektor}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Sektör seçin" />
+                      <SelectValue placeholder={t('entegratorRegister.selectSector')} />
                     </SelectTrigger>
                     <SelectContent>
                       {SEKTORLER.map((s) => (
@@ -648,7 +650,7 @@ export default function EntegratorRegister() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Hizmet Verilen İller *</Label>
+                  <Label>{t('entegratorRegister.serviceProvinces')} *</Label>
                   <div className="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto p-2 border rounded-lg">
                     {ILLER.map((il) => (
                       <label key={il} className="flex items-center gap-2 cursor-pointer">
@@ -663,33 +665,33 @@ export default function EntegratorRegister() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="konum">Konum</Label>
+                  <Label htmlFor="konum">{t('entegratorRegister.location')}</Label>
                   <Input
                     id="konum"
                     value={konum}
                     onChange={(e) => setKonum(e.target.value)}
-                    placeholder="Örn: İstanbul, Kadıköy"
+                    placeholder={t('entegratorRegister.locationPlaceholder')}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="referans">Referanslar</Label>
+                  <Label htmlFor="referans">{t('entegratorRegister.references')}</Label>
                   <Textarea
                     id="referans"
                     value={referans}
                     onChange={(e) => setReferans(e.target.value)}
-                    placeholder="Çalıştığınız firmalar ve projeler..."
+                    placeholder={t('entegratorRegister.referencesPlaceholder')}
                     rows={3}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="sosyalMedya">İletişim / Sosyal Medya</Label>
+                  <Label htmlFor="sosyalMedya">{t('entegratorRegister.socialMedia')}</Label>
                   <Input
                     id="sosyalMedya"
                     value={iletisimSosyalMedya}
                     onChange={(e) => setIletisimSosyalMedya(e.target.value)}
-                    placeholder="LinkedIn, website vb."
+                    placeholder={t('entegratorRegister.socialMediaPlaceholder')}
                   />
                 </div>
               </div>
@@ -712,7 +714,7 @@ export default function EntegratorRegister() {
                       {PLANS[planKey].highlighted && (
                         <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-entegrator text-white text-xs rounded-full flex items-center gap-1">
                           <Star className="h-3 w-3" />
-                          Önerilen
+                          {t('register.recommended')}
                         </div>
                       )}
                       <div className="font-bold text-xl mb-2">{PLANS[planKey].name}</div>
@@ -730,7 +732,7 @@ export default function EntegratorRegister() {
 
                 <div className="p-4 bg-muted rounded-lg text-center">
                   <p className="text-sm text-muted-foreground">
-                    Şu an için üyelikler ücretsizdir. Ödeme sistemi yakında aktif olacaktır.
+                    {t('register.membershipsFree')}
                   </p>
                 </div>
               </div>
@@ -747,12 +749,12 @@ export default function EntegratorRegister() {
             className="gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
-            Geri
+            {t('common.back')}
           </Button>
 
           {currentStep < 3 ? (
             <Button onClick={handleNext} className="gap-2 bg-entegrator hover:bg-entegrator/90">
-              İleri
+              {t('common.next')}
               <ArrowRight className="h-4 w-4" />
             </Button>
           ) : (
@@ -764,12 +766,12 @@ export default function EntegratorRegister() {
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Kaydediliyor...
+                  {t('common.saving')}
                 </>
               ) : (
                 <>
                   <Check className="h-4 w-4" />
-                  Tamamla
+                  {t('common.complete')}
                 </>
               )}
             </Button>
