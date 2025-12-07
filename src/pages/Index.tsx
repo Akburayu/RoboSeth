@@ -94,7 +94,7 @@ const Index = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <img src="/assets/logo.png" alt="RoboAtlas Logo" className="h-10 w-10 object-contain" />
+            <img alt="RoboAtlas Logo" className="h-10 w-10 object-contain" src="/lovable-uploads/5d38a4b5-03a0-4b60-918b-3569375619f1.png" />
             <span className="text-xl font-bold">RoboAtlas</span>
           </div>
           
