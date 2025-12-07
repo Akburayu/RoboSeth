@@ -157,173 +157,6 @@ const TECRUBE_OPTIONS = [
 // Fixed cost for revealing contacts
 const REVEAL_COST = 1;
 
-// Demo data for guest mode
-const DEMO_ENTEGRATORLER: Entegrator[] = [
-  {
-    id: 'demo-1',
-    entegrator_adi: 'TechRobot Sistemleri',
-    uzmanlik_alani: 'Ark Kaynağı, Punta Kaynağı, Robot Programlama',
-    faaliyet_alanlari: 'Robot Programlama, Robot Devreye Alma, PLC Programlama',
-    sektor: 'Otomotiv Ana Sanayi',
-    tecrube: '5-10 yıl',
-    kac_kisi: 25,
-    konum: 'İstanbul',
-    hizmet_verilen_iller: 'İstanbul, Bursa, Kocaeli',
-    referans: 'Ford Otosan, Toyota Türkiye, Tofaş projelerinde aktif çalışmalar',
-    puan: 4.8,
-    email: null,
-    belgesi1: null,
-    belgesi2: null,
-    belgesi3: null,
-    created_at: null,
-    entegrator_buyuklugu: 'orta',
-    iletisim_sosyal_medya: null,
-    user_id: null,
-    yorumlar: null,
-  },
-  {
-    id: 'demo-2',
-    entegrator_adi: 'Otomasyon Pro',
-    uzmanlik_alani: 'Makine/Tezgah Besleme, Paletleme, Al/Bırak (Pick&Place)',
-    faaliyet_alanlari: 'Otomasyon İşleri, Robot Kurulum, Robot Montaj',
-    sektor: 'Gıda',
-    tecrube: '10+ yıl',
-    kac_kisi: 45,
-    konum: 'Bursa',
-    hizmet_verilen_iller: 'Bursa, İstanbul, Ankara, Tüm Türkiye',
-    referans: 'Ülker, Eti, Nestle paketleme hatları otomasyonu',
-    puan: 4.5,
-    email: null,
-    belgesi1: null,
-    belgesi2: null,
-    belgesi3: null,
-    created_at: null,
-    entegrator_buyuklugu: 'buyuk',
-    iletisim_sosyal_medya: null,
-    user_id: null,
-    yorumlar: null,
-  },
-  {
-    id: 'demo-3',
-    entegrator_adi: 'Endüstri 4.0 Çözümleri',
-    uzmanlik_alani: 'Sealing, Boya, Montaj',
-    faaliyet_alanlari: 'Elektrik İşleri, Otomasyon Ekipmanları, Robot Bakımı',
-    sektor: 'Otomotiv Yan Sanayi (Tier 1)',
-    tecrube: '3-5 yıl',
-    kac_kisi: 12,
-    konum: 'Kocaeli',
-    hizmet_verilen_iller: 'Kocaeli, İstanbul, Sakarya',
-    referans: 'Magna, Faurecia, Bosch yan sanayi projeleri',
-    puan: 4.2,
-    email: null,
-    belgesi1: null,
-    belgesi2: null,
-    belgesi3: null,
-    created_at: null,
-    entegrator_buyuklugu: 'kucuk',
-    iletisim_sosyal_medya: null,
-    user_id: null,
-    yorumlar: null,
-  },
-  {
-    id: 'demo-4',
-    entegrator_adi: 'Kaynak Teknolojileri A.Ş.',
-    uzmanlik_alani: 'Ark Kaynağı, Punta Kaynağı',
-    faaliyet_alanlari: 'Ark Kaynak Ekipmanı Devreye Alma, Ark Kaynak Kalitesi Çalışması, Timer Ayarı',
-    sektor: 'Metal',
-    tecrube: '10+ yıl',
-    kac_kisi: 35,
-    konum: 'Ankara',
-    hizmet_verilen_iller: 'Ankara, Eskişehir, Konya, Tüm Türkiye',
-    referans: 'ASELSAN, ROKETSAN, TAI savunma sanayi projeleri',
-    puan: 4.9,
-    email: null,
-    belgesi1: null,
-    belgesi2: null,
-    belgesi3: null,
-    created_at: null,
-    entegrator_buyuklugu: 'orta',
-    iletisim_sosyal_medya: null,
-    user_id: null,
-    yorumlar: null,
-  },
-  {
-    id: 'demo-5',
-    entegrator_adi: 'Smart Factory Systems',
-    uzmanlik_alani: 'Kutulama, Paletleme, Vidalama',
-    faaliyet_alanlari: 'Robot Programlama, Otomasyon İşleri, Yedek Parça Satışı',
-    sektor: 'Hızlı Tüketim Ürünleri (temizlik malzemeleri, bebek bezi, vs.)',
-    tecrube: '5-10 yıl',
-    kac_kisi: 18,
-    konum: 'İzmir',
-    hizmet_verilen_iller: 'İzmir, Manisa, Denizli',
-    referans: 'P&G, Unilever, Henkel üretim hatları',
-    puan: 4.6,
-    email: null,
-    belgesi1: null,
-    belgesi2: null,
-    belgesi3: null,
-    created_at: null,
-    entegrator_buyuklugu: 'orta',
-    iletisim_sosyal_medya: null,
-    user_id: null,
-    yorumlar: null,
-  },
-  {
-    id: 'demo-6',
-    entegrator_adi: 'RoboServis Türkiye',
-    uzmanlik_alani: 'Robot Programlama, Robot Bakımı',
-    faaliyet_alanlari: 'Mekanik Arıza Robot Servisi, Elektrik Arıza Robot Servisi, Robot Eğitimi',
-    sektor: 'Otomotiv Yan Sanayi (Tier 2)',
-    tecrube: '1-3 yıl',
-    kac_kisi: 8,
-    konum: 'Gaziantep',
-    hizmet_verilen_iller: 'Gaziantep, Adana, Mersin, Kayseri',
-    referans: 'Bölgesel tekstil ve metal işleme tesisleri',
-    puan: 4.0,
-    email: null,
-    belgesi1: null,
-    belgesi2: null,
-    belgesi3: null,
-    created_at: null,
-    entegrator_buyuklugu: 'kucuk',
-    iletisim_sosyal_medya: null,
-    user_id: null,
-    yorumlar: null,
-  },
-];
-
-// Demo ratings for guest mode
-const DEMO_RATINGS: Record<string, EntegratorRatings> = {
-  'demo-1': { kalite_avg: 4.8, musteri_iliskisi_avg: 4.6, surec_yonetimi_avg: 4.7, rating_count: 12 },
-  'demo-2': { kalite_avg: 4.5, musteri_iliskisi_avg: 4.3, surec_yonetimi_avg: 4.4, rating_count: 8 },
-  'demo-3': { kalite_avg: 4.2, musteri_iliskisi_avg: 4.0, surec_yonetimi_avg: 4.1, rating_count: 5 },
-  'demo-4': { kalite_avg: 4.9, musteri_iliskisi_avg: 4.8, surec_yonetimi_avg: 4.9, rating_count: 15 },
-  'demo-5': { kalite_avg: 4.6, musteri_iliskisi_avg: 4.5, surec_yonetimi_avg: 4.4, rating_count: 9 },
-  'demo-6': { kalite_avg: 4.0, musteri_iliskisi_avg: 3.9, surec_yonetimi_avg: 4.0, rating_count: 3 },
-};
-
-// Demo comments for guest mode
-const DEMO_COMMENTS: Record<string, RatingComment[]> = {
-  'demo-1': [
-    { kalite_puan: 5, musteri_iliskisi_puan: 5, surec_yonetimi_puan: 5, yorum: 'Mükemmel bir ekip. Projemizi zamanında ve bütçe dahilinde tamamladılar.', created_at: '2024-11-15T10:30:00Z' },
-    { kalite_puan: 5, musteri_iliskisi_puan: 4, surec_yonetimi_puan: 5, yorum: 'Robot programlama konusunda çok tecrübeliler. Tavsiye ederim.', created_at: '2024-10-20T14:00:00Z' },
-    { kalite_puan: 4, musteri_iliskisi_puan: 5, surec_yonetimi_puan: 4, yorum: 'İletişimleri çok iyi, sorunları hızlı çözdüler.', created_at: '2024-09-05T09:15:00Z' },
-  ],
-  'demo-2': [
-    { kalite_puan: 5, musteri_iliskisi_puan: 4, surec_yonetimi_puan: 5, yorum: 'Paketleme hattımızı başarıyla otomatize ettiler.', created_at: '2024-11-01T16:45:00Z' },
-    { kalite_puan: 4, musteri_iliskisi_puan: 4, surec_yonetimi_puan: 4, yorum: 'Güvenilir ve profesyonel bir firma.', created_at: '2024-08-22T11:20:00Z' },
-  ],
-  'demo-4': [
-    { kalite_puan: 5, musteri_iliskisi_puan: 5, surec_yonetimi_puan: 5, yorum: 'Savunma sanayi standartlarında kaliteli iş çıkarıyorlar.', created_at: '2024-11-10T08:00:00Z' },
-    { kalite_puan: 5, musteri_iliskisi_puan: 5, surec_yonetimi_puan: 5, yorum: 'Kaynak kalitesi mükemmel. Her zaman tercih ederiz.', created_at: '2024-10-15T13:30:00Z' },
-    { kalite_puan: 5, musteri_iliskisi_puan: 4, surec_yonetimi_puan: 5, yorum: 'Teknik bilgileri çok güçlü.', created_at: '2024-09-28T10:00:00Z' },
-  ],
-  'demo-5': [
-    { kalite_puan: 5, musteri_iliskisi_puan: 5, surec_yonetimi_puan: 4, yorum: 'Kutulama sistemimizi yenilediler, verimlilik %40 arttı.', created_at: '2024-10-30T15:00:00Z' },
-  ],
-};
-
 // Completely mask name - show only asterisks
 function maskName(name: string): string {
   if (!name) return '******';
@@ -414,15 +247,10 @@ export default function FirmaDashboard() {
   useEffect(() => {
     if (authLoading) return;
     
-    // Guest mode - use demo data only, no database access
+    // Allow guest mode without authentication
     if (isGuestMode) {
-      setLoading(true);
-      // Use demo data for guest mode
-      setEntegratorler(DEMO_ENTEGRATORLER);
-      setEntegratorRatings(DEMO_RATINGS);
-      setEntegratorComments(DEMO_COMMENTS);
-      setFirmaCredits(5); // Demo credits
-      setLoading(false);
+      fetchEntegratorler();
+      fetchAllRatings();
       return;
     }
     
@@ -992,43 +820,32 @@ export default function FirmaDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Fixed Guest Mode Banner - Cannot be dismissed */}
+      {/* Guest Mode Banner */}
       {isGuestMode && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg">
+        <div className="bg-amber-500/10 border-b border-amber-500/30">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3 text-white">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/20">
-                <Eye className="h-5 w-5" />
-              </div>
-              <div>
-                <span className="font-bold text-lg">Demo Modu</span>
-                <span className="hidden sm:inline text-white/90 ml-2">- Bu sayfa sadece tanıtım amaçlıdır. Gerçek veriler gösterilmemektedir.</span>
-              </div>
+            <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+              <Eye className="h-5 w-5" />
+              <span className="font-medium">{t('index.guestMode')}</span>
+              <span className="text-sm">- {t('index.guestModeDesc')}</span>
             </div>
             <Button 
               size="sm" 
               onClick={() => navigate('/')}
-              className="bg-white text-amber-600 hover:bg-white/90 font-semibold shadow-md"
+              className="bg-amber-500 hover:bg-amber-600 text-white"
             >
-              Üye Ol ve Gerçek Verileri Gör
+              {t('auth.register')}
             </Button>
           </div>
         </div>
       )}
 
-      {/* Header - with top padding for fixed guest banner */}
-      <header className={`border-b bg-card ${isGuestMode ? 'mt-14' : ''}`}>
+      {/* Header */}
+      <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold text-firma">{t('dashboard.firmaTitle')}</h1>
-                {isGuestMode && (
-                  <Badge variant="outline" className="text-amber-600 border-amber-400 bg-amber-50">
-                    Demo
-                  </Badge>
-                )}
-              </div>
+              <h1 className="text-2xl font-bold text-firma">{t('dashboard.firmaTitle')}</h1>
               <p className="text-sm text-muted-foreground">{t('dashboard.firmaSubtitle')}</p>
             </div>
             <div className="flex items-center gap-3">
@@ -1092,19 +909,12 @@ export default function FirmaDashboard() {
                 </>
               )}
               {isGuestMode && (
-                <>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-muted rounded-lg border opacity-60">
-                    <CreditCard className="h-5 w-5 text-muted-foreground" />
-                    <span className="font-semibold text-muted-foreground">{firmaCredits}</span>
-                    <span className="text-sm text-muted-foreground">Demo Kredi</span>
-                  </div>
-                  <Button 
-                    variant="outline"
-                    onClick={() => navigate('/')}
-                  >
-                    Ana Sayfa
-                  </Button>
-                </>
+                <Button 
+                  variant="ghost"
+                  onClick={() => navigate('/')}
+                >
+                  Ana Sayfa
+                </Button>
               )}
             </div>
           </div>
@@ -1195,19 +1005,14 @@ export default function FirmaDashboard() {
                     className="hover:shadow-lg transition-shadow cursor-pointer border-firma/10 hover:border-firma/30"
                   >
                     <CardContent className="p-5">
-                      {/* Header with name and ratings - show full name in demo mode */}
+                      {/* Header with masked name and ratings */}
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-entegrator/20 to-entegrator/40 flex items-center justify-center">
                             <Building2 className="h-6 w-6 text-entegrator" />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-lg">
-                              {isGuestMode ? entegrator.entegrator_adi : maskName(entegrator.entegrator_adi)}
-                            </h3>
-                            {isGuestMode && (
-                              <span className="text-xs text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">Demo</span>
-                            )}
+                            <h3 className="font-semibold text-lg">{maskName(entegrator.entegrator_adi)}</h3>
                           </div>
                         </div>
                         {/* Three category ratings */}
@@ -1290,27 +1095,21 @@ export default function FirmaDashboard() {
                       {/* CTA Buttons */}
                       <div className="flex gap-2 mt-4">
                         {isGuestMode ? (
-                          <>
-                            <Button 
-                              className="flex-1 gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0"
-                              size="sm"
-                              onClick={() => navigate('/')}
-                            >
-                              <Lock className="h-4 w-4" />
-                              Üye Ol ve İletişimi Gör
-                            </Button>
-                            {entegratorRatings[entegrator.id] && entegratorRatings[entegrator.id].rating_count > 0 && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => openCommentsModal(entegrator)}
-                                title="Demo Yorumlar"
-                              >
-                                <FileText className="h-4 w-4" />
-                                <span className="text-xs ml-1">{entegratorRatings[entegrator.id].rating_count}</span>
-                              </Button>
-                            )}
-                          </>
+                          <Button 
+                            className="flex-1 gap-2"
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              toast({
+                                title: 'Üyelik Gerekli',
+                                description: 'İletişim bilgilerini görmek için üye olmanız gerekmektedir.',
+                              });
+                              navigate('/');
+                            }}
+                          >
+                            <Lock className="h-4 w-4" />
+                            İletişimi Gör (Üyelik Gerekli)
+                          </Button>
                         ) : (
                           <>
                             <Button 
