@@ -239,6 +239,9 @@ export default function FirmaDashboard() {
   const [ihaleOlusturModalOpen, setIhaleOlusturModalOpen] = useState(false);
   const [selectedIhaleTuru, setSelectedIhaleTuru] = useState<string>('');
 
+  // Kredi satın alma modal state
+  const [krediModalOpen, setKrediModalOpen] = useState(false);
+
   useEffect(() => {
     if (authLoading) return;
     
@@ -894,6 +897,13 @@ export default function FirmaDashboard() {
                     <span className="font-semibold text-firma">{firmaCredits}</span>
                     <span className="text-sm text-muted-foreground">Kredi</span>
                   </div>
+                  <Button 
+                    onClick={() => setKrediModalOpen(true)}
+                    className="bg-green-600 hover:bg-green-700 text-white gap-2"
+                  >
+                    <CreditCard className="h-4 w-4" />
+                    Kredi Satın Al
+                  </Button>
                 </>
               )}
               {isGuestMode && (
@@ -1427,6 +1437,136 @@ export default function FirmaDashboard() {
           setIhaleTuruModalOpen(true);
         }}
       />
+
+      {/* Kredi Satın Alma Modal */}
+      <Dialog open={krediModalOpen} onOpenChange={setKrediModalOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl">Kredi Satın Al</DialogTitle>
+            <DialogDescription>
+              İhtiyacınıza uygun kredi paketini seçin
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
+            {/* Kobi Paketi */}
+            <Card className="border-2 hover:border-firma transition-colors cursor-pointer group">
+              <CardHeader className="text-center pb-2">
+                <div className="mx-auto w-12 h-12 bg-firma/10 rounded-full flex items-center justify-center mb-2 group-hover:bg-firma/20 transition-colors">
+                  <Building2 className="h-6 w-6 text-firma" />
+                </div>
+                <CardTitle className="text-lg">Kobi Paketi</CardTitle>
+                <p className="text-sm text-muted-foreground">Küçük işletmeler için</p>
+              </CardHeader>
+              <CardContent className="text-center space-y-4">
+                <div>
+                  <span className="text-3xl font-bold text-firma">€650</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <CreditCard className="h-5 w-5 text-muted-foreground" />
+                  <span className="font-semibold">3 Kredi</span>
+                </div>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• 3 entegratör iletişim bilgisi</li>
+                  <li>• Standart destek</li>
+                </ul>
+                <Button 
+                  className="w-full bg-firma hover:bg-firma/90"
+                  onClick={() => {
+                    toast({
+                      title: "Satın Alma",
+                      description: "Ödeme sistemi yakında aktif olacak.",
+                    });
+                  }}
+                >
+                  Satın Al
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Büyük Paket */}
+            <Card className="border-2 border-primary hover:border-primary/80 transition-colors cursor-pointer group relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <Badge className="bg-primary text-primary-foreground">En Popüler</Badge>
+              </div>
+              <CardHeader className="text-center pb-2">
+                <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-2 group-hover:bg-primary/20 transition-colors">
+                  <Award className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle className="text-lg">Büyük Paket</CardTitle>
+                <p className="text-sm text-muted-foreground">Orta ölçekli işletmeler için</p>
+              </CardHeader>
+              <CardContent className="text-center space-y-4">
+                <div>
+                  <span className="text-3xl font-bold text-primary">€1,800</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <CreditCard className="h-5 w-5 text-muted-foreground" />
+                  <span className="font-semibold">10 Kredi</span>
+                </div>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• 10 entegratör iletişim bilgisi</li>
+                  <li>• Öncelikli destek</li>
+                  <li>• %10 tasarruf</li>
+                </ul>
+                <Button 
+                  className="w-full"
+                  onClick={() => {
+                    toast({
+                      title: "Satın Alma",
+                      description: "Ödeme sistemi yakında aktif olacak.",
+                    });
+                  }}
+                >
+                  Satın Al
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Global Paket */}
+            <Card className="border-2 hover:border-amber-500 transition-colors cursor-pointer group">
+              <CardHeader className="text-center pb-2">
+                <div className="mx-auto w-12 h-12 bg-amber-500/10 rounded-full flex items-center justify-center mb-2 group-hover:bg-amber-500/20 transition-colors">
+                  <Star className="h-6 w-6 text-amber-500" />
+                </div>
+                <CardTitle className="text-lg">Global Paket</CardTitle>
+                <p className="text-sm text-muted-foreground">Büyük işletmeler için</p>
+              </CardHeader>
+              <CardContent className="text-center space-y-4">
+                <div>
+                  <span className="text-3xl font-bold text-amber-500">€3,000</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <CreditCard className="h-5 w-5 text-muted-foreground" />
+                  <span className="font-semibold">20 Kredi</span>
+                </div>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• 20 entegratör iletişim bilgisi</li>
+                  <li>• VIP destek</li>
+                  <li>• %23 tasarruf</li>
+                </ul>
+                <Button 
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-white"
+                  onClick={() => {
+                    toast({
+                      title: "Satın Alma",
+                      description: "Ödeme sistemi yakında aktif olacak.",
+                    });
+                  }}
+                >
+                  Satın Al
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setKrediModalOpen(false)}>
+              Kapat
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
