@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -62,14 +63,15 @@ const ILLER = [
 
 const TECRUBE_OPTIONS = ['1 yıldan az', '1-3 yıl', '3-5 yıl', '5-10 yıl', '10+ yıl'];
 
-const BUYUKLUK_LABELS: Record<EntegratorBuyuklugu, string> = {
-  kucuk: 'Küçük',
-  orta: 'Orta',
-  buyuk: 'Büyük',
-};
+const getBuyuklukLabels = (t: (key: string) => string): Record<EntegratorBuyuklugu, string> => ({
+  kucuk: t('profile.scaleSmall'),
+  orta: t('profile.scaleMedium'),
+  buyuk: t('profile.scaleLarge'),
+});
 
 export default function EntegratorProfile() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, userRole, loading: authLoading } = useAuth();
   const { toast } = useToast();
 
@@ -132,7 +134,7 @@ export default function EntegratorProfile() {
       }
     } catch (error: any) {
       toast({
-        title: 'Hata',
+        title: t('common.error'),
         description: error.message,
         variant: 'destructive',
       });
@@ -164,12 +166,12 @@ export default function EntegratorProfile() {
       if (error) throw error;
 
       toast({
-        title: 'Başarılı',
-        description: 'Profil bilgileriniz güncellendi.',
+        title: t('common.success'),
+        description: t('profile.profileUpdated'),
       });
     } catch (error: any) {
       toast({
-        title: 'Hata',
+        title: t('common.error'),
         description: error.message,
         variant: 'destructive',
       });
@@ -198,14 +200,16 @@ export default function EntegratorProfile() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="p-8 text-center">
-          <p className="text-muted-foreground">Entegratör profili bulunamadı.</p>
+          <p className="text-muted-foreground">{t('profile.entegratorNotFound')}</p>
           <Button onClick={() => navigate('/entegrator/register')} className="mt-4">
-            Entegratör Kaydı Oluştur
+            {t('profile.createEntegratorRegistration')}
           </Button>
         </Card>
       </div>
     );
   }
+
+  const BUYUKLUK_LABELS = getBuyuklukLabels(t);
 
   return (
     <div className="min-h-screen bg-background">
@@ -224,10 +228,10 @@ export default function EntegratorProfile() {
               <div>
                 <h1 className="text-2xl font-bold text-entegrator flex items-center gap-2">
                   <User className="h-6 w-6" />
-                  Entegratör Profili
+                  {t('profile.entegratorProfile')}
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Profil bilgilerinizi düzenleyin
+                  {t('profile.editProfile')}
                 </p>
               </div>
             </div>
@@ -247,13 +251,13 @@ export default function EntegratorProfile() {
                     <Users className="h-5 w-5 text-muted-foreground" />
                     {entegrator.kac_kisi || 0}
                   </div>
-                  <p className="text-xs text-muted-foreground">Çalışan</p>
+                  <p className="text-xs text-muted-foreground">{t('common.employee')}</p>
                 </div>
                 <div>
                   <Badge variant="secondary" className="text-sm">
                     {BUYUKLUK_LABELS[entegrator.entegrator_buyuklugu || 'kucuk']}
                   </Badge>
-                  <p className="text-xs text-muted-foreground mt-1">Ölçek</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t('common.scale')}</p>
                 </div>
               </div>
             </CardContent>
@@ -262,41 +266,41 @@ export default function EntegratorProfile() {
           {/* Temel Bilgiler */}
           <Card>
             <CardHeader>
-              <CardTitle>Temel Bilgiler</CardTitle>
+              <CardTitle>{t('profile.basicInfo')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label>Entegratör Adı</Label>
+                <Label>{t('entegratorRegister.entegratorName')}</Label>
                 <Input value={entegrator.entegrator_adi} disabled className="bg-muted" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="konum">Konum</Label>
+                  <Label htmlFor="konum">{t('entegratorRegister.location')}</Label>
                   <Input
                     id="konum"
                     value={konum}
                     onChange={(e) => setKonum(e.target.value)}
-                    placeholder="Örn: İstanbul, Türkiye"
+                    placeholder={t('entegratorRegister.locationPlaceholder')}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="kacKisi">Çalışan Sayısı</Label>
+                  <Label htmlFor="kacKisi">{t('register.employeeCount')}</Label>
                   <Input
                     id="kacKisi"
                     type="number"
                     value={kacKisi}
                     onChange={(e) => setKacKisi(e.target.value ? Number(e.target.value) : '')}
-                    placeholder="Örn: 25"
+                    placeholder={t('register.employeeCountPlaceholder')}
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="sektor">Sektör</Label>
+                <Label htmlFor="sektor">{t('filters.sector')}</Label>
                 <Select value={sektor} onValueChange={setSektor}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Sektör seçin" />
+                    <SelectValue placeholder={t('profile.selectSector')} />
                   </SelectTrigger>
                   <SelectContent>
                     {SEKTORLER.map(s => (
@@ -307,10 +311,10 @@ export default function EntegratorProfile() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="tecrube">Tecrübe</Label>
+                <Label htmlFor="tecrube">{t('filters.experience')}</Label>
                 <Select value={tecrube} onValueChange={setTecrube}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Tecrübe seçin" />
+                    <SelectValue placeholder={t('profile.selectExperience')} />
                   </SelectTrigger>
                   <SelectContent>
                     {TECRUBE_OPTIONS.map(t => (
@@ -327,9 +331,9 @@ export default function EntegratorProfile() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Briefcase className="h-5 w-5" />
-                Faaliyet Alanları
+                {t('filters.activityAreas')}
               </CardTitle>
-              <CardDescription>Sunduğunuz hizmetleri seçin</CardDescription>
+              <CardDescription>{t('profile.selectServices')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-60 overflow-y-auto">
@@ -351,7 +355,7 @@ export default function EntegratorProfile() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Award className="h-5 w-5" />
-                Uzmanlık Alanları
+                {t('filters.expertiseAreas')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -374,7 +378,7 @@ export default function EntegratorProfile() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <MapPin className="h-5 w-5" />
-                Hizmet Verilen İller
+                {t('filters.serviceProvinces')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -395,16 +399,16 @@ export default function EntegratorProfile() {
           {/* Referanslar ve İletişim */}
           <Card>
             <CardHeader>
-              <CardTitle>Referanslar ve İletişim</CardTitle>
+              <CardTitle>{t('profile.referencesAndContact')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="referans">Referanslar</Label>
+                <Label htmlFor="referans">{t('entegratorRegister.references')}</Label>
                 <Textarea
                   id="referans"
                   value={referans}
                   onChange={(e) => setReferans(e.target.value)}
-                  placeholder="Çalıştığınız firmalar, tamamladığınız projeler..."
+                  placeholder={t('profile.referencesPlaceholder')}
                   rows={4}
                 />
               </div>
@@ -412,16 +416,16 @@ export default function EntegratorProfile() {
               <Separator />
 
               <div className="space-y-2">
-                <Label htmlFor="iletisim">İletişim Bilgileri</Label>
+                <Label htmlFor="iletisim">{t('profile.contactInfo')}</Label>
                 <Textarea
                   id="iletisim"
                   value={iletisim}
                   onChange={(e) => setIletisim(e.target.value)}
-                  placeholder="Telefon, e-posta, web sitesi, sosyal medya hesapları..."
+                  placeholder={t('profile.contactPlaceholder')}
                   rows={3}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Bu bilgiler firmalar tarafından kredi karşılığı görüntülenebilir
+                  {t('profile.contactNote')}
                 </p>
               </div>
             </CardContent>
@@ -430,15 +434,15 @@ export default function EntegratorProfile() {
           {/* Belgeler */}
           <Card>
             <CardHeader>
-              <CardTitle>Yüklü Belgeler</CardTitle>
+              <CardTitle>{t('register.uploadedDocuments')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 {[
-                  { belge: entegrator.belgesi1, name: 'Ticaret Sicil Gazetesi' },
-                  { belge: entegrator.belgesi2, name: 'Faaliyet Belgesi' },
-                  { belge: entegrator.belgesi3, name: 'İmza Sirküleri' },
-                  { belge: (entegrator as any).belgesi4, name: 'Vergi Levhası' },
+                  { belge: entegrator.belgesi1, name: t('register.ticaretSicil') },
+                  { belge: entegrator.belgesi2, name: t('register.faaliyetBelgesi') },
+                  { belge: entegrator.belgesi3, name: t('register.imzaSirkuleri') },
+                  { belge: (entegrator as any).belgesi4, name: t('register.vergiLevhasi') },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm">
                     {item.belge ? (
@@ -449,7 +453,7 @@ export default function EntegratorProfile() {
                     ) : (
                       <>
                         <div className="h-4 w-4 rounded-full border-2 border-muted-foreground/30" />
-                        <span className="text-muted-foreground">{item.name} - Yüklenmedi</span>
+                        <span className="text-muted-foreground">{item.name} - {t('register.notUploaded')}</span>
                       </>
                     )}
                   </div>
@@ -467,12 +471,12 @@ export default function EntegratorProfile() {
             {saving ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Kaydediliyor...
+                {t('common.saving')}...
               </>
             ) : (
               <>
                 <Save className="h-4 w-4" />
-                Değişiklikleri Kaydet
+                {t('register.saveChanges')}
               </>
             )}
           </Button>
