@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { RegisterModal } from '@/components/auth/RegisterModal';
 import { LoginModal } from '@/components/auth/LoginModal';
 import { useAuth } from '@/hooks/useAuth';
 import { SEOHead } from '@/components/SEOHead';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Building2, Users, Zap, Shield, MessageSquare, ArrowRight, LogOut, CreditCard, Eye } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
@@ -12,32 +14,33 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 const CREDIT_PACKAGES = [
   {
     id: 'kobi',
-    name: 'KOBİ Paketi',
+    nameKey: 'credits.kobiPackage',
     credits: 3,
     price: 650,
-    description: 'Küçük ve orta ölçekli işletmeler için ideal başlangıç paketi.',
+    descriptionKey: 'credits.kobiPackageDesc',
     popular: false,
   },
   {
     id: 'buyuk',
-    name: 'Büyük Paket',
+    nameKey: 'credits.bigPackage',
     credits: 10,
     price: 1800,
-    description: 'Büyük ölçekli firmalar için. Çoklu proje ve yoğun entegratör araması.',
+    descriptionKey: 'credits.bigPackageDesc',
     popular: true,
   },
   {
     id: 'global',
-    name: 'Global Paket',
+    nameKey: 'credits.globalPackage',
     credits: 20,
     price: 3000,
-    description: 'Kurumsal firmalar için. Maksimum esneklik ve en iyi değer.',
+    descriptionKey: 'credits.globalPackageDesc',
     popular: false,
   },
 ];
 
 const Index = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [registerOpen, setRegisterOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [creditModalOpen, setCreditModalOpen] = useState(false);
@@ -68,7 +71,7 @@ const Index = () => {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="animate-pulse text-muted-foreground">Yükleniyor...</div>
+        <div className="animate-pulse text-muted-foreground">{t('common.loading')}</div>
       </div>
     );
   }
@@ -86,11 +89,11 @@ const Index = () => {
             <span className="text-xl font-bold">EntegraTR</span>
           </div>
           
-<div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
             {user ? (
               <>
                 <span className="text-sm text-muted-foreground">
-                  {userRole === 'firma' ? '🏢 Firma' : '👥 Entegratör'}
+                  {userRole === 'firma' ? `🏢 ${t('roles.firma')}` : `👥 ${t('roles.entegrator')}`}
                 </span>
                 {userRole === 'firma' && (
                   <Button 
@@ -100,24 +103,25 @@ const Index = () => {
                     className="gap-2"
                   >
                     <CreditCard className="h-4 w-4" />
-                    Kredi Satın Al
+                    {t('nav.buyCredits')}
                   </Button>
                 )}
                 <Button variant="outline" size="sm" onClick={signOut}>
                   <LogOut className="h-4 w-4 mr-2" />
-                  Çıkış
+                  {t('auth.logout')}
                 </Button>
               </>
             ) : (
               <>
                 <Button variant="ghost" onClick={() => setLoginOpen(true)}>
-                  Giriş Yap
+                  {t('auth.login')}
                 </Button>
                 <Button onClick={() => setRegisterOpen(true)}>
-                  Kayıt Ol
+                  {t('auth.register')}
                 </Button>
               </>
             )}
+            <LanguageSwitcher />
           </div>
         </div>
       </nav>
@@ -134,24 +138,24 @@ const Index = () => {
           <div className="animate-fade-in">
             <div className="inline-flex items-center gap-2 rounded-full border bg-card px-4 py-1.5 text-sm font-medium mb-6">
               <span className="h-2 w-2 rounded-full bg-firma animate-pulse" />
-              B2B Entegrasyon Platformu
+              {t('index.b2bPlatform')}
             </div>
             
             <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-              <span className="text-gradient">EntegraTR</span>'ye{' '}
+              <span className="text-gradient">EntegraTR</span>
+              {t('index.welcome').replace('EntegraTR', '').replace("'ye Hoş Geldiniz", "'ye")}{' '}
               <br className="hidden sm:block" />
-              Hoş Geldiniz
+              {t('index.welcome').includes('Hoş Geldiniz') ? 'Hoş Geldiniz' : 'Welcome'}
             </h1>
             
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-              Firmalar ve entegratörleri buluşturan Türkiye'nin en kapsamlı B2B platformu. 
-              Doğru iş ortağını bulun, projelerinizi hayata geçirin.
+              {t('index.subtitle')}
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4">
               {user ? (
                 <Button size="lg" className="text-lg px-8 gradient-primary border-0">
-                  Dashboard'a Git
+                  {t('index.goToDashboard')}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               ) : (
@@ -162,7 +166,7 @@ const Index = () => {
                       onClick={() => setRegisterOpen(true)}
                       className="text-lg px-8 gradient-primary border-0"
                     >
-                      Hemen Başla
+                      {t('index.getStarted')}
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                     <Button 
@@ -171,7 +175,7 @@ const Index = () => {
                       onClick={() => setLoginOpen(true)}
                       className="text-lg px-8"
                     >
-                      Giriş Yap
+                      {t('auth.login')}
                     </Button>
                   </div>
                   <Button 
@@ -179,7 +183,7 @@ const Index = () => {
                     onClick={() => setGuestModalOpen(true)}
                     className="text-muted-foreground hover:text-foreground"
                   >
-                    Üye olmadan devam et
+                    {t('index.continueAsGuest')}
                   </Button>
                 </div>
               )}
@@ -192,35 +196,35 @@ const Index = () => {
       <section className="py-20 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold md:text-4xl">Neden EntegraTR?</h2>
+            <h2 className="text-3xl font-bold md:text-4xl">{t('index.whyEntregraTR')}</h2>
             <p className="mt-4 text-muted-foreground">
-              Platform avantajlarımızı keşfedin
+              {t('index.discoverAdvantages')}
             </p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             <FeatureCard
               icon={<Building2 className="h-6 w-6" />}
-              title="Firmalar İçin"
-              description="Projenize uygun entegratörleri bulun, teklifler alın ve karşılaştırın."
+              title={t('index.forCompanies')}
+              description={t('index.forCompaniesDesc')}
               color="firma"
             />
             <FeatureCard
               icon={<Users className="h-6 w-6" />}
-              title="Entegratörler İçin"
-              description="Yeni projelere ulaşın, tekliflerinizi sunun ve iş hacminizi artırın."
+              title={t('index.forIntegrators')}
+              description={t('index.forIntegratorsDesc')}
               color="entegrator"
             />
             <FeatureCard
               icon={<Shield className="h-6 w-6" />}
-              title="Güvenli İletişim"
-              description="Kredi sistemi ile iletişim bilgilerine erişin, güvenle anlaşın."
+              title={t('index.secureCommunication')}
+              description={t('index.secureCommunicationDesc')}
               color="primary"
             />
             <FeatureCard
               icon={<MessageSquare className="h-6 w-6" />}
-              title="Mesajlaşma"
-              description="Platform içi mesajlaşma ile iletişiminizi kolayca yönetin."
+              title={t('index.messaging')}
+              description={t('index.messagingDesc')}
               color="accent"
             />
           </div>
@@ -235,11 +239,10 @@ const Index = () => {
             
             <div className="relative">
               <h2 className="text-3xl font-bold text-primary-foreground md:text-4xl">
-                Hemen Platforma Katılın
+                {t('index.joinPlatform')}
               </h2>
               <p className="mt-4 text-primary-foreground/80 max-w-xl mx-auto">
-                Binlerce firma ve entegratör arasında yerinizi alın. 
-                Ücretsiz kayıt olun, fırsatları kaçırmayın.
+                {t('index.joinPlatformDesc')}
               </p>
               
               {!user && (
@@ -250,7 +253,7 @@ const Index = () => {
                     onClick={() => setRegisterOpen(true)}
                     className="text-lg px-8"
                   >
-                    Ücretsiz Kayıt Ol
+                    {t('index.freeRegister')}
                   </Button>
                 </div>
               )}
@@ -261,12 +264,17 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="border-t py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© 2024 EntegraTR. Tüm hakları saklıdır.</p>
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-muted-foreground">
+              {t('footer.copyright')}
+            </p>
+            <LanguageSwitcher />
+          </div>
         </div>
       </footer>
 
-{/* Modals */}
+      {/* Modals */}
       <RegisterModal 
         open={registerOpen} 
         onOpenChange={setRegisterOpen}
@@ -284,7 +292,7 @@ const Index = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-xl">
               <CreditCard className="h-5 w-5 text-firma" />
-              Kredi Satın Al
+              {t('credits.title')}
             </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -297,33 +305,32 @@ const Index = () => {
               >
                 {pkg.popular && (
                   <div className="absolute -top-3 left-4 px-3 py-1 bg-firma text-white text-xs font-medium rounded-full">
-                    En Popüler
+                    {t('credits.mostPopular')}
                   </div>
                 )}
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-semibold text-lg">{pkg.name}</div>
-                    <div className="text-sm text-muted-foreground mt-1">{pkg.description}</div>
+                    <div className="font-semibold text-lg">{t(pkg.nameKey)}</div>
+                    <div className="text-sm text-muted-foreground mt-1">{t(pkg.descriptionKey)}</div>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold text-firma">€{pkg.price}</div>
-                    <div className="text-sm text-muted-foreground">{pkg.credits} Kredi</div>
+                    <div className="text-sm text-muted-foreground">{pkg.credits} {t('credits.credits')}</div>
                   </div>
                 </div>
                 <Button 
                   className="w-full mt-4 gradient-primary border-0"
                   onClick={() => {
-                    // TODO: Implement payment flow
                     setCreditModalOpen(false);
                   }}
                 >
-                  Satın Al
+                  {t('credits.buy')}
                 </Button>
               </div>
             ))}
           </div>
           <p className="text-xs text-center text-muted-foreground">
-            Ödeme işlemi için iletişime geçilecektir.
+            {t('index.paymentNote')}
           </p>
         </DialogContent>
       </Dialog>
@@ -334,11 +341,11 @@ const Index = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-xl">
               <Eye className="h-5 w-5 text-primary" />
-              Platformu İncele
+              {t('index.explorePlatform')}
             </DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground text-center mb-4">
-            Hangi rolü görüntülemek istiyorsunuz? Misafir modunda sadece mevcut özellikleri inceleyebilirsiniz.
+            {t('index.guestModeDesc')}
           </p>
           <div className="grid gap-4">
             <Button
@@ -351,8 +358,8 @@ const Index = () => {
               }}
             >
               <Building2 className="h-8 w-8 text-firma" />
-              <span className="font-semibold text-lg">Firma Olarak</span>
-              <span className="text-xs text-muted-foreground">Entegratörleri görüntüle, ilanları incele</span>
+              <span className="font-semibold text-lg">{t('index.viewAsCompany')}</span>
+              <span className="text-xs text-muted-foreground">{t('index.viewAsCompanyDesc')}</span>
             </Button>
             <Button
               size="lg"
@@ -364,12 +371,12 @@ const Index = () => {
               }}
             >
               <Users className="h-8 w-8 text-entegrator" />
-              <span className="font-semibold text-lg">Entegratör Olarak</span>
-              <span className="text-xs text-muted-foreground">İlanları görüntüle, piyasayı incele</span>
+              <span className="font-semibold text-lg">{t('index.viewAsIntegrator')}</span>
+              <span className="text-xs text-muted-foreground">{t('index.viewAsIntegratorDesc')}</span>
             </Button>
           </div>
           <p className="text-xs text-center text-muted-foreground mt-4">
-            Misafir modunda değişiklik yapamazsınız. Tam erişim için üye olun.
+            {t('index.guestModeNote')}
           </p>
         </DialogContent>
       </Dialog>
