@@ -12,6 +12,7 @@ import { Progress } from '@/components/ui/progress';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Users, FileText, ClipboardList, CreditCard, ArrowLeft, ArrowRight, Upload, Check, Loader2, X, Star } from 'lucide-react';
+import { YetkinlikChatbot, FuturisticVerifyButton } from '@/components/YetkinlikChatbot';
 import type { Database } from '@/integrations/supabase/types';
 
 interface PlanInfo {
@@ -165,6 +166,10 @@ export default function EntegratorRegister() {
 
   // Step 4: Plan
   const [selectedPlan, setSelectedPlan] = useState<'basic' | 'premium'>('basic');
+
+  // Yetkinlik Chatbot Modal
+  const [chatbotOpen, setChatbotOpen] = useState(false);
+  const showVerifySection = markalar.length > 0 && faaliyetAlanlari.length > 0;
 
   // Check if user is logged in and has entegrator role
   useEffect(() => {
@@ -573,6 +578,11 @@ export default function EntegratorRegister() {
                   </div>
                 </div>
 
+                {/* Yetkinlik Doğrulama Section */}
+                {showVerifySection && (
+                  <FuturisticVerifyButton onClick={() => setChatbotOpen(true)} />
+                )}
+
                 <div className="space-y-2">
                   <Label>Uzmanlık Alanları *</Label>
                   <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border rounded-lg">
@@ -758,6 +768,9 @@ export default function EntegratorRegister() {
           )}
         </div>
       </div>
+
+      {/* Yetkinlik Chatbot Modal */}
+      <YetkinlikChatbot isOpen={chatbotOpen} onClose={() => setChatbotOpen(false)} />
     </div>
   );
 }
