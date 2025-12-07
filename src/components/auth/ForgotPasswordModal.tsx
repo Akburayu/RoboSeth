@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,17 +15,18 @@ interface ForgotPasswordModalProps {
   onBackToLogin: () => void;
 }
 
-const emailSchema = z.object({
-  email: z.string().email('Geçerli bir email adresi giriniz'),
-});
-
 export function ForgotPasswordModal({ open, onOpenChange, onBackToLogin }: ForgotPasswordModalProps) {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
   
   const { toast } = useToast();
+
+  const emailSchema = z.object({
+    email: z.string().email(t('auth.validEmail')),
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +51,7 @@ export function ForgotPasswordModal({ open, onOpenChange, onBackToLogin }: Forgo
 
     if (resetError) {
       toast({
-        title: 'Hata',
+        title: t('common.error'),
         description: resetError.message,
         variant: 'destructive',
       });
@@ -82,12 +84,12 @@ export function ForgotPasswordModal({ open, onOpenChange, onBackToLogin }: Forgo
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">
-            {sent ? 'Email Gönderildi' : 'Şifremi Unuttum'}
+            {sent ? t('auth.emailSent') : t('auth.forgotPassword')}
           </DialogTitle>
           <DialogDescription className="text-center">
             {sent 
-              ? 'Şifre sıfırlama bağlantısı email adresinize gönderildi.' 
-              : 'Kayıtlı email adresinizi girin, şifre sıfırlama bağlantısı gönderelim.'
+              ? t('auth.resetLinkSent')
+              : t('auth.enterEmail')
             }
           </DialogDescription>
         </DialogHeader>
@@ -102,10 +104,10 @@ export function ForgotPasswordModal({ open, onOpenChange, onBackToLogin }: Forgo
             
             <div className="text-center space-y-2">
               <p className="text-sm text-muted-foreground">
-                <strong>{email}</strong> adresine şifre sıfırlama bağlantısı gönderdik.
+                <strong>{email}</strong>
               </p>
               <p className="text-sm text-muted-foreground">
-                Email'inizi kontrol edin ve bağlantıya tıklayarak yeni şifrenizi belirleyin.
+                {t('auth.checkEmail')}
               </p>
             </div>
 
@@ -116,18 +118,18 @@ export function ForgotPasswordModal({ open, onOpenChange, onBackToLogin }: Forgo
                 onClick={handleBackToLogin}
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Giriş Sayfasına Dön
+                {t('auth.backToLogin')}
               </Button>
               
               <p className="text-xs text-center text-muted-foreground">
-                Email almadınız mı? Spam klasörünüzü kontrol edin veya tekrar deneyin.
+                {t('auth.didntReceive')}
               </p>
             </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="reset-email">Email Adresi</Label>
+              <Label htmlFor="reset-email">{t('auth.emailAddress')}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -146,10 +148,10 @@ export function ForgotPasswordModal({ open, onOpenChange, onBackToLogin }: Forgo
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Gönderiliyor...
+                  {t('auth.sending')}
                 </>
               ) : (
-                'Şifre Sıfırlama Bağlantısı Gönder'
+                t('auth.sendResetLink')
               )}
             </Button>
 
@@ -160,7 +162,7 @@ export function ForgotPasswordModal({ open, onOpenChange, onBackToLogin }: Forgo
               onClick={handleBackToLogin}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Giriş Sayfasına Dön
+              {t('auth.backToLogin')}
             </Button>
           </form>
         )}
