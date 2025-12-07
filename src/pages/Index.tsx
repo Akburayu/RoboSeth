@@ -92,30 +92,30 @@ const Index = () => {
       <SEOHead />
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur-lg">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <img alt="RoboAtlas Logo" className="h-10 w-10 object-contain" src="/lovable-uploads/5d38a4b5-03a0-4b60-918b-3569375619f1.png" />
-            <span className="text-xl font-bold">RoboAtlas</span>
+        <div className="container mx-auto flex h-auto min-h-16 items-center justify-between px-4 py-2 gap-2 flex-wrap sm:flex-nowrap">
+          <div className="flex items-center gap-2 shrink-0">
+            <img alt="RoboAtlas Logo" className="h-8 w-8 sm:h-10 sm:w-10 object-contain" src="/lovable-uploads/5d38a4b5-03a0-4b60-918b-3569375619f1.png" />
+            <span className="text-lg sm:text-xl font-bold">RoboAtlas</span>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
             {user ? <>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-muted-foreground hidden sm:inline">
                   {userRole === 'firma' ? `🏢 ${t('roles.firma')}` : `👥 ${t('roles.entegrator')}`}
                 </span>
                 {userRole === 'firma' && <Button variant="outline" size="sm" onClick={() => setCreditModalOpen(true)} className="gap-2">
                     <CreditCard className="h-4 w-4" />
-                    {t('nav.buyCredits')}
+                    <span className="hidden sm:inline">{t('nav.buyCredits')}</span>
                   </Button>}
                 <Button variant="outline" size="sm" onClick={signOut}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  {t('auth.logout')}
+                  <LogOut className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">{t('auth.logout')}</span>
                 </Button>
               </> : <>
-                <Button variant="ghost" onClick={() => setLoginOpen(true)}>
+                <Button variant="ghost" size="sm" onClick={() => setLoginOpen(true)}>
                   {t('auth.login')}
                 </Button>
-                <Button onClick={() => setRegisterOpen(true)}>
+                <Button size="sm" onClick={() => setRegisterOpen(true)}>
                   {t('auth.register')}
                 </Button>
               </>}
