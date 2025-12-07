@@ -455,15 +455,25 @@ export default function EntegratorDashboard() {
             <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
               <Eye className="h-5 w-5" />
               <span className="font-medium">{t('index.guestMode')}</span>
-              <span className="text-sm">- {t('index.guestModeDesc')}</span>
+              <span className="text-sm">- {t('index.guestModeViewOnly')}</span>
             </div>
-            <Button 
-              size="sm" 
-              onClick={() => navigate('/')}
-              className="bg-amber-500 hover:bg-amber-600 text-white"
-            >
-              {t('auth.register')}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => navigate('/')}
+                className="border-amber-500 text-amber-700 hover:bg-amber-500/20"
+              >
+                {t('auth.login')}
+              </Button>
+              <Button 
+                size="sm" 
+                onClick={() => navigate('/')}
+                className="bg-amber-500 hover:bg-amber-600 text-white"
+              >
+                {t('auth.register')}
+              </Button>
+            </div>
           </div>
         </div>
       )}
@@ -898,7 +908,16 @@ export default function EntegratorDashboard() {
                     <Card 
                       key={ihale.id} 
                       className="hover:shadow-lg transition-shadow cursor-pointer"
-                      onClick={() => navigate(`/ihale/${ihale.id}`)}
+                      onClick={() => {
+                        if (isGuestMode) {
+                          toast({
+                            title: t('index.guestModeLoginRequired'),
+                            description: t('index.guestModeLoginRequiredDesc'),
+                          });
+                          return;
+                        }
+                        navigate(`/ihale/${ihale.id}`);
+                      }}
                     >
                       <CardContent className="p-6">
                         <div className="flex items-start gap-4">
@@ -923,9 +942,28 @@ export default function EntegratorDashboard() {
                                 {ihale.aciklama}
                               </p>
                             )}
-                            <Button size="sm" className="bg-entegrator hover:bg-entegrator/90">
-                              {t('auctions.viewDetails')}
-                            </Button>
+                            {isGuestMode ? (
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                className="gap-2"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toast({
+                                    title: t('index.guestModeLoginRequired'),
+                                    description: t('index.guestModeLoginRequiredDesc'),
+                                  });
+                                  navigate('/');
+                                }}
+                              >
+                                <Lock className="h-4 w-4" />
+                                {t('common.membershipRequired')}
+                              </Button>
+                            ) : (
+                              <Button size="sm" className="bg-entegrator hover:bg-entegrator/90">
+                                {t('auctions.viewDetails')}
+                              </Button>
+                            )}
                           </div>
                         </div>
                       </CardContent>

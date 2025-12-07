@@ -827,15 +827,25 @@ export default function FirmaDashboard() {
             <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
               <Eye className="h-5 w-5" />
               <span className="font-medium">{t('index.guestMode')}</span>
-              <span className="text-sm">- {t('index.guestModeDesc')}</span>
+              <span className="text-sm">- {t('index.guestModeViewOnly')}</span>
             </div>
-            <Button 
-              size="sm" 
-              onClick={() => navigate('/')}
-              className="bg-amber-500 hover:bg-amber-600 text-white"
-            >
-              {t('auth.register')}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => navigate('/')}
+                className="border-amber-500 text-amber-700 hover:bg-amber-500/20"
+              >
+                {t('auth.login')}
+              </Button>
+              <Button 
+                size="sm" 
+                onClick={() => navigate('/')}
+                className="bg-amber-500 hover:bg-amber-600 text-white"
+              >
+                {t('auth.register')}
+              </Button>
+            </div>
           </div>
         </div>
       )}
