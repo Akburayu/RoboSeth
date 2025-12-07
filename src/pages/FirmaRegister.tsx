@@ -33,22 +33,22 @@ interface PackageInfo {
   dbValue: FirmaOlcegi;
 }
 
-const PACKAGES: Record<AvailablePackage, PackageInfo> = {
+const getPackages = (t: (key: string) => string): Record<AvailablePackage, PackageInfo> => ({
   orta: { 
-    name: 'KOBİ Paketi', 
+    name: t('credits.smePackage'), 
     credits: 3, 
     price: 650,
-    description: 'Küçük ve orta ölçekli işletmeler için ideal başlangıç paketi.',
+    description: t('credits.smePackageDesc'),
     dbValue: 'orta'
   },
   buyuk: { 
-    name: 'Büyük Paket', 
+    name: t('credits.largePackage'), 
     credits: 10, 
     price: 1800,
-    description: 'Büyük ölçekli firmalar için. Çoklu proje ve yoğun entegratör araması için uygun.',
+    description: t('credits.largePackageDesc'),
     dbValue: 'buyuk'
   },
-};
+});
 
 // Keep PLANS for backward compatibility
 const PLANS: Record<FirmaOlcegi, { credits: number }> = {
@@ -139,8 +139,8 @@ export default function FirmaRegister() {
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
     if (!allowedTypes.includes(file.type)) {
       toast({
-        title: 'Geçersiz Dosya Türü',
-        description: 'Sadece PDF, JPG ve PNG dosyaları yükleyebilirsiniz.',
+        title: t('register.invalidFileType'),
+        description: t('register.invalidFileTypeDesc'),
         variant: 'destructive',
       });
       return;
@@ -149,8 +149,8 @@ export default function FirmaRegister() {
     // Validate file size (10MB)
     if (file.size > 10 * 1024 * 1024) {
       toast({
-        title: 'Dosya Çok Büyük',
-        description: 'Dosya boyutu 10MB\'dan küçük olmalıdır.',
+        title: t('register.fileTooLarge'),
+        description: t('register.fileTooLargeDesc'),
         variant: 'destructive',
       });
       return;
@@ -170,7 +170,7 @@ export default function FirmaRegister() {
 
     if (error) {
       toast({
-        title: 'Yükleme Hatası',
+        title: t('register.uploadError'),
         description: error.message,
         variant: 'destructive',
       });
@@ -187,8 +187,8 @@ export default function FirmaRegister() {
     }));
 
     toast({
-      title: 'Dosya Yüklendi',
-      description: `${file.name} başarıyla yüklendi.`,
+      title: t('register.fileUploaded'),
+      description: `${file.name} ${t('register.fileUploadedDesc')}`,
     });
   };
 
@@ -208,8 +208,8 @@ export default function FirmaRegister() {
       case 1:
         if (!firmaOlcegi) {
           toast({
-            title: 'Seçim Gerekli',
-            description: 'Lütfen firma ölçeğinizi seçin.',
+            title: t('register.selectRequired'),
+            description: t('register.selectFirmaScale'),
             variant: 'destructive',
           });
           return false;
@@ -218,16 +218,16 @@ export default function FirmaRegister() {
       case 2:
         if (!firmaAdi.trim() || firmaAdi.length < 2) {
           toast({
-            title: 'Geçersiz Firma Adı',
-            description: 'Firma adı en az 2 karakter olmalıdır.',
+            title: t('register.invalidFirmaName'),
+            description: t('register.invalidFirmaNameDesc'),
             variant: 'destructive',
           });
           return false;
         }
         if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           toast({
-            title: 'Geçersiz E-posta',
-            description: 'Lütfen geçerli bir e-posta adresi girin.',
+            title: t('register.invalidEmail'),
+            description: t('register.invalidEmailDesc'),
             variant: 'destructive',
           });
           return false;
@@ -236,8 +236,8 @@ export default function FirmaRegister() {
         const allDocsUploaded = Object.values(documents).every((doc) => doc.path !== null);
         if (!allDocsUploaded) {
           toast({
-            title: 'Belgeler Eksik',
-            description: 'Lütfen tüm belgeleri yükleyin.',
+            title: t('register.missingDocuments'),
+            description: t('register.missingDocumentsDesc'),
             variant: 'destructive',
           });
           return false;
@@ -246,8 +246,8 @@ export default function FirmaRegister() {
       case 3:
         if (tanitimYazisi.length < 50) {
           toast({
-            title: 'Yetersiz İçerik',
-            description: 'Tanıtım yazısı en az 50 karakter olmalıdır.',
+            title: t('register.insufficientContent'),
+            description: t('register.aboutMinLength'),
             variant: 'destructive',
           });
           return false;
@@ -293,14 +293,14 @@ export default function FirmaRegister() {
       if (error) throw error;
 
       toast({
-        title: 'Kayıt Tamamlandı!',
-        description: `Hoş geldiniz! ${credits} kredi hesabınıza tanımlandı.`,
+        title: t('register.registrationComplete'),
+        description: `${t('register.welcomeMessage')} ${credits} ${t('register.creditsAdded')}`,
       });
 
       navigate('/firma/dashboard');
     } catch (error: any) {
       toast({
-        title: 'Kayıt Hatası',
+        title: t('register.registrationError'),
         description: error.message,
         variant: 'destructive',
       });
@@ -310,10 +310,10 @@ export default function FirmaRegister() {
   };
 
 const steps = [
-    { number: 1, title: 'Firma Paketi', icon: Building2 },
-    { number: 2, title: 'Firma Bilgileri', icon: FileText },
-    { number: 3, title: 'Hakkında', icon: Info },
-    { number: 4, title: 'Üyelik Planı', icon: CreditCard },
+    { number: 1, title: t('register.firmaPackage'), icon: Building2 },
+    { number: 2, title: t('register.firmaInfo'), icon: FileText },
+    { number: 3, title: t('register.about'), icon: Info },
+    { number: 4, title: t('register.membershipPlan'), icon: CreditCard },
   ];
 
   const progressValue = ((currentStep - 1) / 3) * 100;
@@ -383,40 +383,43 @@ const steps = [
               {steps[currentStep - 1].title}
             </CardTitle>
 <CardDescription>
-              {currentStep === 1 && 'Firmanız için uygun paketi seçin'}
-              {currentStep === 2 && 'Firma bilgilerinizi ve belgelerinizi girin'}
-              {currentStep === 3 && 'Firmanızı tanıtan bir yazı ekleyin'}
-              {currentStep === 4 && 'Size önerilen üyelik planını onaylayın'}
+              {currentStep === 1 && t('register.selectPackage')}
+              {currentStep === 2 && t('register.fillFirmaInfo')}
+              {currentStep === 3 && t('register.addAbout')}
+              {currentStep === 4 && t('register.confirmPlan')}
             </CardDescription>
           </CardHeader>
           <CardContent>
 {/* Step 1: Firma Paketi */}
             {currentStep === 1 && (
               <div className="grid gap-4">
-                {(Object.keys(PACKAGES) as AvailablePackage[]).map((pkg) => (
-                  <button
-                    key={pkg}
-                    onClick={() => setFirmaOlcegi(PACKAGES[pkg].dbValue)}
-                    className={`p-6 rounded-xl border-2 transition-all text-left ${
-                      firmaOlcegi === PACKAGES[pkg].dbValue
-                        ? 'border-firma bg-firma/10 shadow-lg'
-                        : 'border-border hover:border-firma/50 hover:bg-firma/5'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-semibold text-lg">{PACKAGES[pkg].name}</div>
-                        <div className="text-2xl font-bold text-firma mt-1">€{PACKAGES[pkg].price}</div>
+                {(Object.keys(getPackages(t)) as AvailablePackage[]).map((pkg) => {
+                  const packages = getPackages(t);
+                  return (
+                    <button
+                      key={pkg}
+                      onClick={() => setFirmaOlcegi(packages[pkg].dbValue)}
+                      className={`p-6 rounded-xl border-2 transition-all text-left ${
+                        firmaOlcegi === packages[pkg].dbValue
+                          ? 'border-firma bg-firma/10 shadow-lg'
+                          : 'border-border hover:border-firma/50 hover:bg-firma/5'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-semibold text-lg">{packages[pkg].name}</div>
+                          <div className="text-2xl font-bold text-firma mt-1">€{packages[pkg].price}</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-firma font-bold text-xl">{packages[pkg].credits} {t('common.credit')}</div>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-firma font-bold text-xl">{PACKAGES[pkg].credits} Kredi</div>
+                      <div className="text-sm text-muted-foreground mt-3">
+                        {packages[pkg].description}
                       </div>
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-3">
-                      {PACKAGES[pkg].description}
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             )}
 
@@ -424,37 +427,37 @@ const steps = [
             {currentStep === 2 && (
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="firmaAdi">Firma Adı *</Label>
+                  <Label htmlFor="firmaAdi">{t('register.firmaNameLabel')} *</Label>
                   <Input
                     id="firmaAdi"
                     value={firmaAdi}
                     onChange={(e) => setFirmaAdi(e.target.value)}
-                    placeholder="Şirketinizin tam adı"
+                    placeholder={t('register.firmaNamePlaceholder')}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">E-posta Adresi *</Label>
+                  <Label htmlFor="email">{t('register.emailLabel')} *</Label>
                   <Input
                     id="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="firma@ornek.com"
+                    placeholder={t('register.emailPlaceholder')}
                   />
                   <p className="text-xs text-muted-foreground">
-                    Bildirimler bu e-posta adresine gönderilecektir.
+                    {t('register.emailNote')}
                   </p>
                 </div>
 
                 <div className="space-y-4">
-                  <Label>Belgeler (İsteğe Bağlı)</Label>
+                  <Label>{t('register.documentsOptional')}</Label>
                   
                   {[
-                    { key: 'ticaret_sicil', label: 'Ticaret Sicil Gazetesi' },
-                    { key: 'faaliyet_belgesi', label: 'Faaliyet Belgesi' },
-                    { key: 'imza_sirkuleri', label: 'İmza Sirküleri' },
-                    { key: 'vergi_levhasi', label: 'Vergi Levhası' },
+                    { key: 'ticaret_sicil', label: t('register.ticaretSicil') },
+                    { key: 'faaliyet_belgesi', label: t('register.faaliyetBelgesi') },
+                    { key: 'imza_sirkuleri', label: t('register.imzaSirkuleri') },
+                    { key: 'vergi_levhasi', label: t('register.vergiLevhasi') },
                   ].map(({ key, label }) => (
                     <div key={key} className="flex items-center gap-4 p-4 border rounded-lg">
                       <div className="flex-1">
@@ -466,7 +469,7 @@ const steps = [
                           </div>
                         ) : (
                           <div className="text-xs text-muted-foreground mt-1">
-                            PDF, JPG veya PNG (max 10MB)
+                            {t('register.fileFormats')}
                           </div>
                         )}
                       </div>
@@ -491,7 +494,7 @@ const steps = [
                           />
                           <div className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg hover:bg-muted transition-colors">
                             <Upload className="h-4 w-4" />
-                            Yükle
+                            {t('register.upload')}
                           </div>
                         </label>
                       )}
@@ -505,16 +508,16 @@ const steps = [
             {currentStep === 3 && (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="tanitim">Firma Tanıtım Yazısı *</Label>
+                  <Label htmlFor="tanitim">{t('register.aboutLabel')} *</Label>
                   <Textarea
                     id="tanitim"
                     value={tanitimYazisi}
                     onChange={(e) => setTanitimYazisi(e.target.value)}
-                    placeholder="Firmanızı tanıtan bir yazı yazın. Faaliyet alanlarınız, deneyimleriniz ve sunduğunuz hizmetler hakkında bilgi verin..."
+                    placeholder={t('register.aboutPlaceholder')}
                     rows={6}
                   />
                   <div className={`text-xs ${tanitimYazisi.length < 50 ? 'text-destructive' : 'text-muted-foreground'}`}>
-                    {tanitimYazisi.length} / 50 karakter (minimum)
+                    {tanitimYazisi.length} / 50 {t('register.aboutMinChars')}
                   </div>
                 </div>
               </div>
@@ -527,36 +530,36 @@ const steps = [
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <div className="text-xl font-bold text-firma">
-                        {selectedPlan === 'orta' ? 'KOBİ Paketi' : selectedPlan === 'buyuk' ? 'Büyük Paket' : 'Global Paket'}
+                        {selectedPlan === 'orta' ? t('credits.smePackage') : selectedPlan === 'buyuk' ? t('credits.largePackage') : t('credits.globalPackage')}
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        Seçtiğiniz üyelik planı
+                        {t('register.selectedPlan')}
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="text-3xl font-bold">{PLANS[selectedPlan].credits}</div>
-                      <div className="text-sm text-muted-foreground">Kredi</div>
+                      <div className="text-sm text-muted-foreground">{t('common.credit')}</div>
                     </div>
                   </div>
                   <ul className="space-y-2">
                     <li className="flex items-center gap-2 text-sm">
                       <Check className="h-4 w-4 text-firma" />
-                      {PLANS[selectedPlan].credits} Kredi
+                      {PLANS[selectedPlan].credits} {t('common.credit')}
                     </li>
                     <li className="flex items-center gap-2 text-sm">
                       <Check className="h-4 w-4 text-firma" />
-                      Tüm özellikler dahil
+                      {t('register.allFeaturesIncluded')}
                     </li>
                     <li className="flex items-center gap-2 text-sm">
                       <Check className="h-4 w-4 text-firma" />
-                      Öncelikli destek
+                      {t('register.prioritySupport')}
                     </li>
                   </ul>
                 </div>
 
                 <div className="p-4 bg-muted rounded-lg text-center">
                   <div className="text-sm text-muted-foreground">
-                    Şu an için ödeme entegrasyonu aktif değil. Ücretsiz olarak devam edebilirsiniz.
+                    {t('register.paymentNotActive')}
                   </div>
                 </div>
               </div>
@@ -569,18 +572,18 @@ const steps = [
           {currentStep > 1 ? (
             <Button variant="outline" onClick={handleBack}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Geri
+              {t('common.back')}
             </Button>
           ) : (
             <Button variant="outline" onClick={() => navigate('/')}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Anasayfa
+              {t('nav.home')}
             </Button>
           )}
 
           {currentStep < 4 ? (
             <Button onClick={handleNext} className="bg-firma hover:bg-firma/90">
-              İleri
+              {t('common.next')}
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           ) : (
@@ -592,11 +595,11 @@ const steps = [
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Kaydediliyor...
+                  {t('common.saving')}...
                 </>
               ) : (
                 <>
-                  Kaydı Tamamla
+                  {t('common.completeRegistration')}
                   <Check className="h-4 w-4 ml-2" />
                 </>
               )}

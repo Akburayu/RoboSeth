@@ -53,7 +53,8 @@
     "employee": "Çalışan",
     "scale": "Ölçek",
     "person": "kişi",
-    "noRatingYet": "Henüz değerlendirme yok"
+    "noRatingYet": "Henüz değerlendirme yok",
+    "credit": "Kredi"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -154,12 +155,16 @@
   },
   "credits": {
     "title": "Kredi Satın Al",
+    "smePackage": "KOBİ Paketi",
+    "smePackageDesc": "Küçük ve orta ölçekli işletmeler için ideal başlangıç paketi.",
+    "largePackage": "Büyük Paket",
+    "largePackageDesc": "Büyük ölçekli firmalar için. Çoklu proje ve yoğun entegratör araması için uygun.",
+    "globalPackage": "Global Paket",
+    "globalPackageDesc": "Kurumsal firmalar için. Maksimum esneklik ve en iyi değer.",
     "kobiPackage": "KOBİ Paketi",
     "kobiPackageDesc": "Küçük ve orta ölçekli işletmeler için ideal başlangıç paketi.",
     "bigPackage": "Büyük Paket",
     "bigPackageDesc": "Büyük ölçekli firmalar için. Çoklu proje ve yoğun entegratör araması.",
-    "globalPackage": "Global Paket",
-    "globalPackageDesc": "Kurumsal firmalar için. Maksimum esneklik ve en iyi değer.",
     "mostPopular": "En Popüler",
     "buy": "Satın Al",
     "credits": "Kredi",
