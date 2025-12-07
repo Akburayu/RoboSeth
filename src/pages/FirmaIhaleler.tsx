@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -36,25 +37,26 @@ interface Ihale {
   teklif_sayisi?: number;
 }
 
-const IHALE_TURU_CONFIG: Record<string, { label: string; icon: any; color: string }> = {
-  'acik_eksiltme': { label: 'Açık Eksiltme', icon: TrendingDown, color: 'bg-blue-500' },
-  'ingiliz': { label: 'İngiliz Usulü', icon: TrendingUp, color: 'bg-green-500' },
-  'hollanda': { label: 'Hollanda Usulü', icon: Gavel, color: 'bg-orange-500' },
-  'japon': { label: 'Japon Usulü', icon: Users, color: 'bg-yellow-500' },
-  'turlu_kapali': { label: 'Turlu Kapalı', icon: Lock, color: 'bg-red-500' },
-  'muhurlu_kapali': { label: 'Mühürlü Kapalı', icon: Shield, color: 'bg-purple-500' },
-};
+const getIhaleTuruConfig = (t: any) => ({
+  'acik_eksiltme': { label: t('auctions.acikEksiltme'), icon: TrendingDown, color: 'bg-blue-500' },
+  'ingiliz': { label: t('auctions.ingiliz'), icon: TrendingUp, color: 'bg-green-500' },
+  'hollanda': { label: t('auctions.hollanda'), icon: Gavel, color: 'bg-orange-500' },
+  'japon': { label: t('auctions.japon'), icon: Users, color: 'bg-yellow-500' },
+  'turlu_kapali': { label: t('auctions.turluKapali'), icon: Lock, color: 'bg-red-500' },
+  'muhurlu_kapali': { label: t('auctions.muhurluKapali'), icon: Shield, color: 'bg-purple-500' },
+});
 
-const DURUM_BADGES: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-  'aktif': { label: 'Aktif', variant: 'default' },
-  'beklemede': { label: 'Beklemede', variant: 'secondary' },
-  'tamamlandi': { label: 'Tamamlandı', variant: 'outline' },
-  'iptal': { label: 'İptal', variant: 'destructive' },
-};
+const getDurumBadges = (t: any) => ({
+  'aktif': { label: t('auctions.statusActive'), variant: 'default' as const },
+  'beklemede': { label: t('auctions.statusPending'), variant: 'secondary' as const },
+  'tamamlandi': { label: t('auctions.statusCompleted'), variant: 'outline' as const },
+  'iptal': { label: t('auctions.statusCancelled'), variant: 'destructive' as const },
+});
 
 export default function FirmaIhaleler() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [ihaleler, setIhaleler] = useState<Ihale[]>([]);
   const [loading, setLoading] = useState(true);
   const [firmaId, setFirmaId] = useState<string | null>(null);
@@ -119,13 +121,13 @@ export default function FirmaIhaleler() {
     const end = new Date(deadline);
     const diff = end.getTime() - now.getTime();
 
-    if (diff <= 0) return 'Süre doldu';
+    if (diff <= 0) return t('auctions.timeExpired');
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 
-    if (days > 0) return `${days} gün ${hours} saat`;
-    return `${hours} saat`;
+    if (days > 0) return t('auctions.daysHours', { days, hours });
+    return `${hours} ${t('auctions.hours')}`;
   };
 
   if (authLoading || loading) {
@@ -145,13 +147,13 @@ export default function FirmaIhaleler() {
             <Button variant="ghost" size="icon" onClick={() => navigate('/firma/dashboard')}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h1 className="text-xl font-bold">İhalelerim</h1>
+            <h1 className="text-xl font-bold">{t('nav.myAuctions')}</h1>
           </div>
           <div className="flex items-center gap-4">
             <NotificationBell />
             <Button onClick={() => navigate('/firma/dashboard')}>
               <Plus className="h-4 w-4 mr-2" />
-              Yeni İhale
+              {t('auctions.newAuction')}
             </Button>
           </div>
         </div>
@@ -163,23 +165,24 @@ export default function FirmaIhaleler() {
           <Card className="text-center py-12">
             <CardContent>
               <Gavel className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Henüz ihale oluşturmadınız</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('auctions.noAuctionsCreated')}</h3>
               <p className="text-muted-foreground mb-4">
-                İlk ihalenizi başlatmak için aşağıdaki butona tıklayın.
+                {t('auctions.startFirstAuction')}
               </p>
               <Button onClick={() => navigate('/firma/dashboard')}>
                 <Plus className="h-4 w-4 mr-2" />
-                İhale Başlat
+                {t('auctions.startAuction')}
               </Button>
             </CardContent>
           </Card>
         ) : (
           <div className="grid gap-4">
             {ihaleler.map((ihale) => {
-              const config = IHALE_TURU_CONFIG[ihale.ihale_turu] || IHALE_TURU_CONFIG['acik_eksiltme'];
-              const durumBadge = DURUM_BADGES[ihale.durum] || DURUM_BADGES['aktif'];
+              const IHALE_TURU_CONFIG = getIhaleTuruConfig(t);
+              const DURUM_BADGES = getDurumBadges(t);
+              const config = IHALE_TURU_CONFIG[ihale.ihale_turu as keyof typeof IHALE_TURU_CONFIG] || IHALE_TURU_CONFIG['acik_eksiltme'];
+              const durumBadge = DURUM_BADGES[ihale.durum as keyof typeof DURUM_BADGES] || DURUM_BADGES['aktif'];
               const IconComponent = config.icon;
-
               return (
                 <Card 
                   key={ihale.id} 
@@ -210,33 +213,33 @@ export default function FirmaIhaleler() {
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <Calendar className="h-4 w-4" />
                         <span>
-                          {format(new Date(ihale.deadline), 'dd MMM yyyy HH:mm', { locale: tr })}
+                          {format(new Date(ihale.deadline), 'dd MMM yyyy HH:mm', { locale: i18n.language === 'en' ? undefined : tr })}
                         </span>
                       </div>
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <Users className="h-4 w-4" />
-                        <span>{ihale.teklif_sayisi} teklif</span>
+                        <span>{ihale.teklif_sayisi} {t('auctions.bids')}</span>
                       </div>
                       {ihale.durum === 'aktif' && (
                         <Badge variant="outline" className="text-primary">
-                          {getTimeRemaining(ihale.deadline)} kaldı
+                          {getTimeRemaining(ihale.deadline)} {t('auctions.remaining')}
                         </Badge>
                       )}
                       {ihale.mevcut_fiyat && (
                         <Badge variant="secondary">
-                          Mevcut: {ihale.mevcut_fiyat.toLocaleString('tr-TR')} ₺
+                          {t('auctions.currentPrice')}: {ihale.mevcut_fiyat.toLocaleString('tr-TR')} ₺
                         </Badge>
                       )}
                       {ihale.ihale_turu === 'turlu_kapali' && ihale.mevcut_tur && ihale.toplam_tur && (
                         <Badge variant="secondary">
-                          Tur {ihale.mevcut_tur}/{ihale.toplam_tur}
+                          {t('auctions.round')} {ihale.mevcut_tur}/{ihale.toplam_tur}
                         </Badge>
                       )}
                     </div>
                     <div className="mt-4 flex justify-end">
                       <Button variant="outline" size="sm">
                         <Eye className="h-4 w-4 mr-2" />
-                        Detayları Gör
+                        {t('auctions.viewDetails')}
                       </Button>
                     </div>
                   </CardContent>

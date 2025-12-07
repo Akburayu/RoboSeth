@@ -142,9 +142,9 @@ const Index = () => {
             </div>
             
             <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-              {t('index.welcome')}{' '}
-              <br className="hidden sm:block" />
               <span className="text-gradient">EntegraTR</span>
+              <br className="hidden sm:block" />
+              <span className="text-3xl sm:text-4xl md:text-5xl">{t('index.welcome')}</span>
             </h1>
             
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">

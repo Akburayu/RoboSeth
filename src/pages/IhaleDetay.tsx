@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -68,50 +69,51 @@ interface Teklif {
   };
 }
 
-const IHALE_TURU_CONFIG: Record<string, { label: string; description: string; icon: any; color: string }> = {
+const getIhaleTuruConfig = (t: any) => ({
   'acik_eksiltme': { 
-    label: 'Açık Eksiltme Usulü E-İhale', 
-    description: 'Tüm teklifler görünür, en düşük fiyat kazanır',
+    label: t('auctions.acikEksiltmeLabel'), 
+    description: t('auctions.acikEksiltmeDesc'),
     icon: TrendingDown, 
     color: 'bg-blue-500' 
   },
   'ingiliz': { 
-    label: 'İngiliz Usulü E-İhale', 
-    description: 'Açık artırma, en yüksek teklif kazanır',
+    label: t('auctions.ingilizLabel'), 
+    description: t('auctions.ingilizDesc'),
     icon: TrendingUp, 
     color: 'bg-green-500' 
   },
   'hollanda': { 
-    label: 'Hollanda Usulü E-İhale', 
-    description: 'Fiyat düşer, ilk kabul eden kazanır',
+    label: t('auctions.hollandaLabel'), 
+    description: t('auctions.hollandaDesc'),
     icon: Gavel, 
     color: 'bg-orange-500' 
   },
   'japon': { 
-    label: 'Japon Usulü E-İhale', 
-    description: 'Fiyat artar, devam etmeyenler elenir, son kalan kazanır',
+    label: t('auctions.japonLabel'), 
+    description: t('auctions.japonDesc'),
     icon: Users, 
     color: 'bg-yellow-500' 
   },
   'turlu_kapali': { 
-    label: 'Turlu Kapalı Usulü E-İhale', 
-    description: 'Birden fazla turda kapalı teklifler, en düşük kazanır',
+    label: t('auctions.turluKapaliLabel'), 
+    description: t('auctions.turluKapaliDesc'),
     icon: Lock, 
     color: 'bg-red-500' 
   },
   'muhurlu_kapali': { 
-    label: 'Mühürlü Kapalı Usulü E-İhale', 
-    description: 'Tek seferlik gizli teklif, en düşük kazanır',
+    label: t('auctions.muhurluKapaliLabel'), 
+    description: t('auctions.muhurluKapaliDesc'),
     icon: Shield, 
     color: 'bg-purple-500' 
   },
-};
+});
 
 export default function IhaleDetay() {
   const { id } = useParams<{ id: string }>();
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t, i18n } = useTranslation();
   
   const [ihale, setIhale] = useState<Ihale | null>(null);
   const [teklifler, setTeklifler] = useState<Teklif[]>([]);
@@ -152,7 +154,7 @@ export default function IhaleDetay() {
     const diff = end.getTime() - now.getTime();
 
     if (diff <= 0) {
-      setTimeRemaining('Süre doldu');
+      setTimeRemaining(t('auctions.timeExpired'));
       return;
     }
 
@@ -162,11 +164,11 @@ export default function IhaleDetay() {
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     if (days > 0) {
-      setTimeRemaining(`${days}g ${hours}s ${minutes}d`);
+      setTimeRemaining(t('auctions.daysHours', { days, hours }));
     } else if (hours > 0) {
-      setTimeRemaining(`${hours}s ${minutes}d ${seconds}sn`);
+      setTimeRemaining(`${hours}h ${minutes}m ${seconds}s`);
     } else {
-      setTimeRemaining(`${minutes}d ${seconds}sn`);
+      setTimeRemaining(t('auctions.minutesSeconds', { minutes }));
     }
   };
 
@@ -214,8 +216,8 @@ export default function IhaleDetay() {
     } catch (error) {
       console.error('Error fetching ihale:', error);
       toast({
-        title: "Hata",
-        description: "İhale bilgileri yüklenirken bir hata oluştu.",
+        title: t('common.error'),
+        description: t('auctions.loadError'),
         variant: "destructive",
       });
     } finally {
@@ -306,8 +308,8 @@ export default function IhaleDetay() {
         if (error) throw error;
 
         toast({
-          title: "Başarılı",
-          description: "Teklifiniz güncellendi.",
+          title: t('common.success'),
+          description: t('auctions.bidUpdated'),
         });
       } else {
         // Insert new bid
@@ -323,8 +325,8 @@ export default function IhaleDetay() {
         if (error) throw error;
 
         toast({
-          title: "Başarılı",
-          description: "Teklifiniz başarıyla gönderildi.",
+          title: t('common.success'),
+          description: t('auctions.bidSubmitted'),
         });
       }
 
@@ -332,8 +334,8 @@ export default function IhaleDetay() {
       fetchTeklifler();
     } catch (error: any) {
       toast({
-        title: "Hata",
-        description: error.message || "Teklif gönderilirken bir hata oluştu.",
+        title: t('common.error'),
+        description: error.message || t('auctions.bidError'),
         variant: "destructive",
       });
     }
@@ -351,15 +353,26 @@ export default function IhaleDetay() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="p-8 text-center">
-          <h2 className="text-xl font-semibold mb-2">İhale bulunamadı</h2>
-          <Button onClick={() => navigate(-1)}>Geri Dön</Button>
+          <h2 className="text-xl font-semibold mb-2">{t('auctions.notFound')}</h2>
+          <Button onClick={() => navigate(-1)}>{t('common.back')}</Button>
         </Card>
       </div>
     );
   }
 
-  const config = IHALE_TURU_CONFIG[ihale.ihale_turu] || IHALE_TURU_CONFIG['acik_eksiltme'];
+  const IHALE_TURU_CONFIG = getIhaleTuruConfig(t);
+  const config = IHALE_TURU_CONFIG[ihale.ihale_turu as keyof typeof IHALE_TURU_CONFIG] || IHALE_TURU_CONFIG['acik_eksiltme'];
+
   const IconComponent = config.icon;
+
+  const getStatusLabel = (status: string) => {
+    switch(status) {
+      case 'aktif': return t('auctions.statusActive');
+      case 'tamamlandi': return t('auctions.statusCompleted');
+      case 'iptal': return t('auctions.statusCancelled');
+      default: return status;
+    }
+  };
 
   const renderAuctionView = () => {
     const commonProps = {
@@ -434,7 +447,7 @@ export default function IhaleDetay() {
                 variant={ihale.durum === 'aktif' ? 'default' : ihale.durum === 'tamamlandi' ? 'secondary' : 'destructive'}
                 className="text-sm"
               >
-                {ihale.durum === 'aktif' ? 'Aktif' : ihale.durum === 'tamamlandi' ? 'Tamamlandı' : 'İptal'}
+                {getStatusLabel(ihale.durum)}
               </Badge>
             </div>
           </div>
@@ -448,38 +461,38 @@ export default function IhaleDetay() {
           <div className="lg:col-span-1 space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">İhale Bilgileri</CardTitle>
+                <CardTitle className="text-lg">{t('auctions.auctionInfo')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {ihale.aciklama && (
                   <div>
-                    <h4 className="text-sm font-medium text-muted-foreground mb-1">Açıklama</h4>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-1">{t('common.description')}</h4>
                     <p className="text-sm">{ihale.aciklama}</p>
                   </div>
                 )}
 
                 {ihale.teknik_sartlar && (
                   <div>
-                    <h4 className="text-sm font-medium text-muted-foreground mb-1">Teknik Şartlar</h4>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-1">{t('auctions.technicalSpecs')}</h4>
                     <p className="text-sm whitespace-pre-wrap">{ihale.teknik_sartlar}</p>
                   </div>
                 )}
 
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span>Bitiş: {format(new Date(ihale.deadline), 'dd MMM yyyy HH:mm', { locale: tr })}</span>
+                  <span>{t('auctions.deadline')}: {format(new Date(ihale.deadline), 'dd MMM yyyy HH:mm', { locale: i18n.language === 'en' ? undefined : tr })}</span>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm">
                   <Users className="h-4 w-4 text-muted-foreground" />
-                  <span>{teklifler.length} teklif</span>
+                  <span>{teklifler.length} {t('auctions.bids')}</span>
                 </div>
 
                 {ihale.dokuman_url && (
                   <Button variant="outline" className="w-full" asChild>
                     <a href={ihale.dokuman_url} target="_blank" rel="noopener noreferrer">
                       <Download className="h-4 w-4 mr-2" />
-                      Teknik Şartname İndir
+                      {t('auctions.downloadSpecs')}
                     </a>
                   </Button>
                 )}
