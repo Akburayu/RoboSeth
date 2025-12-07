@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,13 +17,9 @@ interface LoginModalProps {
   onSwitchToRegister: () => void;
 }
 
-const loginSchema = z.object({
-  email: z.string().email('Geçerli bir email adresi giriniz'),
-  password: z.string().min(1, 'Şifre gereklidir'),
-});
-
 export function LoginModal({ open, onOpenChange, onSwitchToRegister }: LoginModalProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -32,6 +29,11 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister }: LoginModa
   
   const { signIn, userRole } = useAuth();
   const { toast } = useToast();
+
+  const loginSchema = z.object({
+    email: z.string().email(t('auth.validEmail')),
+    password: z.string().min(1, t('auth.passwordRequired')),
+  });
 
   // Navigate after login when userRole becomes available
   useEffect(() => {
@@ -72,13 +74,13 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister }: LoginModa
     if (error) {
       if (error.message.includes('Invalid login credentials')) {
         toast({
-          title: 'Giriş Hatası',
-          description: 'Email veya şifre hatalı. Lütfen tekrar deneyin.',
+          title: t('auth.loginError'),
+          description: t('auth.invalidCredentials'),
           variant: 'destructive',
         });
       } else {
         toast({
-          title: 'Giriş Hatası',
+          title: t('auth.loginError'),
           description: error.message,
           variant: 'destructive',
         });
@@ -87,8 +89,8 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister }: LoginModa
     }
 
     toast({
-      title: 'Hoş Geldiniz!',
-      description: 'Başarıyla giriş yaptınız.',
+      title: t('auth.welcomeBack'),
+      description: t('auth.loginSuccess'),
     });
     
     setLoginSuccess(true);
@@ -122,12 +124,12 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister }: LoginModa
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-center">Giriş Yap</DialogTitle>
+            <DialogTitle className="text-2xl font-bold text-center">{t('auth.loginTitle')}</DialogTitle>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="login-email">Email</Label>
+              <Label htmlFor="login-email">{t('common.email')}</Label>
               <Input
                 id="login-email"
                 type="email"
@@ -141,13 +143,13 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister }: LoginModa
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="login-password">Şifre</Label>
+                <Label htmlFor="login-password">{t('common.password')}</Label>
                 <button
                   type="button"
                   onClick={handleForgotPassword}
                   className="text-sm text-primary hover:underline"
                 >
-                  Şifremi Unuttum
+                  {t('auth.forgotPassword')}
                 </button>
               </div>
               <Input
@@ -165,21 +167,21 @@ export function LoginModal({ open, onOpenChange, onSwitchToRegister }: LoginModa
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Giriş Yapılıyor...
+                  {t('auth.loggingIn')}
                 </>
               ) : (
-                'Giriş Yap'
+                t('auth.login')
               )}
             </Button>
 
             <div className="text-center text-sm text-muted-foreground">
-              Hesabınız yok mu?{' '}
+              {t('auth.dontHaveAccount')}{' '}
               <button
                 type="button"
                 onClick={onSwitchToRegister}
                 className="font-medium text-primary hover:underline"
               >
-                Kayıt Ol
+                {t('auth.register')}
               </button>
             </div>
           </form>

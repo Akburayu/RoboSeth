@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,16 +18,11 @@ interface RegisterModalProps {
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const registerSchema = z.object({
-  name: z.string().min(2, 'İsim en az 2 karakter olmalıdır').max(100, 'İsim çok uzun'),
-  email: z.string().regex(emailRegex, 'Geçerli bir email adresi giriniz'),
-  password: z.string().min(6, 'Şifre en az 6 karakter olmalıdır'),
-});
-
 type RoleType = 'firma' | 'entegrator' | null;
 
 export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterModalProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [step, setStep] = useState<'select' | 'form'>('select');
   const [selectedRole, setSelectedRole] = useState<RoleType>(null);
   const [name, setName] = useState('');
@@ -37,6 +33,12 @@ export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterM
   
   const { signUp } = useAuth();
   const { toast } = useToast();
+
+  const registerSchema = z.object({
+    name: z.string().min(2, t('auth.nameMinLength')).max(100, t('auth.nameTooLong')),
+    email: z.string().regex(emailRegex, t('auth.validEmail')),
+    password: z.string().min(6, t('auth.passwordMinLength')),
+  });
 
   const handleRoleSelect = (role: RoleType) => {
     setSelectedRole(role);
@@ -75,13 +77,13 @@ export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterM
     if (error) {
       if (error.message.includes('already registered')) {
         toast({
-          title: 'Kayıt Hatası',
-          description: 'Bu email adresi zaten kayıtlı. Giriş yapmayı deneyin.',
+          title: t('auth.registerError'),
+          description: t('auth.emailAlreadyRegistered'),
           variant: 'destructive',
         });
       } else {
         toast({
-          title: 'Kayıt Hatası',
+          title: t('auth.registerError'),
           description: error.message,
           variant: 'destructive',
         });
@@ -90,8 +92,8 @@ export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterM
     }
 
     toast({
-      title: 'Kayıt Başarılı!',
-      description: 'Hesabınız oluşturuldu. Hoş geldiniz!',
+      title: t('auth.registerSuccess'),
+      description: t('auth.accountCreated'),
     });
     
     onOpenChange(false);
@@ -126,12 +128,12 @@ export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterM
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">
-            {step === 'select' ? 'Hesap Türü Seçin' : (
+            {step === 'select' ? t('auth.selectAccountType') : (
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon" onClick={handleBack} className="h-8 w-8">
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
-                <span>{selectedRole === 'firma' ? 'Firma Kaydı' : 'Entegratör Kaydı'}</span>
+                <span>{selectedRole === 'firma' ? t('roles.firmaRegistration') : t('roles.entegratorRegistration')}</span>
               </div>
             )}
           </DialogTitle>
@@ -149,9 +151,9 @@ export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterM
                   <Building2 className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Firma Girişi</h3>
+                  <h3 className="font-semibold text-lg">{t('roles.firmaEntry')}</h3>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Entegratör arayan şirketler için. İlan yayınlayın, teklifler alın.
+                    {t('roles.firmaDesc')}
                   </p>
                 </div>
               </div>
@@ -167,21 +169,21 @@ export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterM
                   <Users className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Entegratör Girişi</h3>
+                  <h3 className="font-semibold text-lg">{t('roles.entegratorEntry')}</h3>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Hizmet veren entegratörler için. Projelere teklif verin.
+                    {t('roles.entegratorDesc')}
                   </p>
                 </div>
               </div>
             </button>
 
             <div className="text-center text-sm text-muted-foreground mt-2">
-              Zaten hesabınız var mı?{' '}
+              {t('auth.alreadyHaveAccount')}{' '}
               <button
                 onClick={onSwitchToLogin}
                 className="font-medium text-primary hover:underline"
               >
-                Giriş Yap
+                {t('auth.login')}
               </button>
             </div>
           </div>
@@ -189,20 +191,20 @@ export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterM
           <form onSubmit={handleSubmit} className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="name">
-                {selectedRole === 'firma' ? 'Firma Adı' : 'Entegratör Adı'}
+                {selectedRole === 'firma' ? t('roles.firmaName') : t('roles.entegratorName')}
               </Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={selectedRole === 'firma' ? 'Şirket adınız' : 'İsminiz veya şirket adınız'}
+                placeholder={selectedRole === 'firma' ? t('roles.firmaNamePlaceholder') : t('roles.entegratorNamePlaceholder')}
                 className={errors.name ? 'border-destructive' : ''}
               />
               {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('common.email')}</Label>
               <Input
                 id="email"
                 type="text"
@@ -217,7 +219,7 @@ export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterM
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Şifre</Label>
+              <Label htmlFor="password">{t('common.password')}</Label>
               <Input
                 id="password"
                 type="password"
@@ -237,10 +239,10 @@ export function RegisterModal({ open, onOpenChange, onSwitchToLogin }: RegisterM
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Kayıt Yapılıyor...
+                  {t('auth.registering')}
                 </>
               ) : (
-                'Kayıt Ol'
+                t('auth.register')
               )}
             </Button>
           </form>

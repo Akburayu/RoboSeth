@@ -36,7 +36,17 @@
     "seeLess": "Daha Az",
     "noResults": "Sonuç bulunamadı",
     "confirmDelete": "Silmek istediğinizden emin misiniz?",
-    "language": "Dil"
+    "language": "Dil",
+    "saving": "Kaydediliyor...",
+    "complete": "Tamamla",
+    "completeRegistration": "Kaydı Tamamla",
+    "homePage": "Anasayfa",
+    "all": "Tümü",
+    "found": "bulundu",
+    "activeFilters": "filtre aktif",
+    "profileActive": "Profil Aktif",
+    "membershipRequired": "Üyelik Gerekli",
+    "membershipRequiredDesc": "Bu işlem için üye olmanız gerekmektedir."
   },
   "auth": {
     "login": "Giriş Yap",
@@ -66,7 +76,9 @@
     "passwordRequired": "Şifre gereklidir",
     "passwordMinLength": "Şifre en az 6 karakter olmalıdır",
     "nameMinLength": "İsim en az 2 karakter olmalıdır",
-    "nameTooLong": "İsim çok uzun"
+    "nameTooLong": "İsim çok uzun",
+    "loggingIn": "Giriş Yapılıyor...",
+    "registering": "Kayıt Yapılıyor..."
   },
   "roles": {
     "firma": "Firma",
@@ -78,7 +90,9 @@
     "firmaName": "Firma Adı",
     "entegratorName": "Entegratör Adı",
     "firmaNamePlaceholder": "Şirket adınız",
-    "entegratorNamePlaceholder": "İsminiz veya şirket adınız"
+    "entegratorNamePlaceholder": "İsminiz veya şirket adınız",
+    "firmaRegistration": "Firma Kaydı",
+    "entegratorRegistration": "Entegratör Kaydı"
   },
   "nav": {
     "home": "Ana Sayfa",
@@ -89,11 +103,12 @@
     "createListing": "İlan Oluştur",
     "myListings": "İlanlarım",
     "myAuctions": "İhalelerim",
-    "buyCredits": "Kredi Satın Al"
+    "buyCredits": "Kredi Satın Al",
+    "startAuction": "İhale Başlat"
   },
   "index": {
     "b2bPlatform": "B2B Entegrasyon Platformu",
-    "welcome": "EntegraTR'ye Hoş Geldiniz",
+    "welcome": "Hoş Geldiniz",
     "subtitle": "Firmalar ve entegratörleri buluşturan Türkiye'nin en kapsamlı B2B platformu. Doğru iş ortağını bulun, projelerinizi hayata geçirin.",
     "getStarted": "Hemen Başla",
     "goToDashboard": "Dashboard'a Git",
@@ -132,7 +147,11 @@
     "mostPopular": "En Popüler",
     "buy": "Satın Al",
     "credits": "Kredi",
-    "yourCredits": "Krediniz"
+    "yourCredits": "Krediniz",
+    "insufficientCredits": "Yetersiz Kredi",
+    "insufficientCreditsDesc": "Bu işlem için {{required}} kredi gerekli. Mevcut krediniz: {{available}}",
+    "creditSpent": "{{cost}} kredi harcandı. Kalan: {{remaining}}",
+    "contactRevealed": "İletişim Bilgisi Açıldı"
   },
   "register": {
     "firmaTitle": "Firma Kaydı",
@@ -193,16 +212,26 @@
     "membershipActive": "üyeliğiniz aktif.",
     "basic": "Basic",
     "premium": "Premium",
+    "recommended": "Önerilen",
     "basicFeatures": ["Temel profil", "İlan görüntüleme", "Teklif gönderme", "Email desteği"],
     "premiumFeatures": ["Öne çıkan profil", "Sınırsız teklif", "Öncelikli listeleme", "7/24 destek", "Rozet görünümü"],
     "emailLabel": "E-posta Adresi",
     "emailPlaceholder": "firma@ornek.com",
     "emailNote": "Bildirimler bu e-posta adresine gönderilecektir.",
-    "aboutPlaceholder": "Firmanızı ve sunduğunuz hizmetleri detaylı bir şekilde anlatın..."
+    "aboutPlaceholder": "Firmanızı ve sunduğunuz hizmetleri detaylı bir şekilde anlatın...",
+    "aboutLabel": "Firma Tanıtım Yazısı",
+    "aboutMinChars": "karakter (minimum)",
+    "selectedPlan": "Seçtiğiniz üyelik planı",
+    "allFeaturesIncluded": "Tüm özellikler dahil",
+    "prioritySupport": "Öncelikli destek",
+    "paymentNotActive": "Şu an için ödeme entegrasyonu aktif değil. Ücretsiz olarak devam edebilirsiniz.",
+    "membershipsFree": "Şu an için üyelikler ücretsizdir. Ödeme sistemi yakında aktif olacaktır.",
+    "employeeCount": "Çalışan Sayısı",
+    "employeeCountPlaceholder": "Örn: 15"
   },
   "entegratorRegister": {
     "entegratorName": "Entegratör Adı",
-    "entegratorNamePlaceholder": "Şirketinizin veya kişisel isminiz",
+    "entegratorNamePlaceholder": "Şirketinizin tam adı",
     "brands": "Markalar",
     "selectBrands": "Uzmanlaştığınız robot markalarını seçin",
     "activityAreas": "Faaliyet Alanları",
@@ -212,15 +241,15 @@
     "experience": "Tecrübe",
     "selectExperience": "Tecrübe sürenizi seçin",
     "sector": "Sektör",
-    "selectSector": "Ana sektörünüzü seçin",
+    "selectSector": "Sektör seçin",
     "teamSize": "Ekip Büyüklüğü",
     "teamSizePlaceholder": "Ekibinizdeki kişi sayısı",
     "references": "Referanslar",
-    "referencesPlaceholder": "Daha önce çalıştığınız firmalar",
+    "referencesPlaceholder": "Çalıştığınız firmalar ve projeler...",
     "location": "Konum",
-    "locationPlaceholder": "Şehir, İlçe",
+    "locationPlaceholder": "Örn: İstanbul, Kadıköy",
     "socialMedia": "İletişim / Sosyal Medya",
-    "socialMediaPlaceholder": "LinkedIn, Web sitesi, vb.",
+    "socialMediaPlaceholder": "LinkedIn, website vb.",
     "serviceProvinces": "Hizmet Verilen İller",
     "selectServiceProvinces": "Hizmet verdiğiniz illeri seçin",
     "verifyCompetency": "Yetkinliğini Doğrula",
@@ -241,13 +270,20 @@
     "firmaDashboard": "Firma Paneli",
     "entegratorDashboard": "Entegratör Paneli",
     "viewListings": "Açık ilanları görüntüleyin ve teklif verin",
-    "findIntegrators": "Entegratörleri keşfedin ve iletişime geçin",
+    "findIntegrators": "Entegratörleri keşfedin",
     "guestMode": "Misafir Modu",
     "viewOnly": "- Sadece görüntüleme yapabilirsiniz",
     "signUp": "Üye Ol",
     "listings": "İlanlar",
     "auctions": "İhaleler",
-    "integrators": "Entegratörler"
+    "integrators": "Entegratörler",
+    "searchListings": "İlan ara...",
+    "searchIntegrators": "Entegratör ara...",
+    "noListingsYet": "Henüz ilan bulunmuyor.",
+    "noAuctionsYet": "Henüz aktif ihale bulunmuyor.",
+    "noIntegratorsYet": "Henüz entegratör bulunmuyor.",
+    "listingsFound": "ilan bulundu",
+    "integratorsFound": "entegratör bulundu"
   },
   "listings": {
     "title": "İlanlar",
@@ -256,10 +292,13 @@
     "budget": "Bütçe",
     "deadline": "Son Tarih",
     "activityAreas": "Faaliyet Alanları",
+    "requiredActivityAreas": "Aranan Faaliyet Alanları",
+    "requiredExpertise": "Aranan Uzmanlık",
     "expertise": "Uzmanlık",
     "sector": "Sektör",
     "experience": "Tecrübe",
     "provinces": "İller",
+    "requiredProvinces": "Hizmet Beklenen İller",
     "sendProposal": "Teklif Ver",
     "proposalSent": "Teklif Verildi",
     "alreadyProposed": "Zaten Teklif Verildi",
@@ -270,7 +309,8 @@
     "proposalMessage": "Mesaj (İsteğe Bağlı)",
     "proposalMessagePlaceholder": "Teklifinizle ilgili detaylar...",
     "proposalSuccess": "Teklif Gönderildi",
-    "proposalSuccessDesc": "Teklifiniz başarıyla iletildi."
+    "proposalSuccessDesc": "Teklifiniz başarıyla iletildi.",
+    "unnamedListing": "İsimsiz İlan"
   },
   "auctions": {
     "title": "İhaleler",
@@ -281,7 +321,17 @@
     "deadline": "Bitiş Tarihi",
     "participants": "Katılımcılar",
     "viewDetails": "Detayları Gör",
-    "createAuction": "İhale Oluştur"
+    "createAuction": "İhale Oluştur",
+    "timeExpired": "Süre doldu",
+    "daysHours": "{{days}} gün {{hours}} saat",
+    "hoursMinutes": "{{hours}} saat {{minutes}} dakika",
+    "minutesSeconds": "{{minutes}} dakika",
+    "acikEksiltme": "Açık Eksiltme",
+    "ingiliz": "İngiliz Usulü",
+    "hollanda": "Hollanda Usulü",
+    "japon": "Japon Usulü",
+    "turluKapali": "Turlu Kapalı",
+    "muhurluKapali": "Mühürlü Kapalı"
   },
   "profile": {
     "title": "Profil",
@@ -299,14 +349,40 @@
   "footer": {
     "copyright": "© 2024 EntegraTR. Tüm hakları saklıdır."
   },
-  "experience": {
-    "lessThan1Year": "1 yıldan az",
-    "1to3Years": "1-3 yıl",
-    "3to5Years": "3-5 yıl",
-    "5to10Years": "5-10 yıl",
-    "moreThan10Years": "10+ yıl"
+  "filters": {
+    "activityAreas": "Faaliyet Alanları",
+    "expertiseAreas": "Uzmanlık Alanları",
+    "sector": "Sektör",
+    "selectSector": "Sektör seçin",
+    "experience": "Tecrübe",
+    "selectExperience": "Tecrübe seçin",
+    "serviceProvinces": "Hizmet Verilen İller",
+    "minScore": "Minimum Puan",
+    "employeeCount": "Çalışan Sayısı",
+    "filters": "Filtreler"
   },
-  "provinces": {
-    "allTurkey": "Tüm Türkiye"
+  "rating": {
+    "quality": "Kalite",
+    "customerRelations": "Müşteri İlişkisi",
+    "processManagement": "Süreç Yönetimi",
+    "comment": "Yorum",
+    "rateIntegrator": "Entegratörü Değerlendir",
+    "updateRating": "Değerlendirmeyi Güncelle",
+    "incompleteRating": "Eksik Değerlendirme",
+    "rateAllCategories": "Lütfen tüm kategorilere puan verin.",
+    "ratingUpdated": "Değerlendirmeniz güncellendi.",
+    "ratingSaved": "Değerlendirmeniz kaydedildi.",
+    "viewComments": "Yorumları Gör"
+  },
+  "contact": {
+    "revealContact": "İletişim Bilgisini Aç",
+    "viewContact": "İletişim Bilgisini Gör",
+    "contactInfo": "İletişim Bilgisi",
+    "confirmReveal": "İletişim Bilgisini Aç",
+    "revealCost": "Bu işlem {{cost}} kredi harcayacaktır.",
+    "currentCredits": "Mevcut krediniz: {{credits}}",
+    "confirm": "Onayla",
+    "sessionError": "Oturum Hatası",
+    "pleaseLoginAgain": "Lütfen tekrar giriş yapın."
   }
 }
