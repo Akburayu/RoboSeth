@@ -249,7 +249,7 @@ export default function EntegratorDashboard() {
       setIlanlar(data || []);
     } catch (error: any) {
       toast({
-        title: 'Hata',
+        title: t('common.error'),
         description: error.message,
         variant: 'destructive',
       });
@@ -296,8 +296,8 @@ export default function EntegratorDashboard() {
   const handleTeklifClick = (ilan: Ilan) => {
     if (myTeklifler.has(ilan.id)) {
       toast({
-        title: 'Zaten Teklif Verildi',
-        description: 'Bu ilana daha önce teklif verdiniz.',
+        title: t('listings.alreadyProposed'),
+        description: t('listings.alreadyProposedDesc'),
       });
       return;
     }
@@ -312,8 +312,8 @@ export default function EntegratorDashboard() {
 
     if (!teklifTutari) {
       toast({
-        title: 'Teklif Tutarı Gerekli',
-        description: 'Lütfen teklif tutarınızı girin.',
+        title: t('listings.proposalAmountRequired'),
+        description: t('listings.proposalAmountRequiredDesc'),
         variant: 'destructive',
       });
       return;
@@ -350,12 +350,12 @@ export default function EntegratorDashboard() {
       setTeklifModalOpen(false);
       
       toast({
-        title: 'Teklif Gönderildi',
-        description: 'Teklifiniz başarıyla iletildi.',
+        title: t('listings.proposalSuccess'),
+        description: t('listings.proposalSuccessDesc'),
       });
     } catch (error: any) {
       toast({
-        title: 'Hata',
+        title: t('common.error'),
         description: error.message,
         variant: 'destructive',
       });
@@ -527,7 +527,7 @@ export default function EntegratorDashboard() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="İlan ara..."
+                placeholder={t('dashboard.searchListings')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -539,7 +539,7 @@ export default function EntegratorDashboard() {
               className="gap-2"
             >
               <Filter className="h-4 w-4" />
-              Filtrele
+              {t('common.filter')}
               {activeFilterCount > 0 && (
                 <Badge variant="secondary" className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
                   {activeFilterCount}
@@ -556,7 +556,7 @@ export default function EntegratorDashboard() {
                 <div className="space-y-4">
                   {/* Faaliyet Alanları */}
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">Faaliyet Alanları</Label>
+                    <Label className="text-sm font-medium">{t('filters.activityAreas')}</Label>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 max-h-32 overflow-y-auto p-2 border rounded-lg bg-muted/30">
                       {FAALIYET_ALANLARI.map((alan) => (
                         <label key={alan} className="flex items-center gap-2 cursor-pointer text-xs">
@@ -572,7 +572,7 @@ export default function EntegratorDashboard() {
 
                   {/* Uzmanlık Alanları */}
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">Uzmanlık Alanları</Label>
+                    <Label className="text-sm font-medium">{t('filters.expertiseAreas')}</Label>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 max-h-24 overflow-y-auto p-2 border rounded-lg bg-muted/30">
                       {UZMANLIK_ALANLARI.map((alan) => (
                         <label key={alan} className="flex items-center gap-2 cursor-pointer text-xs">
@@ -589,13 +589,13 @@ export default function EntegratorDashboard() {
                   {/* Sektör ve Tecrübe */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium">Sektör</Label>
+                      <Label className="text-sm font-medium">{t('filters.sector')}</Label>
                       <Select value={filterSektor} onValueChange={setFilterSektor}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Sektör seçin" />
+                          <SelectValue placeholder={t('filters.selectSector')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">Tümü</SelectItem>
+                          <SelectItem value="">{t('common.all')}</SelectItem>
                           {SEKTORLER.map((s) => (
                             <SelectItem key={s} value={s}>{s}</SelectItem>
                           ))}
@@ -604,13 +604,13 @@ export default function EntegratorDashboard() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-sm font-medium">Tecrübe</Label>
+                      <Label className="text-sm font-medium">{t('filters.experience')}</Label>
                       <Select value={filterTecrube} onValueChange={setFilterTecrube}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Tecrübe seçin" />
+                          <SelectValue placeholder={t('filters.selectExperience')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">Tümü</SelectItem>
+                          <SelectItem value="">{t('common.all')}</SelectItem>
                           {TECRUBE_OPTIONS.map((t) => (
                             <SelectItem key={t} value={t}>{t}</SelectItem>
                           ))}
@@ -621,7 +621,7 @@ export default function EntegratorDashboard() {
 
                   {/* İller */}
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">Hizmet Beklenen İller</Label>
+                    <Label className="text-sm font-medium">{t('listings.requiredProvinces')}</Label>
                     <div className="grid grid-cols-3 md:grid-cols-5 gap-2 max-h-24 overflow-y-auto p-2 border rounded-lg bg-muted/30">
                       {ILLER.map((il) => (
                         <label key={il} className="flex items-center gap-2 cursor-pointer text-xs">
@@ -640,7 +640,7 @@ export default function EntegratorDashboard() {
                     <div className="flex justify-end">
                       <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1 text-muted-foreground">
                         <X className="h-4 w-4" />
-                        Filtreleri Temizle
+                        {t('common.clearFilters')}
                       </Button>
                     </div>
                   )}
@@ -655,19 +655,19 @@ export default function EntegratorDashboard() {
           <TabsList className="mb-4">
             <TabsTrigger value="ilanlar" className="gap-2">
               <Briefcase className="h-4 w-4" />
-              İlanlar ({filteredIlanlar.length})
+              {t('dashboard.listings')} ({filteredIlanlar.length})
             </TabsTrigger>
             <TabsTrigger value="ihaleler" className="gap-2">
               <Gavel className="h-4 w-4" />
-              İhaleler ({ihaleler.length})
+              {t('dashboard.auctions')} ({ihaleler.length})
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="ilanlar">
             {/* Results Count */}
             <div className="mb-4 text-sm text-muted-foreground">
-              {filteredIlanlar.length} ilan bulundu
-              {activeFilterCount > 0 && ` (${activeFilterCount} filtre aktif)`}
+              {filteredIlanlar.length} {t('common.found')}
+              {activeFilterCount > 0 && ` (${activeFilterCount} ${t('common.activeFilters')})`}
             </div>
 
             {/* İlanlar */}
@@ -678,7 +678,7 @@ export default function EntegratorDashboard() {
             ) : filteredIlanlar.length === 0 ? (
               <Card className="p-12 text-center">
                 <Briefcase className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">Henüz ilan bulunmuyor.</p>
+                <p className="text-muted-foreground">{t('listings.noListings')}</p>
               </Card>
             ) : (
           <div className="grid gap-4">
@@ -695,7 +695,7 @@ export default function EntegratorDashboard() {
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <h3 className="font-semibold text-lg">
-                            {ilan.baslik || 'İsimsiz İlan'}
+                            {ilan.baslik || t('listings.unnamedListing')}
                           </h3>
                           {ilan.firma && (
                             <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
@@ -707,7 +707,7 @@ export default function EntegratorDashboard() {
                         {myTeklifler.has(ilan.id) && (
                           <Badge className="bg-green-600">
                             <CheckCircle2 className="h-3 w-3 mr-1" />
-                            Teklif Verildi
+                            {t('listings.proposalSent')}
                           </Badge>
                         )}
                       </div>
@@ -724,7 +724,7 @@ export default function EntegratorDashboard() {
                         <div className="mb-3">
                           <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
                             <Briefcase className="h-3 w-3" />
-                            Aranan Faaliyet Alanları
+                            {t('listings.requiredActivityAreas')}
                           </div>
                           <div className="flex flex-wrap gap-1">
                             {ilan.aranan_faaliyet_alanlari.split(', ').slice(0, 4).map((alan, i) => (
@@ -746,7 +746,7 @@ export default function EntegratorDashboard() {
                         <div className="mb-3">
                           <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
                             <Award className="h-3 w-3" />
-                            Aranan Uzmanlık
+                            {t('listings.requiredExpertise')}
                           </div>
                           <div className="flex flex-wrap gap-1">
                             {ilan.aranan_uzmanlik.split(', ').slice(0, 3).map((uzm, i) => (
@@ -791,19 +791,19 @@ export default function EntegratorDashboard() {
                     {/* Action Button */}
                     <div className="lg:w-40 shrink-0">
                       {isGuestMode ? (
-                        <Button
-                          className="w-full gap-2"
-                          variant="outline"
-                          onClick={() => {
-                            toast({
-                              title: 'Üyelik Gerekli',
-                              description: 'Teklif vermek için üye olmanız gerekmektedir.',
-                            });
+                          <Button
+                            className="w-full gap-2"
+                            variant="outline"
+                            onClick={() => {
+                              toast({
+                                title: t('common.membershipRequired'),
+                                description: t('common.membershipRequiredDesc'),
+                              });
                             navigate('/');
                           }}
                         >
                           <Lock className="h-4 w-4" />
-                          Üyelik Gerekli
+                          {t('common.membershipRequired')}
                         </Button>
                       ) : (
                         <Button
@@ -818,12 +818,12 @@ export default function EntegratorDashboard() {
                           {myTeklifler.has(ilan.id) ? (
                             <>
                               <CheckCircle2 className="h-4 w-4" />
-                              Teklif Verildi
+                              {t('listings.proposalSent')}
                             </>
                           ) : (
                             <>
                               <Send className="h-4 w-4" />
-                              Teklif Ver
+                              {t('listings.sendProposal')}
                             </>
                           )}
                         </Button>
@@ -849,7 +849,7 @@ export default function EntegratorDashboard() {
             ) : ihaleler.length === 0 ? (
               <Card className="p-12 text-center">
                 <Gavel className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">Henüz aktif ihale bulunmuyor.</p>
+                <p className="text-muted-foreground">{t('dashboard.noAuctionsYet')}</p>
               </Card>
             ) : (
               <div className="grid gap-4">
@@ -870,13 +870,16 @@ export default function EntegratorDashboard() {
                     'turlu_kapali': 'bg-red-500',
                     'muhurlu_kapali': 'bg-purple-500',
                   };
-                  const IHALE_LABELS: Record<string, string> = {
-                    'acik_eksiltme': 'Açık Eksiltme',
-                    'ingiliz': 'İngiliz Usulü',
-                    'hollanda': 'Hollanda Usulü',
-                    'japon': 'Japon Usulü',
-                    'turlu_kapali': 'Turlu Kapalı',
-                    'muhurlu_kapali': 'Mühürlü Kapalı',
+                  const getIhaleLabels = (turu: string) => {
+                    const labels: Record<string, string> = {
+                      'acik_eksiltme': t('auctions.acikEksiltme'),
+                      'ingiliz': t('auctions.ingiliz'),
+                      'hollanda': t('auctions.hollanda'),
+                      'japon': t('auctions.japon'),
+                      'turlu_kapali': t('auctions.turluKapali'),
+                      'muhurlu_kapali': t('auctions.muhurluKapali'),
+                    };
+                    return labels[turu] || turu;
                   };
                   const IconComponent = IHALE_ICONS[ihale.ihale_turu] || Gavel;
 
@@ -884,11 +887,11 @@ export default function EntegratorDashboard() {
                     const now = new Date();
                     const end = new Date(deadline);
                     const diff = end.getTime() - now.getTime();
-                    if (diff <= 0) return 'Süre doldu';
+                    if (diff <= 0) return t('auctions.timeExpired');
                     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    if (days > 0) return `${days} gün ${hours} saat`;
-                    return `${hours} saat`;
+                    if (days > 0) return t('auctions.daysHours', { days, hours });
+                    return `${hours} ${t('auctions.hours')}`;
                   };
 
                   return (
@@ -906,8 +909,8 @@ export default function EntegratorDashboard() {
                             <div className="flex items-start justify-between mb-2">
                               <div>
                                 <h3 className="font-semibold text-lg">{ihale.baslik}</h3>
-                                <Badge variant="outline" className="mt-1">
-                                  {IHALE_LABELS[ihale.ihale_turu] || ihale.ihale_turu}
+                              <Badge variant="outline" className="mt-1">
+                                  {getIhaleLabels(ihale.ihale_turu)}
                                 </Badge>
                               </div>
                               <Badge variant="secondary" className="shrink-0">
@@ -921,7 +924,7 @@ export default function EntegratorDashboard() {
                               </p>
                             )}
                             <Button size="sm" className="bg-entegrator hover:bg-entegrator/90">
-                              İhaleye Katıl
+                              {t('auctions.viewDetails')}
                             </Button>
                           </div>
                         </div>
@@ -939,36 +942,36 @@ export default function EntegratorDashboard() {
       <Dialog open={teklifModalOpen} onOpenChange={setTeklifModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Teklif Gönder</DialogTitle>
+            <DialogTitle>{t('listings.sendProposal')}</DialogTitle>
             <DialogDescription>
-              {selectedIlan?.baslik || 'Bu ilan'} için teklifinizi oluşturun
+              {selectedIlan?.baslik || t('listings.unnamedListing')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="teklifTutari">Teklif Tutarı (₺) *</Label>
+              <Label htmlFor="teklifTutari">{t('listings.proposalAmount')} (₺) *</Label>
               <Input
                 id="teklifTutari"
                 type="number"
                 value={teklifTutari}
                 onChange={(e) => setTeklifTutari(e.target.value ? Number(e.target.value) : '')}
-                placeholder="Örn: 75000"
+                placeholder="75000"
               />
               {selectedIlan && formatBudget(selectedIlan.butce_min, selectedIlan.butce_max) && (
                 <p className="text-xs text-muted-foreground">
-                  Firma bütçesi: {formatBudget(selectedIlan.butce_min, selectedIlan.butce_max)}
+                  {t('listings.budget')}: {formatBudget(selectedIlan.butce_min, selectedIlan.butce_max)}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="teklifMesaj">Mesaj</Label>
+              <Label htmlFor="teklifMesaj">{t('listings.proposalMessage')}</Label>
               <Textarea
                 id="teklifMesaj"
                 value={teklifMesaj}
                 onChange={(e) => setTeklifMesaj(e.target.value)}
-                placeholder="Teklifinizle ilgili açıklama ekleyin..."
+                placeholder={t('listings.proposalMessagePlaceholder')}
                 rows={4}
               />
             </div>
@@ -976,7 +979,7 @@ export default function EntegratorDashboard() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setTeklifModalOpen(false)}>
-              İptal
+              {t('common.cancel')}
             </Button>
             <Button 
               onClick={submitTeklif}
@@ -986,12 +989,12 @@ export default function EntegratorDashboard() {
               {submittingTeklif ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Gönderiliyor...
+                  {t('common.processing')}
                 </>
               ) : (
                 <>
                   <Send className="h-4 w-4 mr-2" />
-                  Teklifi Gönder
+                  {t('listings.sendProposal')}
                 </>
               )}
             </Button>
