@@ -1460,7 +1460,7 @@ export default function FirmaDashboard() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
             {/* Kobi Paketi */}
             <Card className="border-2 hover:border-firma transition-colors cursor-pointer group">
               <CardHeader className="text-center pb-2">
@@ -1559,6 +1559,42 @@ export default function FirmaDashboard() {
                 </ul>
                 <Button 
                   className="w-full bg-amber-500 hover:bg-amber-600 text-white"
+                  onClick={() => {
+                    toast({
+                      title: "Satın Alma",
+                      description: "Ödeme sistemi yakında aktif olacak.",
+                    });
+                  }}
+                >
+                  Satın Al
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* İhale Paketi */}
+            <Card className="border-2 hover:border-purple-500 transition-colors cursor-pointer group">
+              <CardHeader className="text-center pb-2">
+                <div className="mx-auto w-12 h-12 bg-purple-500/10 rounded-full flex items-center justify-center mb-2 group-hover:bg-purple-500/20 transition-colors">
+                  <Gavel className="h-6 w-6 text-purple-500" />
+                </div>
+                <CardTitle className="text-lg">İhale Paketi</CardTitle>
+                <p className="text-sm text-muted-foreground">İhale açmak için</p>
+              </CardHeader>
+              <CardContent className="text-center space-y-4">
+                <div>
+                  <span className="text-3xl font-bold text-purple-500">€2,000</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <Gavel className="h-5 w-5 text-muted-foreground" />
+                  <span className="font-semibold">İhale Başına</span>
+                </div>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• 1 ihale açma hakkı</li>
+                  <li>• Tüm ihale türleri</li>
+                  <li>• Özel destek</li>
+                </ul>
+                <Button 
+                  className="w-full bg-purple-500 hover:bg-purple-600 text-white"
                   onClick={() => {
                     toast({
                       title: "Satın Alma",
