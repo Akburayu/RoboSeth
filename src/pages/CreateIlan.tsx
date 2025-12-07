@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -87,6 +88,7 @@ const TECRUBE_OPTIONS = [
 
 export default function CreateIlan() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, userRole, loading: authLoading } = useAuth();
   const { toast } = useToast();
 
@@ -115,14 +117,14 @@ export default function CreateIlan() {
 
     if (userRole && userRole !== 'firma') {
       toast({
-        title: 'Erişim Engellendi',
-        description: 'Bu sayfa sadece firma hesapları için.',
+        title: t('auth.accessDenied'),
+        description: t('auth.firmaOnly'),
         variant: 'destructive',
       });
       navigate('/');
       return;
     }
-  }, [user, userRole, authLoading, navigate, toast]);
+  }, [user, userRole, authLoading, navigate, toast, t]);
 
   // Fetch firma ID when user is available
   useEffect(() => {
@@ -162,8 +164,8 @@ export default function CreateIlan() {
 
     if (!firmaId) {
       toast({
-        title: 'Hata',
-        description: 'Firma bilgisi bulunamadı.',
+        title: t('common.error'),
+        description: t('listings.firmaNotFound'),
         variant: 'destructive',
       });
       return;
@@ -171,8 +173,8 @@ export default function CreateIlan() {
 
     if (!baslik.trim()) {
       toast({
-        title: 'Başlık Gerekli',
-        description: 'Lütfen ilan başlığını girin.',
+        title: t('listings.titleRequired'),
+        description: t('listings.enterTitle'),
         variant: 'destructive',
       });
       return;
@@ -180,8 +182,8 @@ export default function CreateIlan() {
 
     if (faaliyetAlanlari.length === 0) {
       toast({
-        title: 'Faaliyet Alanı Seçin',
-        description: 'En az bir faaliyet alanı seçmelisiniz.',
+        title: t('register.selectActivity'),
+        description: t('register.selectActivityDesc'),
         variant: 'destructive',
       });
       return;
@@ -189,8 +191,8 @@ export default function CreateIlan() {
 
     if (!sonTarih) {
       toast({
-        title: 'Son Başvuru Tarihi Gerekli',
-        description: 'Lütfen son başvuru tarihini seçin.',
+        title: t('listings.deadlineRequired'),
+        description: t('listings.selectDeadline'),
         variant: 'destructive',
       });
       return;
@@ -216,14 +218,14 @@ export default function CreateIlan() {
       if (error) throw error;
 
       toast({
-        title: 'İlan Oluşturuldu',
-        description: 'İlanınız başarıyla yayınlandı.',
+        title: t('listings.listingCreated'),
+        description: t('listings.listingPublished'),
       });
 
       navigate('/dashboard');
     } catch (error: any) {
       toast({
-        title: 'Hata',
+        title: t('common.error'),
         description: error.message,
         variant: 'destructive',
       });
@@ -242,10 +244,10 @@ export default function CreateIlan() {
           </Button>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-firma to-firma/70 bg-clip-text text-transparent">
-              Yeni İlan Oluştur
+              {t('listings.newListing')}
             </h1>
             <p className="text-muted-foreground mt-1">
-              Entegratörlerden teklif almak için ilan yayınlayın
+              {t('listings.getProposals')}
             </p>
           </div>
         </div>
@@ -255,40 +257,40 @@ export default function CreateIlan() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-firma" />
-                İlan Bilgileri
+                {t('listings.listingInfo')}
               </CardTitle>
               <CardDescription>
-                İlanınızın detaylarını girin
+                {t('listings.enterListingDetails')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Başlık */}
               <div className="space-y-2">
-                <Label htmlFor="baslik">İlan Başlığı *</Label>
+                <Label htmlFor="baslik">{t('listings.listingTitle')} *</Label>
                 <Input
                   id="baslik"
                   value={baslik}
                   onChange={(e) => setBaslik(e.target.value)}
-                  placeholder="Örn: Robot Kaynak Hattı Kurulumu"
+                  placeholder={t('listings.listingTitlePlaceholder')}
                   maxLength={200}
                 />
               </div>
 
               {/* Açıklama */}
               <div className="space-y-2">
-                <Label htmlFor="aciklama">Açıklama</Label>
+                <Label htmlFor="aciklama">{t('common.description')}</Label>
                 <Textarea
                   id="aciklama"
                   value={aciklama}
                   onChange={(e) => setAciklama(e.target.value)}
-                  placeholder="Proje detaylarını açıklayın..."
+                  placeholder={t('listings.projectDescription')}
                   rows={4}
                 />
               </div>
 
               {/* Faaliyet Alanları */}
               <div className="space-y-2">
-                <Label>Aranan Faaliyet Alanları *</Label>
+                <Label>{t('listings.requiredActivityAreas')} *</Label>
                 <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-3 border rounded-lg bg-muted/30">
                   {FAALIYET_ALANLARI.map((alan) => (
                     <label key={alan} className="flex items-center gap-2 cursor-pointer">
@@ -304,7 +306,7 @@ export default function CreateIlan() {
 
               {/* Uzmanlık Alanları */}
               <div className="space-y-2">
-                <Label>Aranan Uzmanlık Alanları</Label>
+                <Label>{t('listings.requiredExpertise')}</Label>
                 <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-3 border rounded-lg bg-muted/30">
                   {UZMANLIK_ALANLARI.map((alan) => (
                     <label key={alan} className="flex items-center gap-2 cursor-pointer">
@@ -321,10 +323,10 @@ export default function CreateIlan() {
               {/* Sektör ve Tecrübe */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Sektör</Label>
+                  <Label>{t('listings.sector')}</Label>
                   <Select value={sektor} onValueChange={setSektor}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Sektör seçin" />
+                      <SelectValue placeholder={t('entegratorRegister.selectSector')} />
                     </SelectTrigger>
                     <SelectContent>
                       {SEKTORLER.map((s) => (
@@ -335,14 +337,14 @@ export default function CreateIlan() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Minimum Tecrübe</Label>
+                  <Label>{t('listings.minimumExperience')}</Label>
                   <Select value={tecrube} onValueChange={setTecrube}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Tecrübe seçin" />
+                      <SelectValue placeholder={t('entegratorRegister.selectExperience')} />
                     </SelectTrigger>
                     <SelectContent>
-                      {TECRUBE_OPTIONS.map((t) => (
-                        <SelectItem key={t} value={t}>{t}</SelectItem>
+                      {TECRUBE_OPTIONS.map((exp) => (
+                        <SelectItem key={exp} value={exp}>{exp}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -351,7 +353,7 @@ export default function CreateIlan() {
 
               {/* İller */}
               <div className="space-y-2">
-                <Label>Hizmet Beklenen İller</Label>
+                <Label>{t('listings.requiredProvinces')}</Label>
                 <div className="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto p-3 border rounded-lg bg-muted/30">
                   {ILLER.map((il) => (
                     <label key={il} className="flex items-center gap-2 cursor-pointer">
@@ -368,31 +370,31 @@ export default function CreateIlan() {
               {/* Bütçe */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="butceMin">Minimum Bütçe (₺)</Label>
+                  <Label htmlFor="butceMin">{t('listings.minBudget')} (₺)</Label>
                   <Input
                     id="butceMin"
                     type="number"
                     value={butceMin}
                     onChange={(e) => setButceMin(e.target.value ? Number(e.target.value) : '')}
-                    placeholder="Örn: 50000"
+                    placeholder="50000"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="butceMax">Maksimum Bütçe (₺)</Label>
+                  <Label htmlFor="butceMax">{t('listings.maxBudget')} (₺)</Label>
                   <Input
                     id="butceMax"
                     type="number"
                     value={butceMax}
                     onChange={(e) => setButceMax(e.target.value ? Number(e.target.value) : '')}
-                    placeholder="Örn: 150000"
+                    placeholder="150000"
                   />
                 </div>
               </div>
 
               {/* Son Tarih */}
               <div className="space-y-2">
-                <Label htmlFor="sonTarih">Son Başvuru Tarihi *</Label>
+                <Label htmlFor="sonTarih">{t('listings.applicationDeadline')} *</Label>
                 <Input
                   id="sonTarih"
                   type="date"
@@ -412,12 +414,12 @@ export default function CreateIlan() {
                 {loading ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Yayınlanıyor...
+                    {t('listings.publishing')}
                   </>
                 ) : (
                   <>
                     <Send className="h-4 w-4" />
-                    İlanı Yayınla
+                    {t('listings.publishListing')}
                   </>
                 )}
               </Button>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import NotificationBell from '@/components/NotificationBell';
 import { supabase } from '@/integrations/supabase/client';
@@ -88,8 +89,15 @@ interface RevealedContact {
 
 export default function FirmaIlanlar() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const { user, userRole, signOut, loading: authLoading } = useAuth();
   const { toast } = useToast();
+
+  const getBuyuklukLabels = () => ({
+    kucuk: t('integrators.small'),
+    orta: t('integrators.medium'),
+    buyuk: t('integrators.large'),
+  });
 
   const [ilanlar, setIlanlar] = useState<Ilan[]>([]);
   const [tekliflerByIlan, setTekliflerByIlan] = useState<Record<string, Teklif[]>>({});
@@ -118,8 +126,8 @@ export default function FirmaIlanlar() {
 
     if (userRole && userRole !== 'firma') {
       toast({
-        title: 'Erişim Engellendi',
-        description: 'Bu sayfa sadece firma hesapları için.',
+        title: t('auth.accessDenied'),
+        description: t('auth.firmaOnly'),
         variant: 'destructive',
       });
       navigate('/');
@@ -127,7 +135,7 @@ export default function FirmaIlanlar() {
     }
 
     fetchData();
-  }, [user, userRole, authLoading, navigate, toast]);
+  }, [user, userRole, authLoading, navigate, toast, t]);
 
   const fetchData = async () => {
     if (!user) return;
@@ -146,8 +154,8 @@ export default function FirmaIlanlar() {
       if (firmaError) throw firmaError;
       if (!firmaData) {
         toast({
-          title: 'Firma Bulunamadı',
-          description: 'Firma profiliniz bulunamadı.',
+          title: t('common.error'),
+          description: t('listings.firmaNotFound'),
           variant: 'destructive',
         });
         return;
@@ -305,13 +313,15 @@ export default function FirmaIlanlar() {
         throw new Error(response.error.message);
       }
 
+      const BUYUKLUK_LABELS = getBuyuklukLabels();
+
       const result = response.data;
       
       if (result.error) {
         if (result.error === 'Yetersiz kredi') {
           toast({
-            title: 'Yetersiz Kredi',
-            description: `Bu işlem için ${result.required} kredi gerekli. Mevcut krediniz: ${result.available}`,
+            title: t('credits.insufficientCredits'),
+            description: t('credits.insufficientCreditsDesc', { required: result.required, available: result.available }),
             variant: 'destructive',
           });
         } else {
@@ -329,8 +339,8 @@ export default function FirmaIlanlar() {
 
       if (!result.already_revealed) {
         toast({
-          title: 'İletişim Bilgisi Açıldı',
-          description: `${result.cost} kredi harcandı. Kalan: ${result.remaining_credits}`,
+          title: t('credits.contactRevealed'),
+          description: t('credits.creditSpent', { cost: result.cost, remaining: result.remaining_credits }),
         });
       }
     } catch (error: any) {
@@ -346,15 +356,15 @@ export default function FirmaIlanlar() {
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return '-';
-    return new Date(dateStr).toLocaleDateString('tr-TR');
+    return new Date(dateStr).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'tr-TR');
   };
 
   const formatBudget = (min: number | null, max: number | null) => {
-    if (!min && !max) return 'Belirtilmemiş';
+    if (!min && !max) return t('integrators.notSpecified');
     if (min && max) return `₺${min.toLocaleString()} - ₺${max.toLocaleString()}`;
     if (min) return `₺${min.toLocaleString()}+`;
     if (max) return `₺${max.toLocaleString()} max`;
-    return 'Belirtilmemiş';
+    return t('integrators.notSpecified');
   };
 
   if (loading) {
@@ -376,8 +386,8 @@ export default function FirmaIlanlar() {
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-firma">İlanlarım ve Teklifler</h1>
-                <p className="text-sm text-muted-foreground">Yayınladığınız ilanları ve gelen teklifleri görüntüleyin</p>
+                <h1 className="text-2xl font-bold text-firma">{t('listings.myListingsAndProposals')}</h1>
+                <p className="text-sm text-muted-foreground">{t('listings.viewMyListings')}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -386,7 +396,7 @@ export default function FirmaIlanlar() {
                 variant="ghost"
                 size="icon"
                 onClick={() => navigate('/firma/profile')}
-                title="Profil"
+                title={t('nav.profile')}
               >
                 <User className="h-5 w-5" />
               </Button>
@@ -397,14 +407,14 @@ export default function FirmaIlanlar() {
                   await signOut();
                   navigate('/');
                 }}
-                title="Çıkış Yap"
+                title={t('auth.logout')}
               >
                 <LogOut className="h-5 w-5" />
               </Button>
               <div className="flex items-center gap-2 px-4 py-2 bg-firma/10 rounded-lg border border-firma/20">
                 <CreditCard className="h-5 w-5 text-firma" />
                 <span className="font-semibold text-firma">{firmaCredits}</span>
-                <span className="text-sm text-muted-foreground">Kredi</span>
+                <span className="text-sm text-muted-foreground">{t('common.credit')}</span>
               </div>
             </div>
           </div>
@@ -415,11 +425,11 @@ export default function FirmaIlanlar() {
         {ilanlar.length === 0 ? (
           <Card className="p-12 text-center">
             <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Henüz ilan yayınlamadınız</h2>
-            <p className="text-muted-foreground mb-4">İlan oluşturarak entegratörlerden teklif almaya başlayın.</p>
+            <h2 className="text-xl font-semibold mb-2">{t('listings.noListingsPublished')}</h2>
+            <p className="text-muted-foreground mb-4">{t('listings.startPublishing')}</p>
             <Button onClick={() => navigate('/firma/ilan-olustur')} className="bg-firma hover:bg-firma/90">
               <FileText className="h-4 w-4 mr-2" />
-              İlan Oluştur
+              {t('listings.createListing')}
             </Button>
           </Card>
         ) : (
@@ -436,7 +446,7 @@ export default function FirmaIlanlar() {
                           <FileText className="h-5 w-5 text-firma" />
                         </div>
                         <div className="text-left">
-                          <h3 className="font-semibold text-lg">{ilan.baslik || 'İsimsiz İlan'}</h3>
+                          <h3 className="font-semibold text-lg">{ilan.baslik || t('listings.unnamedListing')}</h3>
                           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
                             <span className="flex items-center gap-1">
                               <Calendar className="h-3 w-3" />
@@ -450,7 +460,7 @@ export default function FirmaIlanlar() {
                         </div>
                       </div>
                       <Badge className={teklifler.length > 0 ? 'bg-firma' : 'bg-muted text-muted-foreground'}>
-                        {teklifler.length} Teklif
+                        {teklifler.length} {t('listings.receivedProposals').split(' ')[0]}
                       </Badge>
                     </div>
                   </AccordionTrigger>
@@ -458,35 +468,35 @@ export default function FirmaIlanlar() {
                   <AccordionContent className="px-6 pb-6">
                     {/* İlan Detayları */}
                     <div className="mb-6 p-4 bg-muted/50 rounded-lg">
-                      <h4 className="font-medium mb-3 text-sm text-muted-foreground">İlan Detayları</h4>
+                      <h4 className="font-medium mb-3 text-sm text-muted-foreground">{t('listings.listingDetails')}</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         {ilan.aciklama && (
                           <div className="md:col-span-2">
-                            <span className="text-muted-foreground">Açıklama:</span>
+                            <span className="text-muted-foreground">{t('common.description')}:</span>
                             <p className="mt-1">{ilan.aciklama}</p>
                           </div>
                         )}
                         {ilan.aranan_faaliyet_alanlari && (
                           <div>
-                            <span className="text-muted-foreground">Faaliyet Alanları:</span>
+                            <span className="text-muted-foreground">{t('listings.activityAreas')}:</span>
                             <p className="mt-1">{ilan.aranan_faaliyet_alanlari}</p>
                           </div>
                         )}
                         {ilan.aranan_uzmanlik && (
                           <div>
-                            <span className="text-muted-foreground">Uzmanlık:</span>
+                            <span className="text-muted-foreground">{t('listings.expertise')}:</span>
                             <p className="mt-1">{ilan.aranan_uzmanlik}</p>
                           </div>
                         )}
                         {ilan.hizmet_verilen_iller && (
                           <div>
-                            <span className="text-muted-foreground">İller:</span>
+                            <span className="text-muted-foreground">{t('listings.provinces')}:</span>
                             <p className="mt-1">{ilan.hizmet_verilen_iller}</p>
                           </div>
                         )}
                         {ilan.son_tarih && (
                           <div>
-                            <span className="text-muted-foreground">Son Tarih:</span>
+                            <span className="text-muted-foreground">{t('listings.deadline')}:</span>
                             <p className="mt-1">{formatDate(ilan.son_tarih)}</p>
                           </div>
                         )}
@@ -497,12 +507,12 @@ export default function FirmaIlanlar() {
                     <div>
                       <h4 className="font-medium mb-4 flex items-center gap-2">
                         <Users className="h-4 w-4" />
-                        Gelen Teklifler ({teklifler.length})
+                        {t('listings.receivedProposals')} ({teklifler.length})
                       </h4>
                       
                       {teklifler.length === 0 ? (
                         <p className="text-muted-foreground text-center py-8">
-                          Bu ilana henüz teklif gelmedi.
+                          {t('listings.noProposals')}
                         </p>
                       ) : (
                         <div className="space-y-4">
@@ -510,6 +520,7 @@ export default function FirmaIlanlar() {
                             const entegrator = teklif.entegrator;
                             const isRevealed = entegrator && revealedContacts.has(entegrator.id);
                             const ratings = entegrator ? entegratorRatings[entegrator.id] : null;
+                            const BUYUKLUK_LABELS = getBuyuklukLabels();
 
                             return (
                               <Card key={teklif.id} className="border-firma/10">
@@ -536,17 +547,17 @@ export default function FirmaIlanlar() {
                                         {ratings && (
                                           <div className="ml-auto flex flex-col gap-1 text-right">
                                             <div className="flex items-center gap-1 justify-end text-xs">
-                                              <span className="text-muted-foreground">Kalite:</span>
+                                              <span className="text-muted-foreground">{t('integrators.qualityScore')}:</span>
                                               <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                                               <span className="font-medium">{ratings.kalite_avg.toFixed(1)}</span>
                                             </div>
                                             <div className="flex items-center gap-1 justify-end text-xs">
-                                              <span className="text-muted-foreground">M.İlişki:</span>
+                                              <span className="text-muted-foreground">{t('integrators.customerRelations')}:</span>
                                               <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                                               <span className="font-medium">{ratings.musteri_iliskisi_avg.toFixed(1)}</span>
                                             </div>
                                             <div className="flex items-center gap-1 justify-end text-xs">
-                                              <span className="text-muted-foreground">Süreç:</span>
+                                              <span className="text-muted-foreground">{t('integrators.processManagement')}:</span>
                                               <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                                               <span className="font-medium">{ratings.surec_yonetimi_avg.toFixed(1)}</span>
                                             </div>
@@ -566,7 +577,7 @@ export default function FirmaIlanlar() {
                                           {entegrator.kac_kisi && (
                                             <div className="flex items-center gap-1">
                                               <Users className="h-3 w-3" />
-                                              {entegrator.kac_kisi} kişi
+                                              {entegrator.kac_kisi} {t('common.person')}
                                             </div>
                                           )}
                                           {entegrator.sektor && (
@@ -578,7 +589,7 @@ export default function FirmaIlanlar() {
                                           {entegrator.referans && (
                                             <div className="flex items-center gap-1">
                                               <Award className="h-3 w-3" />
-                                              Referanslı
+                                              {t('integrators.hasReferences')}
                                             </div>
                                           )}
                                         </div>
@@ -607,7 +618,7 @@ export default function FirmaIlanlar() {
                                           <span className="font-semibold text-firma">
                                             {teklif.teklif_tutari 
                                               ? `₺${teklif.teklif_tutari.toLocaleString()}`
-                                              : 'Tutar belirtilmedi'
+                                              : t('integrators.notSpecified')
                                             }
                                           </span>
                                           <span className="text-xs text-muted-foreground ml-auto">
@@ -634,12 +645,12 @@ export default function FirmaIlanlar() {
                                         {isRevealed ? (
                                           <>
                                             <CheckCircle2 className="h-4 w-4" />
-                                            İletişimi Görüntüle
+                                            {t('integrators.viewContact')}
                                           </>
                                         ) : (
                                           <>
                                             <Eye className="h-4 w-4" />
-                                            İletişimi Gör ({getRevealCost(entegrator.entegrator_buyuklugu)} Kredi)
+                                            {t('integrators.revealContact')} ({getRevealCost(entegrator.entegrator_buyuklugu)} {t('common.credit')})
                                           </>
                                         )}
                                       </Button>
@@ -664,24 +675,23 @@ export default function FirmaIlanlar() {
       <Dialog open={revealModalOpen} onOpenChange={setRevealModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>İletişim Bilgisini Aç</DialogTitle>
+            <DialogTitle>{t('integrators.revealContactTitle')}</DialogTitle>
             <DialogDescription>
-              Bu entegratörün iletişim bilgilerini açmak için{' '}
+              {t('integrators.revealContactDesc')}{' '}
               <span className="font-bold text-firma">
-                {selectedEntegrator ? getRevealCost(selectedEntegrator.entegrator_buyuklugu) : 0} kredi
-              </span>{' '}
-              harcayacaksınız.
+                {selectedEntegrator ? getRevealCost(selectedEntegrator.entegrator_buyuklugu) : 0} {t('common.credit')}
+              </span>
             </DialogDescription>
           </DialogHeader>
           
           <div className="py-4">
             <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
               <div>
-                <p className="text-sm text-muted-foreground">Mevcut Krediniz</p>
+                <p className="text-sm text-muted-foreground">{t('credits.yourCredits')}</p>
                 <p className="text-2xl font-bold text-firma">{firmaCredits}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-muted-foreground">İşlem Sonrası</p>
+                <p className="text-sm text-muted-foreground">{t('integrators.afterTransaction')}</p>
                 <p className="text-2xl font-bold">
                   {selectedEntegrator 
                     ? firmaCredits - getRevealCost(selectedEntegrator.entegrator_buyuklugu)
@@ -694,7 +704,7 @@ export default function FirmaIlanlar() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setRevealModalOpen(false)}>
-              İptal
+              {t('common.cancel')}
             </Button>
             <Button 
               onClick={confirmReveal} 
@@ -704,10 +714,10 @@ export default function FirmaIlanlar() {
               {revealing ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  İşleniyor...
+                  {t('common.processing')}
                 </>
               ) : (
-                'Onayla'
+                t('common.confirm')
               )}
             </Button>
           </DialogFooter>
@@ -720,27 +730,27 @@ export default function FirmaIlanlar() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-green-600" />
-              İletişim Bilgileri
+              {t('integrators.contactInfo')}
             </DialogTitle>
           </DialogHeader>
           
           {revealedContactInfo && (
             <div className="space-y-4 py-4">
               <div className="p-4 bg-muted rounded-lg">
-                <p className="text-sm text-muted-foreground mb-1">Entegratör</p>
+                <p className="text-sm text-muted-foreground mb-1">{t('roles.entegrator')}</p>
                 <p className="font-semibold text-lg">{revealedContactInfo.entegrator_adi}</p>
               </div>
               
               {revealedContactInfo.iletisim && (
                 <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-1">İletişim / Sosyal Medya</p>
+                  <p className="text-sm text-muted-foreground mb-1">{t('entegratorRegister.socialMedia')}</p>
                   <p className="font-medium">{revealedContactInfo.iletisim}</p>
                 </div>
               )}
               
               {revealedContactInfo.konum && (
                 <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-1">Konum</p>
+                  <p className="text-sm text-muted-foreground mb-1">{t('entegratorRegister.location')}</p>
                   <p className="font-medium flex items-center gap-1">
                     <MapPin className="h-4 w-4" />
                     {revealedContactInfo.konum}
@@ -750,7 +760,7 @@ export default function FirmaIlanlar() {
               
               {!revealedContactInfo.iletisim && !revealedContactInfo.konum && (
                 <p className="text-center text-muted-foreground py-4">
-                  Bu entegratör henüz iletişim bilgisi eklememiş.
+                  {t('integrators.noContactInfo')}
                 </p>
               )}
             </div>
@@ -758,7 +768,7 @@ export default function FirmaIlanlar() {
 
           <DialogFooter>
             <Button onClick={() => setContactModalOpen(false)}>
-              Kapat
+              {t('common.close')}
             </Button>
           </DialogFooter>
         </DialogContent>
