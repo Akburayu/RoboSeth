@@ -148,12 +148,15 @@
     "explorePlatform": "Platformu İncele",
     "guestMode": "Misafir Modu",
     "guestModeDesc": "Sadece görüntüleme yapabilirsiniz",
+    "guestModeViewOnly": "Değişiklik yapamazsınız, sadece görüntüleme modunda",
     "guestModeDescLong": "Hangi rolü görüntülemek istiyorsunuz? Misafir modunda sadece mevcut özellikleri inceleyebilirsiniz.",
     "viewAsCompany": "Firma Olarak",
     "viewAsCompanyDesc": "Entegratörleri görüntüle, ilanları incele",
     "viewAsIntegrator": "Entegratör Olarak",
     "viewAsIntegratorDesc": "İlanları görüntüle, piyasayı incele",
     "guestModeNote": "Misafir modunda değişiklik yapamazsınız. Tam erişim için üye olun.",
+    "guestModeLoginRequired": "Üyelik Gerekli",
+    "guestModeLoginRequiredDesc": "Bu işlemi yapmak için üye olmanız gerekmektedir.",
     "paymentNote": "Ödeme işlemi için iletişime geçilecektir."
   },
   "credits": {

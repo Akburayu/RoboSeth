@@ -148,12 +148,15 @@
     "explorePlatform": "Explore Platform",
     "guestMode": "Guest Mode",
     "guestModeDesc": "View only mode",
+    "guestModeViewOnly": "No changes allowed, view only mode",
     "guestModeDescLong": "Which role would you like to view? In guest mode, you can only view existing features.",
     "viewAsCompany": "As Company",
     "viewAsCompanyDesc": "View integrators, browse listings",
     "viewAsIntegrator": "As Integrator",
     "viewAsIntegratorDesc": "View listings, explore the market",
     "guestModeNote": "You cannot make changes in guest mode. Sign up for full access.",
+    "guestModeLoginRequired": "Membership Required",
+    "guestModeLoginRequiredDesc": "You need to sign up to perform this action.",
     "paymentNote": "You will be contacted for payment processing."
   },
   "credits": {
