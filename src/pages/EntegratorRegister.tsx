@@ -23,19 +23,30 @@ interface PlanInfo {
   highlighted?: boolean;
 }
 
-const PLANS: Record<'basic' | 'premium', PlanInfo> = {
+const getPlans = (t: (key: string) => string): Record<'basic' | 'premium', PlanInfo> => ({
   basic: { 
     name: 'Basic', 
     price: 0, 
-    features: ['Temel profil', 'İlan görüntüleme', 'Teklif gönderme', 'Email desteği'] 
+    features: [
+      t('register.basicFeature1'),
+      t('register.basicFeature2'),
+      t('register.basicFeature3'),
+      t('register.basicFeature4')
+    ]
   },
   premium: { 
     name: 'Premium', 
     price: 0, 
-    features: ['Öne çıkan profil', 'Sınırsız teklif', 'Öncelikli listeleme', '7/24 destek', 'Rozet görünümü'],
+    features: [
+      t('register.premiumFeature1'),
+      t('register.premiumFeature2'),
+      t('register.premiumFeature3'),
+      t('register.premiumFeature4'),
+      t('register.premiumFeature5')
+    ],
     highlighted: true
   },
-};
+});
 
 const FAALIYET_ALANLARI = [
   'Mekanik Tasarım',
@@ -701,33 +712,36 @@ export default function EntegratorRegister() {
             {currentStep === 3 && (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  {(Object.keys(PLANS) as Array<'basic' | 'premium'>).map((planKey) => (
-                    <button
-                      key={planKey}
-                      onClick={() => setSelectedPlan(planKey)}
-                      className={`p-6 rounded-xl border-2 transition-all text-left relative ${
-                        selectedPlan === planKey
-                          ? 'border-entegrator bg-entegrator/10 shadow-lg'
-                          : 'border-border hover:border-entegrator/50 hover:bg-entegrator/5'
-                      } ${PLANS[planKey].highlighted ? 'ring-2 ring-entegrator/50' : ''}`}
-                    >
-                      {PLANS[planKey].highlighted && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-entegrator text-white text-xs rounded-full flex items-center gap-1">
-                          <Star className="h-3 w-3" />
-                          {t('register.recommended')}
-                        </div>
-                      )}
-                      <div className="font-bold text-xl mb-2">{PLANS[planKey].name}</div>
-                      <ul className="space-y-1">
-                        {PLANS[planKey].features.map((f, i) => (
-                          <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Check className="h-3 w-3 text-entegrator" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-                    </button>
-                  ))}
+                  {(Object.keys(getPlans(t)) as Array<'basic' | 'premium'>).map((planKey) => {
+                    const plans = getPlans(t);
+                    return (
+                      <button
+                        key={planKey}
+                        onClick={() => setSelectedPlan(planKey)}
+                        className={`p-6 rounded-xl border-2 transition-all text-left relative ${
+                          selectedPlan === planKey
+                            ? 'border-entegrator bg-entegrator/10 shadow-lg'
+                            : 'border-border hover:border-entegrator/50 hover:bg-entegrator/5'
+                        } ${plans[planKey].highlighted ? 'ring-2 ring-entegrator/50' : ''}`}
+                      >
+                        {plans[planKey].highlighted && (
+                          <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-entegrator text-white text-xs rounded-full flex items-center gap-1">
+                            <Star className="h-3 w-3" />
+                            {t('register.recommended')}
+                          </div>
+                        )}
+                        <div className="font-bold text-xl mb-2">{plans[planKey].name}</div>
+                        <ul className="space-y-1">
+                          {plans[planKey].features.map((f, i) => (
+                            <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <Check className="h-3 w-3 text-entegrator" />
+                              {f}
+                            </li>
+                          ))}
+                        </ul>
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <div className="p-4 bg-muted rounded-lg text-center">
