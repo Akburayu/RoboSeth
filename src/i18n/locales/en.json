@@ -46,7 +46,14 @@
     "activeFilters": "filters active",
     "profileActive": "Profile Active",
     "membershipRequired": "Membership Required",
-    "membershipRequiredDesc": "You need to be a member for this action."
+    "membershipRequiredDesc": "You need to be a member for this action.",
+    "processing": "Processing...",
+    "confirm": "Confirm",
+    "update": "Update",
+    "employee": "Employee",
+    "scale": "Scale",
+    "person": "person",
+    "noRatingYet": "No ratings yet"
   },
   "auth": {
     "login": "Login",
@@ -78,7 +85,16 @@
     "nameMinLength": "Name must be at least 2 characters",
     "nameTooLong": "Name is too long",
     "loggingIn": "Logging in...",
-    "registering": "Registering..."
+    "registering": "Registering...",
+    "emailSent": "Email Sent",
+    "resetLinkSent": "Password reset link has been sent to your email.",
+    "enterEmail": "Enter your registered email address and we'll send you a password reset link.",
+    "emailAddress": "Email Address",
+    "sendResetLink": "Send Password Reset Link",
+    "backToLogin": "Back to Login",
+    "checkEmail": "Check your email and click the link to set your new password.",
+    "didntReceive": "Didn't receive the email? Check your spam folder or try again.",
+    "sending": "Sending..."
   },
   "roles": {
     "firma": "Company",
@@ -151,7 +167,10 @@
     "insufficientCredits": "Insufficient Credits",
     "insufficientCreditsDesc": "This action requires {{required}} credits. Your current credits: {{available}}",
     "creditSpent": "{{cost}} credits spent. Remaining: {{remaining}}",
-    "contactRevealed": "Contact Revealed"
+    "contactRevealed": "Contact Revealed",
+    "creditBalance": "Credit Balance",
+    "startingCredits": "Starting credits",
+    "creditAndPlan": "Credits and Plan"
   },
   "register": {
     "firmaTitle": "Company Registration",
@@ -227,7 +246,16 @@
     "paymentNotActive": "Payment integration is not active yet. You can continue for free.",
     "membershipsFree": "Memberships are currently free. Payment system will be active soon.",
     "employeeCount": "Employee Count",
-    "employeeCountPlaceholder": "e.g. 15"
+    "employeeCountPlaceholder": "e.g. 15",
+    "firmaNameLabel": "Company Name",
+    "firmaNamePlaceholder": "Your company's full name",
+    "documentsOptional": "Documents (Optional)",
+    "uploadedDocuments": "Uploaded Documents",
+    "noDocuments": "No documents uploaded yet",
+    "notUploaded": "Not uploaded",
+    "firmaNameReadOnly": "Company name cannot be changed",
+    "aboutNote": "This description will be shown to integrators",
+    "saveChanges": "Save Changes"
   },
   "entegratorRegister": {
     "entegratorName": "Integrator Name",
@@ -310,7 +338,36 @@
     "proposalMessagePlaceholder": "Details about your proposal...",
     "proposalSuccess": "Proposal Sent",
     "proposalSuccessDesc": "Your proposal has been successfully submitted.",
-    "unnamedListing": "Unnamed Listing"
+    "unnamedListing": "Unnamed Listing",
+    "createListing": "Create Listing",
+    "myListingsAndProposals": "My Listings and Proposals",
+    "viewMyListings": "View your published listings and received proposals",
+    "noListingsPublished": "You haven't published any listings yet",
+    "startPublishing": "Create a listing to start receiving proposals from integrators.",
+    "listingDetails": "Listing Details",
+    "receivedProposals": "Received Proposals",
+    "noProposals": "No proposals yet",
+    "proposalAmountLabel": "Proposal",
+    "newListing": "Create New Listing",
+    "getProposals": "Publish a listing to receive proposals from integrators",
+    "listingInfo": "Listing Information",
+    "enterListingDetails": "Enter your listing details",
+    "listingTitle": "Listing Title",
+    "listingTitlePlaceholder": "e.g. Robot Welding Line Installation",
+    "projectDescription": "Describe project details...",
+    "titleRequired": "Title Required",
+    "enterTitle": "Please enter the listing title.",
+    "deadlineRequired": "Application Deadline Required",
+    "selectDeadline": "Please select the application deadline.",
+    "listingCreated": "Listing Created",
+    "listingPublished": "Your listing has been successfully published.",
+    "firmaNotFound": "Company information not found.",
+    "minBudget": "Minimum Budget",
+    "maxBudget": "Maximum Budget",
+    "applicationDeadline": "Application Deadline",
+    "publishListing": "Publish Listing",
+    "publishing": "Publishing...",
+    "minimumExperience": "Minimum Experience"
   },
   "auctions": {
     "title": "Auctions",
@@ -338,7 +395,22 @@
     "editProfile": "Edit Profile",
     "updateProfile": "Update Profile",
     "profileUpdated": "Profile Updated",
-    "profileUpdatedDesc": "Your information has been successfully updated."
+    "profileUpdatedDesc": "Your information has been successfully updated.",
+    "firmaProfile": "Company Profile",
+    "entegratorProfile": "Integrator Profile",
+    "editProfileInfo": "Edit your profile information",
+    "membershipPlan": "Membership Plan",
+    "firmaScale": "Company Scale",
+    "firmaInfo": "Company Information",
+    "basicInfo": "Basic Information",
+    "referencesAndContact": "References and Contact",
+    "contactInfo": "Contact Information",
+    "contactNote": "This information can be viewed by companies for a credit fee",
+    "createFirma": "Create Company Registration",
+    "createEntegrator": "Create Integrator Registration",
+    "firmaNotFound": "Company profile not found.",
+    "entegratorNotFound": "Integrator profile not found.",
+    "servicesOffered": "Select the services you offer"
   },
   "notifications": {
     "title": "Notifications",
@@ -372,17 +444,31 @@
     "rateAllCategories": "Please rate all categories.",
     "ratingUpdated": "Your rating has been updated.",
     "ratingSaved": "Your rating has been saved.",
-    "viewComments": "View Comments"
+    "viewComments": "View Comments",
+    "evaluatorRatings": "Company Ratings",
+    "otherFirmaRatings": "Ratings from other companies about this integrator",
+    "noComments": "No comments yet",
+    "optionalComment": "Comment (Optional)",
+    "shareExperience": "Share your experience...",
+    "evaluate": "Evaluate",
+    "evaluationNote": "This rating is only visible to other companies. The integrator cannot see this rating."
   },
   "contact": {
     "revealContact": "Reveal Contact",
     "viewContact": "View Contact",
     "contactInfo": "Contact Information",
     "confirmReveal": "Reveal Contact Information",
-    "revealCost": "This action will cost {{cost}} credits.",
-    "currentCredits": "Your current credits: {{credits}}",
+    "revealCost": "You will spend",
+    "revealCostSuffix": "credits to reveal this integrator's contact information.",
+    "currentCredits": "Your Current Credits",
+    "afterTransaction": "After Transaction",
     "confirm": "Confirm",
     "sessionError": "Session Error",
-    "pleaseLoginAgain": "Please login again."
+    "pleaseLoginAgain": "Please login again.",
+    "socialMedia": "Contact / Social Media",
+    "integrator": "Integrator",
+    "noContactInfo": "This integrator hasn't added contact information yet.",
+    "viewContactMembership": "View Contact (Membership Required)",
+    "viewContactWithCredit": "View Contact ({{cost}} Credits)"
   }
 }

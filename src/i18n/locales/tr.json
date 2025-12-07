@@ -46,7 +46,14 @@
     "activeFilters": "filtre aktif",
     "profileActive": "Profil Aktif",
     "membershipRequired": "Üyelik Gerekli",
-    "membershipRequiredDesc": "Bu işlem için üye olmanız gerekmektedir."
+    "membershipRequiredDesc": "Bu işlem için üye olmanız gerekmektedir.",
+    "processing": "İşleniyor...",
+    "confirm": "Onayla",
+    "update": "Güncelle",
+    "employee": "Çalışan",
+    "scale": "Ölçek",
+    "person": "kişi",
+    "noRatingYet": "Henüz değerlendirme yok"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -78,7 +85,16 @@
     "nameMinLength": "İsim en az 2 karakter olmalıdır",
     "nameTooLong": "İsim çok uzun",
     "loggingIn": "Giriş Yapılıyor...",
-    "registering": "Kayıt Yapılıyor..."
+    "registering": "Kayıt Yapılıyor...",
+    "emailSent": "Email Gönderildi",
+    "resetLinkSent": "Şifre sıfırlama bağlantısı email adresinize gönderildi.",
+    "enterEmail": "Kayıtlı email adresinizi girin, şifre sıfırlama bağlantısı gönderelim.",
+    "emailAddress": "Email Adresi",
+    "sendResetLink": "Şifre Sıfırlama Bağlantısı Gönder",
+    "backToLogin": "Giriş Sayfasına Dön",
+    "checkEmail": "Email'inizi kontrol edin ve bağlantıya tıklayarak yeni şifrenizi belirleyin.",
+    "didntReceive": "Email almadınız mı? Spam klasörünüzü kontrol edin veya tekrar deneyin.",
+    "sending": "Gönderiliyor..."
   },
   "roles": {
     "firma": "Firma",
@@ -151,7 +167,10 @@
     "insufficientCredits": "Yetersiz Kredi",
     "insufficientCreditsDesc": "Bu işlem için {{required}} kredi gerekli. Mevcut krediniz: {{available}}",
     "creditSpent": "{{cost}} kredi harcandı. Kalan: {{remaining}}",
-    "contactRevealed": "İletişim Bilgisi Açıldı"
+    "contactRevealed": "İletişim Bilgisi Açıldı",
+    "creditBalance": "Kredi Bakiyesi",
+    "startingCredits": "Başlangıç kredisi",
+    "creditAndPlan": "Kredi ve Plan"
   },
   "register": {
     "firmaTitle": "Firma Kaydı",
@@ -227,7 +246,16 @@
     "paymentNotActive": "Şu an için ödeme entegrasyonu aktif değil. Ücretsiz olarak devam edebilirsiniz.",
     "membershipsFree": "Şu an için üyelikler ücretsizdir. Ödeme sistemi yakında aktif olacaktır.",
     "employeeCount": "Çalışan Sayısı",
-    "employeeCountPlaceholder": "Örn: 15"
+    "employeeCountPlaceholder": "Örn: 15",
+    "firmaNameLabel": "Firma Adı",
+    "firmaNamePlaceholder": "Şirketinizin tam adı",
+    "documentsOptional": "Belgeler (İsteğe Bağlı)",
+    "uploadedDocuments": "Yüklü Belgeler",
+    "noDocuments": "Henüz belge yüklenmemiş",
+    "notUploaded": "Yüklenmedi",
+    "firmaNameReadOnly": "Firma adı değiştirilemez",
+    "aboutNote": "Bu tanıtım yazısı entegratörlere gösterilecektir",
+    "saveChanges": "Değişiklikleri Kaydet"
   },
   "entegratorRegister": {
     "entegratorName": "Entegratör Adı",
@@ -310,7 +338,36 @@
     "proposalMessagePlaceholder": "Teklifinizle ilgili detaylar...",
     "proposalSuccess": "Teklif Gönderildi",
     "proposalSuccessDesc": "Teklifiniz başarıyla iletildi.",
-    "unnamedListing": "İsimsiz İlan"
+    "unnamedListing": "İsimsiz İlan",
+    "createListing": "İlan Oluştur",
+    "myListingsAndProposals": "İlanlarım ve Teklifler",
+    "viewMyListings": "Yayınladığınız ilanları ve gelen teklifleri görüntüleyin",
+    "noListingsPublished": "Henüz ilan yayınlamadınız",
+    "startPublishing": "İlan oluşturarak entegratörlerden teklif almaya başlayın.",
+    "listingDetails": "İlan Detayları",
+    "receivedProposals": "Gelen Teklifler",
+    "noProposals": "Henüz teklif yok",
+    "proposalAmountLabel": "Teklif",
+    "newListing": "Yeni İlan Oluştur",
+    "getProposals": "Entegratörlerden teklif almak için ilan yayınlayın",
+    "listingInfo": "İlan Bilgileri",
+    "enterListingDetails": "İlanınızın detaylarını girin",
+    "listingTitle": "İlan Başlığı",
+    "listingTitlePlaceholder": "Örn: Robot Kaynak Hattı Kurulumu",
+    "projectDescription": "Proje detaylarını açıklayın...",
+    "titleRequired": "Başlık Gerekli",
+    "enterTitle": "Lütfen ilan başlığını girin.",
+    "deadlineRequired": "Son Başvuru Tarihi Gerekli",
+    "selectDeadline": "Lütfen son başvuru tarihini seçin.",
+    "listingCreated": "İlan Oluşturuldu",
+    "listingPublished": "İlanınız başarıyla yayınlandı.",
+    "firmaNotFound": "Firma bilgisi bulunamadı.",
+    "minBudget": "Minimum Bütçe",
+    "maxBudget": "Maksimum Bütçe",
+    "applicationDeadline": "Son Başvuru Tarihi",
+    "publishListing": "İlanı Yayınla",
+    "publishing": "Yayınlanıyor...",
+    "minimumExperience": "Minimum Tecrübe"
   },
   "auctions": {
     "title": "İhaleler",
@@ -338,7 +395,22 @@
     "editProfile": "Profili Düzenle",
     "updateProfile": "Profili Güncelle",
     "profileUpdated": "Profil Güncellendi",
-    "profileUpdatedDesc": "Bilgileriniz başarıyla güncellendi."
+    "profileUpdatedDesc": "Bilgileriniz başarıyla güncellendi.",
+    "firmaProfile": "Firma Profili",
+    "entegratorProfile": "Entegratör Profili",
+    "editProfileInfo": "Profil bilgilerinizi düzenleyin",
+    "membershipPlan": "Üyelik Planı",
+    "firmaScale": "Firma Ölçeği",
+    "firmaInfo": "Firma Bilgileri",
+    "basicInfo": "Temel Bilgiler",
+    "referencesAndContact": "Referanslar ve İletişim",
+    "contactInfo": "İletişim Bilgileri",
+    "contactNote": "Bu bilgiler firmalar tarafından kredi karşılığı görüntülenebilir",
+    "createFirma": "Firma Kaydı Oluştur",
+    "createEntegrator": "Entegratör Kaydı Oluştur",
+    "firmaNotFound": "Firma profili bulunamadı.",
+    "entegratorNotFound": "Entegratör profili bulunamadı.",
+    "servicesOffered": "Sunduğunuz hizmetleri seçin"
   },
   "notifications": {
     "title": "Bildirimler",
@@ -372,17 +444,31 @@
     "rateAllCategories": "Lütfen tüm kategorilere puan verin.",
     "ratingUpdated": "Değerlendirmeniz güncellendi.",
     "ratingSaved": "Değerlendirmeniz kaydedildi.",
-    "viewComments": "Yorumları Gör"
+    "viewComments": "Yorumları Gör",
+    "evaluatorRatings": "Firma Değerlendirmeleri",
+    "otherFirmaRatings": "Bu entegratör hakkında diğer firmaların yaptığı değerlendirmeler",
+    "noComments": "Henüz yorum yok",
+    "optionalComment": "Yorum (Opsiyonel)",
+    "shareExperience": "Deneyiminizi paylaşın...",
+    "evaluate": "Değerlendir",
+    "evaluationNote": "Bu değerlendirme sadece diğer firmalara görünür. Entegratör bu puanlamayı göremez."
   },
   "contact": {
     "revealContact": "İletişim Bilgisini Aç",
-    "viewContact": "İletişim Bilgisini Gör",
-    "contactInfo": "İletişim Bilgisi",
+    "viewContact": "İletişimi Görüntüle",
+    "contactInfo": "İletişim Bilgileri",
     "confirmReveal": "İletişim Bilgisini Aç",
-    "revealCost": "Bu işlem {{cost}} kredi harcayacaktır.",
-    "currentCredits": "Mevcut krediniz: {{credits}}",
+    "revealCost": "Bu entegratörün iletişim bilgilerini açmak için",
+    "revealCostSuffix": "kredi harcayacaksınız.",
+    "currentCredits": "Mevcut Krediniz",
+    "afterTransaction": "İşlem Sonrası",
     "confirm": "Onayla",
     "sessionError": "Oturum Hatası",
-    "pleaseLoginAgain": "Lütfen tekrar giriş yapın."
+    "pleaseLoginAgain": "Lütfen tekrar giriş yapın.",
+    "socialMedia": "İletişim / Sosyal Medya",
+    "integrator": "Entegratör",
+    "noContactInfo": "Bu entegratör henüz iletişim bilgisi eklememiş.",
+    "viewContactMembership": "İletişimi Gör (Üyelik Gerekli)",
+    "viewContactWithCredit": "İletişimi Gör ({{cost}} Kredi)"
   }
 }
