@@ -53,7 +53,8 @@
     "employee": "Employee",
     "scale": "Scale",
     "person": "person",
-    "noRatingYet": "No ratings yet"
+    "noRatingYet": "No ratings yet",
+    "credit": "Credit"
   },
   "auth": {
     "login": "Login",
@@ -154,12 +155,16 @@
   },
   "credits": {
     "title": "Buy Credits",
+    "smePackage": "SME Package",
+    "smePackageDesc": "Ideal starter package for small and medium-sized businesses.",
+    "largePackage": "Large Package",
+    "largePackageDesc": "For large-scale companies. Suitable for multiple projects and intensive integrator search.",
+    "globalPackage": "Global Package",
+    "globalPackageDesc": "For corporate companies. Maximum flexibility and best value.",
     "kobiPackage": "SME Package",
     "kobiPackageDesc": "Ideal starter package for small and medium-sized businesses.",
     "bigPackage": "Large Package",
     "bigPackageDesc": "For large-scale companies. Multiple projects and intensive integrator search.",
-    "globalPackage": "Global Package",
-    "globalPackageDesc": "For corporate companies. Maximum flexibility and best value.",
     "mostPopular": "Most Popular",
     "buy": "Buy",
     "credits": "Credits",
