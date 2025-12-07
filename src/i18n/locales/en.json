@@ -36,7 +36,17 @@
     "seeLess": "See Less",
     "noResults": "No results found",
     "confirmDelete": "Are you sure you want to delete?",
-    "language": "Language"
+    "language": "Language",
+    "saving": "Saving...",
+    "complete": "Complete",
+    "completeRegistration": "Complete Registration",
+    "homePage": "Home",
+    "all": "All",
+    "found": "found",
+    "activeFilters": "filters active",
+    "profileActive": "Profile Active",
+    "membershipRequired": "Membership Required",
+    "membershipRequiredDesc": "You need to be a member for this action."
   },
   "auth": {
     "login": "Login",
@@ -66,7 +76,9 @@
     "passwordRequired": "Password is required",
     "passwordMinLength": "Password must be at least 6 characters",
     "nameMinLength": "Name must be at least 2 characters",
-    "nameTooLong": "Name is too long"
+    "nameTooLong": "Name is too long",
+    "loggingIn": "Logging in...",
+    "registering": "Registering..."
   },
   "roles": {
     "firma": "Company",
@@ -78,7 +90,9 @@
     "firmaName": "Company Name",
     "entegratorName": "Integrator Name",
     "firmaNamePlaceholder": "Your company name",
-    "entegratorNamePlaceholder": "Your name or company name"
+    "entegratorNamePlaceholder": "Your name or company name",
+    "firmaRegistration": "Company Registration",
+    "entegratorRegistration": "Integrator Registration"
   },
   "nav": {
     "home": "Home",
@@ -89,11 +103,12 @@
     "createListing": "Create Listing",
     "myListings": "My Listings",
     "myAuctions": "My Auctions",
-    "buyCredits": "Buy Credits"
+    "buyCredits": "Buy Credits",
+    "startAuction": "Start Auction"
   },
   "index": {
     "b2bPlatform": "B2B Integration Platform",
-    "welcome": "Welcome to EntegraTR",
+    "welcome": "Welcome",
     "subtitle": "Turkey's most comprehensive B2B platform connecting companies and integrators. Find the right business partner, bring your projects to life.",
     "getStarted": "Get Started",
     "goToDashboard": "Go to Dashboard",
@@ -132,7 +147,11 @@
     "mostPopular": "Most Popular",
     "buy": "Buy",
     "credits": "Credits",
-    "yourCredits": "Your Credits"
+    "yourCredits": "Your Credits",
+    "insufficientCredits": "Insufficient Credits",
+    "insufficientCreditsDesc": "This action requires {{required}} credits. Your current credits: {{available}}",
+    "creditSpent": "{{cost}} credits spent. Remaining: {{remaining}}",
+    "contactRevealed": "Contact Revealed"
   },
   "register": {
     "firmaTitle": "Company Registration",
@@ -193,16 +212,26 @@
     "membershipActive": "membership is active.",
     "basic": "Basic",
     "premium": "Premium",
+    "recommended": "Recommended",
     "basicFeatures": ["Basic profile", "View listings", "Send proposals", "Email support"],
     "premiumFeatures": ["Featured profile", "Unlimited proposals", "Priority listing", "24/7 support", "Badge visibility"],
     "emailLabel": "Email Address",
     "emailPlaceholder": "company@example.com",
     "emailNote": "Notifications will be sent to this email address.",
-    "aboutPlaceholder": "Describe your company and the services you offer in detail..."
+    "aboutPlaceholder": "Describe your company and the services you offer in detail...",
+    "aboutLabel": "Company Description",
+    "aboutMinChars": "characters (minimum)",
+    "selectedPlan": "Your selected membership plan",
+    "allFeaturesIncluded": "All features included",
+    "prioritySupport": "Priority support",
+    "paymentNotActive": "Payment integration is not active yet. You can continue for free.",
+    "membershipsFree": "Memberships are currently free. Payment system will be active soon.",
+    "employeeCount": "Employee Count",
+    "employeeCountPlaceholder": "e.g. 15"
   },
   "entegratorRegister": {
     "entegratorName": "Integrator Name",
-    "entegratorNamePlaceholder": "Your company or personal name",
+    "entegratorNamePlaceholder": "Your company's full name",
     "brands": "Brands",
     "selectBrands": "Select the robot brands you specialize in",
     "activityAreas": "Activity Areas",
@@ -212,15 +241,15 @@
     "experience": "Experience",
     "selectExperience": "Select your experience period",
     "sector": "Sector",
-    "selectSector": "Select your main sector",
+    "selectSector": "Select sector",
     "teamSize": "Team Size",
     "teamSizePlaceholder": "Number of people in your team",
     "references": "References",
-    "referencesPlaceholder": "Companies you have worked with before",
+    "referencesPlaceholder": "Companies and projects you have worked with...",
     "location": "Location",
-    "locationPlaceholder": "City, District",
+    "locationPlaceholder": "e.g. Istanbul, Kadikoy",
     "socialMedia": "Contact / Social Media",
-    "socialMediaPlaceholder": "LinkedIn, Website, etc.",
+    "socialMediaPlaceholder": "LinkedIn, website etc.",
     "serviceProvinces": "Service Provinces",
     "selectServiceProvinces": "Select the provinces you serve",
     "verifyCompetency": "Verify Competency",
@@ -241,13 +270,20 @@
     "firmaDashboard": "Company Dashboard",
     "entegratorDashboard": "Integrator Dashboard",
     "viewListings": "View open listings and submit proposals",
-    "findIntegrators": "Discover integrators and get in touch",
+    "findIntegrators": "Discover integrators",
     "guestMode": "Guest Mode",
     "viewOnly": "- View only",
     "signUp": "Sign Up",
     "listings": "Listings",
     "auctions": "Auctions",
-    "integrators": "Integrators"
+    "integrators": "Integrators",
+    "searchListings": "Search listings...",
+    "searchIntegrators": "Search integrators...",
+    "noListingsYet": "No listings yet.",
+    "noAuctionsYet": "No active auctions yet.",
+    "noIntegratorsYet": "No integrators yet.",
+    "listingsFound": "listings found",
+    "integratorsFound": "integrators found"
   },
   "listings": {
     "title": "Listings",
@@ -256,10 +292,13 @@
     "budget": "Budget",
     "deadline": "Deadline",
     "activityAreas": "Activity Areas",
+    "requiredActivityAreas": "Required Activity Areas",
+    "requiredExpertise": "Required Expertise",
     "expertise": "Expertise",
     "sector": "Sector",
     "experience": "Experience",
     "provinces": "Provinces",
+    "requiredProvinces": "Required Service Provinces",
     "sendProposal": "Send Proposal",
     "proposalSent": "Proposal Sent",
     "alreadyProposed": "Already Proposed",
@@ -270,7 +309,8 @@
     "proposalMessage": "Message (Optional)",
     "proposalMessagePlaceholder": "Details about your proposal...",
     "proposalSuccess": "Proposal Sent",
-    "proposalSuccessDesc": "Your proposal has been successfully submitted."
+    "proposalSuccessDesc": "Your proposal has been successfully submitted.",
+    "unnamedListing": "Unnamed Listing"
   },
   "auctions": {
     "title": "Auctions",
@@ -281,7 +321,17 @@
     "deadline": "End Date",
     "participants": "Participants",
     "viewDetails": "View Details",
-    "createAuction": "Create Auction"
+    "createAuction": "Create Auction",
+    "timeExpired": "Time expired",
+    "daysHours": "{{days}} days {{hours}} hours",
+    "hoursMinutes": "{{hours}} hours {{minutes}} minutes",
+    "minutesSeconds": "{{minutes}} minutes",
+    "acikEksiltme": "Open Tender",
+    "ingiliz": "English Auction",
+    "hollanda": "Dutch Auction",
+    "japon": "Japanese Auction",
+    "turluKapali": "Multi-Round Sealed",
+    "muhurluKapali": "Sealed Bid"
   },
   "profile": {
     "title": "Profile",
@@ -299,14 +349,40 @@
   "footer": {
     "copyright": "© 2024 EntegraTR. All rights reserved."
   },
-  "experience": {
-    "lessThan1Year": "Less than 1 year",
-    "1to3Years": "1-3 years",
-    "3to5Years": "3-5 years",
-    "5to10Years": "5-10 years",
-    "moreThan10Years": "10+ years"
+  "filters": {
+    "activityAreas": "Activity Areas",
+    "expertiseAreas": "Expertise Areas",
+    "sector": "Sector",
+    "selectSector": "Select sector",
+    "experience": "Experience",
+    "selectExperience": "Select experience",
+    "serviceProvinces": "Service Provinces",
+    "minScore": "Minimum Score",
+    "employeeCount": "Employee Count",
+    "filters": "Filters"
   },
-  "provinces": {
-    "allTurkey": "All Turkey"
+  "rating": {
+    "quality": "Quality",
+    "customerRelations": "Customer Relations",
+    "processManagement": "Process Management",
+    "comment": "Comment",
+    "rateIntegrator": "Rate Integrator",
+    "updateRating": "Update Rating",
+    "incompleteRating": "Incomplete Rating",
+    "rateAllCategories": "Please rate all categories.",
+    "ratingUpdated": "Your rating has been updated.",
+    "ratingSaved": "Your rating has been saved.",
+    "viewComments": "View Comments"
+  },
+  "contact": {
+    "revealContact": "Reveal Contact",
+    "viewContact": "View Contact",
+    "contactInfo": "Contact Information",
+    "confirmReveal": "Reveal Contact Information",
+    "revealCost": "This action will cost {{cost}} credits.",
+    "currentCredits": "Your current credits: {{credits}}",
+    "confirm": "Confirm",
+    "sessionError": "Session Error",
+    "pleaseLoginAgain": "Please login again."
   }
 }
