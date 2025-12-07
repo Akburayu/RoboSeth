@@ -44,6 +44,7 @@
     "all": "All",
     "found": "found",
     "activeFilters": "filters active",
+    "filter": "Filter",
     "profileActive": "Profile Active",
     "membershipRequired": "Membership Required",
     "membershipRequiredDesc": "You need to be a member for this action.",

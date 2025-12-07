@@ -288,7 +288,7 @@ export default function FirmaDashboard() {
       setEntegratorler(data || []);
     } catch (error: any) {
       toast({
-        title: 'Hata',
+        title: t('common.error'),
         description: error.message,
         variant: 'destructive',
       });
@@ -452,8 +452,8 @@ export default function FirmaDashboard() {
     if (!firmaId || !ratingEntegrator) return;
     if (ratingForm.kalite === 0 || ratingForm.musteriIliskisi === 0 || ratingForm.surecYonetimi === 0) {
       toast({
-        title: 'Eksik Değerlendirme',
-        description: 'Lütfen tüm kategorilere puan verin.',
+        title: t('rating.incompleteRating'),
+        description: t('rating.rateAllCategories'),
         variant: 'destructive',
       });
       return;
@@ -475,7 +475,7 @@ export default function FirmaDashboard() {
           .eq('entegrator_id', ratingEntegrator.id);
 
         if (error) throw error;
-        toast({ title: 'Başarılı', description: 'Değerlendirmeniz güncellendi.' });
+        toast({ title: t('common.success'), description: t('rating.ratingUpdated') });
       } else {
         // Insert new rating
         const { error } = await supabase
@@ -490,14 +490,14 @@ export default function FirmaDashboard() {
           });
 
         if (error) throw error;
-        toast({ title: 'Başarılı', description: 'Değerlendirmeniz kaydedildi.' });
+        toast({ title: t('common.success'), description: t('rating.ratingSaved') });
       }
 
       setRatingModalOpen(false);
       fetchAllRatings();
     } catch (error: any) {
       toast({
-        title: 'Hata',
+        title: t('common.error'),
         description: error.message,
         variant: 'destructive',
       });
@@ -558,8 +558,8 @@ export default function FirmaDashboard() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast({
-          title: 'Oturum Hatası',
-          description: 'Lütfen tekrar giriş yapın.',
+          title: t('contact.sessionError'),
+          description: t('contact.pleaseLoginAgain'),
           variant: 'destructive',
         });
         return;
@@ -578,8 +578,8 @@ export default function FirmaDashboard() {
       if (result.error) {
         if (result.error === 'Yetersiz kredi') {
           toast({
-            title: 'Yetersiz Kredi',
-            description: `Bu işlem için ${result.required} kredi gerekli. Mevcut krediniz: ${result.available}`,
+            title: t('credits.insufficientCredits'),
+            description: t('credits.insufficientCreditsDesc', { required: result.required, available: result.available }),
             variant: 'destructive',
           });
         } else {
@@ -599,13 +599,13 @@ export default function FirmaDashboard() {
 
       if (!result.already_revealed) {
         toast({
-          title: 'İletişim Bilgisi Açıldı',
-          description: `${result.cost} kredi harcandı. Kalan: ${result.remaining_credits}`,
+          title: t('credits.contactRevealed'),
+          description: t('credits.creditSpent', { cost: result.cost, remaining: result.remaining_credits }),
         });
       }
     } catch (error: any) {
       toast({
-        title: 'Hata',
+        title: t('common.error'),
         description: error.message,
         variant: 'destructive',
       });
