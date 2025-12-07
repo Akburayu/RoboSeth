@@ -10,7 +10,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Building2, Users, Zap, Shield, MessageSquare, ArrowRight, LogOut, CreditCard, Eye } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-// Credit packages for purchase
+// Credit packages for purchase (for firma only)
 const CREDIT_PACKAGES = [
   {
     id: 'kobi',
@@ -19,6 +19,7 @@ const CREDIT_PACKAGES = [
     price: 650,
     descriptionKey: 'credits.kobiPackageDesc',
     popular: false,
+    type: 'credit',
   },
   {
     id: 'buyuk',
@@ -27,6 +28,7 @@ const CREDIT_PACKAGES = [
     price: 1800,
     descriptionKey: 'credits.bigPackageDesc',
     popular: true,
+    type: 'credit',
   },
   {
     id: 'global',
@@ -35,6 +37,17 @@ const CREDIT_PACKAGES = [
     price: 3000,
     descriptionKey: 'credits.globalPackageDesc',
     popular: false,
+    type: 'credit',
+  },
+  {
+    id: 'ihale',
+    nameKey: 'credits.auctionPackage',
+    credits: 1,
+    price: 2000,
+    descriptionKey: 'credits.auctionPackageDesc',
+    popular: false,
+    type: 'auction',
+    unit: 'perAuction',
   },
 ];
 
@@ -312,9 +325,14 @@ const Index = () => {
                     <div className="font-semibold text-lg">{t(pkg.nameKey)}</div>
                     <div className="text-sm text-muted-foreground mt-1">{t(pkg.descriptionKey)}</div>
                   </div>
-                  <div className="text-right">
+                <div className="text-right">
                     <div className="text-2xl font-bold text-firma">€{pkg.price}</div>
-                    <div className="text-sm text-muted-foreground">{pkg.credits} {t('credits.credits')}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {pkg.type === 'auction' 
+                        ? t('credits.perAuction')
+                        : `${pkg.credits} ${t('credits.credits')}`
+                      }
+                    </div>
                   </div>
                 </div>
                 <Button 
