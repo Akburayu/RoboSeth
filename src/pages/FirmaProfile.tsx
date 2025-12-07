@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -26,12 +27,12 @@ import type { Database } from '@/integrations/supabase/types';
 type Firma = Database['public']['Tables']['firma']['Row'];
 type FirmaOlcegi = Database['public']['Enums']['firma_olcegi'];
 
-const OLCEK_LABELS: Record<FirmaOlcegi, string> = {
-  kucuk: 'Küçük',
-  orta: 'Orta (KOBİ)',
-  buyuk: 'Büyük',
-  global: 'Global',
-};
+const getOlcekLabels = (t: (key: string) => string): Record<FirmaOlcegi, string> => ({
+  kucuk: t('profile.scaleSmall'),
+  orta: t('profile.scaleMedium'),
+  buyuk: t('profile.scaleLarge'),
+  global: t('profile.scaleGlobal'),
+});
 
 const PLAN_INFO: Record<FirmaOlcegi, { name: string; credits: number }> = {
   kucuk: { name: 'Basic', credits: 10 },
@@ -42,6 +43,7 @@ const PLAN_INFO: Record<FirmaOlcegi, { name: string; credits: number }> = {
 
 export default function FirmaProfile() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, userRole, loading: authLoading } = useAuth();
   const { toast } = useToast();
 
@@ -87,7 +89,7 @@ export default function FirmaProfile() {
       }
     } catch (error: any) {
       toast({
-        title: 'Hata',
+        title: t('common.error'),
         description: error.message,
         variant: 'destructive',
       });
@@ -111,12 +113,12 @@ export default function FirmaProfile() {
       if (error) throw error;
 
       toast({
-        title: 'Başarılı',
-        description: 'Profil bilgileriniz güncellendi.',
+        title: t('common.success'),
+        description: t('profile.profileUpdated'),
       });
     } catch (error: any) {
       toast({
-        title: 'Hata',
+        title: t('common.error'),
         description: error.message,
         variant: 'destructive',
       });
@@ -139,14 +141,16 @@ export default function FirmaProfile() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="p-8 text-center">
-          <p className="text-muted-foreground">Firma profili bulunamadı.</p>
+          <p className="text-muted-foreground">{t('profile.firmaNotFound')}</p>
           <Button onClick={() => navigate('/firma/register')} className="mt-4">
-            Firma Kaydı Oluştur
+            {t('profile.createFirmaRegistration')}
           </Button>
         </Card>
       </div>
     );
   }
+
+  const OLCEK_LABELS = getOlcekLabels(t);
 
   return (
     <div className="min-h-screen bg-background">
@@ -165,10 +169,10 @@ export default function FirmaProfile() {
               <div>
                 <h1 className="text-2xl font-bold text-firma flex items-center gap-2">
                   <Building2 className="h-6 w-6" />
-                  Firma Profili
+                  {t('profile.firmaProfile')}
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Profil bilgilerinizi düzenleyin
+                  {t('profile.editProfile')}
                 </p>
               </div>
             </div>
@@ -184,17 +188,17 @@ export default function FirmaProfile() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-firma">
                 <CreditCard className="h-5 w-5" />
-                Kredi ve Plan
+                {t('credits.creditAndPlan')}
               </CardTitle>
               <CardDescription>
-                Mevcut üyelik planınız ve kredi bakiyeniz
+                {t('profile.currentPlanDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-6">
                 {/* Plan Info */}
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Üyelik Planı</Label>
+                  <Label className="text-muted-foreground">{t('profile.membershipPlan')}</Label>
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary" className="text-lg px-3 py-1">
                       <Award className="h-4 w-4 mr-1" />
@@ -202,21 +206,21 @@ export default function FirmaProfile() {
                     </Badge>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Firma Ölçeği: {OLCEK_LABELS[firma.firma_olcegi]}
+                    {t('profile.companyScale')}: {OLCEK_LABELS[firma.firma_olcegi]}
                   </p>
                 </div>
 
                 {/* Credit Balance */}
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Kredi Bakiyesi</Label>
+                  <Label className="text-muted-foreground">{t('credits.creditBalance')}</Label>
                   <div className="flex items-center gap-2">
                     <span className="text-3xl font-bold text-firma">
                       {firma.kredi || 0}
                     </span>
-                    <span className="text-muted-foreground">Kredi</span>
+                    <span className="text-muted-foreground">{t('common.credit')}</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Başlangıç kredisi: {planInfo?.credits || 0}
+                    {t('credits.startingCredits')}: {planInfo?.credits || 0}
                   </p>
                 </div>
               </div>
@@ -228,20 +232,20 @@ export default function FirmaProfile() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FileText className="h-5 w-5" />
-                Firma Bilgileri
+                {t('profile.companyInfo')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Firma Adı (Read-only) */}
               <div className="space-y-2">
-                <Label>Firma Adı</Label>
+                <Label>{t('register.firmaNameLabel')}</Label>
                 <Input 
                   value={firma.firma_adi} 
                   disabled 
                   className="bg-muted"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Firma adı değiştirilemez
+                  {t('register.firmaNameReadOnly')}
                 </p>
               </div>
 
@@ -249,17 +253,17 @@ export default function FirmaProfile() {
 
               {/* Firma Tanıtım Yazısı */}
               <div className="space-y-2">
-                <Label htmlFor="tanitim">Firma Tanıtım Yazısı</Label>
+                <Label htmlFor="tanitim">{t('register.aboutLabel')}</Label>
                 <Textarea
                   id="tanitim"
                   value={tanitimYazisi}
                   onChange={(e) => setTanitimYazisi(e.target.value)}
-                  placeholder="Firmanızı kısaca tanıtın..."
+                  placeholder={t('register.aboutPlaceholder')}
                   rows={5}
                   className="resize-none"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Bu tanıtım yazısı entegratörlere gösterilecektir
+                  {t('register.aboutNote')}
                 </p>
               </div>
             </CardContent>
@@ -268,9 +272,9 @@ export default function FirmaProfile() {
           {/* Belgeler */}
           <Card>
             <CardHeader>
-              <CardTitle>Yüklü Belgeler</CardTitle>
+              <CardTitle>{t('register.uploadedDocuments')}</CardTitle>
               <CardDescription>
-                Kayıt sırasında yüklenen belgeleriniz
+                {t('profile.documentsDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -278,29 +282,29 @@ export default function FirmaProfile() {
                 {firma.belgesi1 && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    <span>Ticaret Sicil Gazetesi</span>
+                    <span>{t('register.ticaretSicil')}</span>
                   </div>
                 )}
                 {firma.belgesi2 && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    <span>Faaliyet Belgesi</span>
+                    <span>{t('register.faaliyetBelgesi')}</span>
                   </div>
                 )}
                 {firma.belgesi3 && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    <span>İmza Sirküleri</span>
+                    <span>{t('register.imzaSirkuleri')}</span>
                   </div>
                 )}
                 {(firma as any).belgesi4 && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    <span>Vergi Levhası</span>
+                    <span>{t('register.vergiLevhasi')}</span>
                   </div>
                 )}
                 {!firma.belgesi1 && !firma.belgesi2 && !firma.belgesi3 && !(firma as any).belgesi4 && (
-                  <p className="text-sm text-muted-foreground">Henüz belge yüklenmemiş</p>
+                  <p className="text-sm text-muted-foreground">{t('register.noDocuments')}</p>
                 )}
               </div>
             </CardContent>
@@ -315,12 +319,12 @@ export default function FirmaProfile() {
             {saving ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Kaydediliyor...
+                {t('common.saving')}...
               </>
             ) : (
               <>
                 <Save className="h-4 w-4" />
-                Değişiklikleri Kaydet
+                {t('register.saveChanges')}
               </>
             )}
           </Button>
