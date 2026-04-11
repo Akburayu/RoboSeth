@@ -548,17 +548,17 @@ export default function FirmaIlanlar() {
                                           <div className="ml-auto flex flex-col gap-1 text-right">
                                             <div className="flex items-center gap-1 justify-end text-xs">
                                               <span className="text-muted-foreground">{t('integrators.qualityScore')}:</span>
-                                              <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                              <Star className="h-3 w-3 fill-accent text-accent" />
                                               <span className="font-medium">{ratings.kalite_avg.toFixed(1)}</span>
                                             </div>
                                             <div className="flex items-center gap-1 justify-end text-xs">
                                               <span className="text-muted-foreground">{t('integrators.customerRelations')}:</span>
-                                              <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                              <Star className="h-3 w-3 fill-accent text-accent" />
                                               <span className="font-medium">{ratings.musteri_iliskisi_avg.toFixed(1)}</span>
                                             </div>
                                             <div className="flex items-center gap-1 justify-end text-xs">
                                               <span className="text-muted-foreground">{t('integrators.processManagement')}:</span>
-                                              <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                              <Star className="h-3 w-3 fill-accent text-accent" />
                                               <span className="font-medium">{ratings.surec_yonetimi_avg.toFixed(1)}</span>
                                             </div>
                                           </div>
@@ -636,7 +636,7 @@ export default function FirmaIlanlar() {
                                       <Button 
                                         className={`shrink-0 gap-2 ${
                                           isRevealed
-                                            ? 'bg-green-600 hover:bg-green-700'
+                                            ? 'bg-primary hover:bg-primary/90 text-primary-foreground'
                                             : 'bg-firma hover:bg-firma/90'
                                         }`}
                                         size="sm"
@@ -729,7 +729,7 @@ export default function FirmaIlanlar() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-600" />
+              <CheckCircle2 className="h-5 w-5 text-emerald-600" />
               {t('integrators.contactInfo')}
             </DialogTitle>
           </DialogHeader>

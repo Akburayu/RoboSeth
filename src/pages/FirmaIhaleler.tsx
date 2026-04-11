@@ -38,12 +38,12 @@ interface Ihale {
 }
 
 const getIhaleTuruConfig = (t: any) => ({
-  'acik_eksiltme': { label: t('auctions.acikEksiltme'), icon: TrendingDown, color: 'bg-blue-500' },
-  'ingiliz': { label: t('auctions.ingiliz'), icon: TrendingUp, color: 'bg-green-500' },
+  'acik_eksiltme': { label: t('auctions.acikEksiltme'), icon: TrendingDown, color: 'bg-primary' },
+  'ingiliz': { label: t('auctions.ingiliz'), icon: TrendingUp, color: 'bg-accent' },
   'hollanda': { label: t('auctions.hollanda'), icon: Gavel, color: 'bg-orange-500' },
   'japon': { label: t('auctions.japon'), icon: Users, color: 'bg-yellow-500' },
   'turlu_kapali': { label: t('auctions.turluKapali'), icon: Lock, color: 'bg-red-500' },
-  'muhurlu_kapali': { label: t('auctions.muhurluKapali'), icon: Shield, color: 'bg-purple-500' },
+  'muhurlu_kapali': { label: t('auctions.muhurluKapali'), icon: Shield, color: 'bg-primary/80' },
 });
 
 const getDurumBadges = (t: any) => ({

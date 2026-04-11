@@ -503,7 +503,7 @@ export default function EntegratorRegister() {
                       <div className="font-medium text-sm">{label} *</div>
                       {documents[key as keyof typeof documents].file ? (
                         <div className="text-xs text-muted-foreground mt-1 flex items-center gap-2">
-                          <Check className="h-3 w-3 text-green-500" />
+                          <Check className="h-3 w-3 text-emerald-500" />
                           {documents[key as keyof typeof documents].file?.name}
                         </div>
                         ) : (

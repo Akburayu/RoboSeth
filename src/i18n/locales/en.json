@@ -131,7 +131,7 @@
     "getStarted": "Get Started",
     "goToDashboard": "Go to Dashboard",
     "continueAsGuest": "Continue as Guest",
-    "whyEntregraTR": "Why RoboAtlas?",
+    "whyEntregraTR": "Why RoboSeth?",
     "discoverAdvantages": "Discover our platform advantages",
     "forCompanies": "For Companies",
     "forCompaniesDesc": "Find integrators for your project, receive and compare proposals.",
@@ -512,7 +512,7 @@
     "markAllAsRead": "Mark All as Read"
   },
   "footer": {
-    "copyright": "© 2024 RoboAtlas. All rights reserved."
+    "copyright": "© 2024 RoboSeth. All rights reserved."
   },
   "filters": {
     "activityAreas": "Activity Areas",

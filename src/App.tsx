@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/hooks/useAuth";
+import Navbar from "./components/Navbar";
 import Index from "./pages/Index";
 import FirmaRegister from "./pages/FirmaRegister";
 import EntegratorRegister from "./pages/EntegratorRegister";
@@ -20,6 +21,8 @@ import FirmaIhaleler from "./pages/FirmaIhaleler";
 import IhaleDetay from "./pages/IhaleDetay";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import Eslesmeler from "./pages/Eslesmeler";
+import Partners from "./pages/Partners";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +34,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <Navbar />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/dashboard" element={<Dashboard />} />
@@ -46,6 +50,8 @@ const App = () => (
               <Route path="/ihale/:id" element={<IhaleDetay />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/notifications" element={<Notifications />} />
+              <Route path="/eslesmeler" element={<Eslesmeler />} />
+              <Route path="/partners" element={<Partners />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -74,13 +74,13 @@ const getIhaleTuruConfig = (t: any) => ({
     label: t('auctions.acikEksiltmeLabel'), 
     description: t('auctions.acikEksiltmeDesc'),
     icon: TrendingDown, 
-    color: 'bg-blue-500' 
+    color: 'bg-primary' 
   },
   'ingiliz': { 
     label: t('auctions.ingilizLabel'), 
     description: t('auctions.ingilizDesc'),
     icon: TrendingUp, 
-    color: 'bg-green-500' 
+    color: 'bg-accent' 
   },
   'hollanda': { 
     label: t('auctions.hollandaLabel'), 
@@ -104,7 +104,7 @@ const getIhaleTuruConfig = (t: any) => ({
     label: t('auctions.muhurluKapaliLabel'), 
     description: t('auctions.muhurluKapaliDesc'),
     icon: Shield, 
-    color: 'bg-purple-500' 
+    color: 'bg-primary/80' 
   },
 });
 

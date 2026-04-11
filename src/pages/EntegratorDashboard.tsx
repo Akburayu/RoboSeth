@@ -452,7 +452,7 @@ export default function EntegratorDashboard() {
       {isGuestMode && (
         <div className="bg-amber-500/10 border-b border-amber-500/30">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+            <div className="flex items-center gap-2 text-amber-700 dark:text-accent">
               <Eye className="h-5 w-5" />
               <span className="font-medium">{t('index.guestMode')}</span>
               <span className="text-sm">- {t('index.guestModeViewOnly')}</span>

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
+import { useMatches } from '@/hooks/useMatches';
 import NotificationBell from '@/components/NotificationBell';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -206,6 +207,7 @@ export default function FirmaDashboard() {
   const [searchParams] = useSearchParams();
   const isGuestMode = searchParams.get('guest') === 'true';
   const { user, userRole, signOut, loading: authLoading } = useAuth();
+  const { matches, createMatch } = useMatches(user?.id, 'firma');
   const { toast } = useToast();
 
   const [entegratorler, setEntegratorler] = useState<Entegrator[]>([]);
@@ -518,7 +520,7 @@ export default function FirmaDashboard() {
             className="p-1 hover:scale-110 transition-transform"
           >
             <Star
-              className={`h-6 w-6 ${star <= value ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}`}
+              className={`h-6 w-6 ${star <= value ? 'fill-accent text-accent' : 'text-muted-foreground'}`}
             />
           </button>
         ))}
@@ -528,7 +530,7 @@ export default function FirmaDashboard() {
 
   const RatingDisplay = ({ avg, label }: { avg: number; label: string }) => (
     <div className="flex items-center gap-1" title={label}>
-      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+      <Star className="h-3 w-3 fill-accent text-accent" />
       <span className="text-xs font-medium">{avg.toFixed(1)}</span>
     </div>
   );
@@ -824,7 +826,7 @@ export default function FirmaDashboard() {
       {isGuestMode && (
         <div className="bg-amber-500/10 border-b border-amber-500/30">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+            <div className="flex items-center gap-2 text-amber-700 dark:text-accent">
               <Eye className="h-5 w-5" />
               <span className="font-medium">{t('index.guestMode')}</span>
               <span className="text-sm">- {t('index.guestModeViewOnly')}</span>
@@ -911,7 +913,7 @@ export default function FirmaDashboard() {
                   </div>
                   <Button 
                     onClick={() => setKrediModalOpen(true)}
-                    className="bg-green-600 hover:bg-green-700 text-white gap-2"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
                   >
                     <CreditCard className="h-4 w-4" />
                     Kredi Satın Al
@@ -1031,17 +1033,17 @@ export default function FirmaDashboard() {
                             <>
                               <div className="flex items-center gap-1 justify-end" title="Kalite">
                                 <span className="text-xs text-muted-foreground">Kalite:</span>
-                                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                <Star className="h-3 w-3 fill-accent text-accent" />
                                 <span className="text-xs font-medium">{entegratorRatings[entegrator.id].kalite_avg.toFixed(1)}</span>
                               </div>
                               <div className="flex items-center gap-1 justify-end" title="Müşteri İlişkisi">
                                 <span className="text-xs text-muted-foreground">M.İlişki:</span>
-                                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                <Star className="h-3 w-3 fill-accent text-accent" />
                                 <span className="text-xs font-medium">{entegratorRatings[entegrator.id].musteri_iliskisi_avg.toFixed(1)}</span>
                               </div>
                               <div className="flex items-center gap-1 justify-end" title="Süreç Yönetimi">
                                 <span className="text-xs text-muted-foreground">Süreç:</span>
-                                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                <Star className="h-3 w-3 fill-accent text-accent" />
                                 <span className="text-xs font-medium">{entegratorRatings[entegrator.id].surec_yonetimi_avg.toFixed(1)}</span>
                               </div>
                             </>
@@ -1112,34 +1114,40 @@ export default function FirmaDashboard() {
                             onClick={() => {
                               toast({
                                 title: 'Üyelik Gerekli',
-                                description: 'İletişim bilgilerini görmek için üye olmanız gerekmektedir.',
+                                description: 'Eşleşme işlemi için üye olmanız gerekmektedir.',
                               });
                               navigate('/');
                             }}
                           >
                             <Lock className="h-4 w-4" />
-                            İletişimi Gör (Üyelik Gerekli)
+                            Eşleş (Üyelik Gerekli)
                           </Button>
                         ) : (
                           <>
                             <Button 
                               className={`flex-1 gap-2 ${
-                                revealedContacts.has(entegrator.id)
-                                  ? 'bg-green-600 hover:bg-green-700'
-                                  : 'bg-firma hover:bg-firma/90'
+                                matches.some(m => m.entegratorId === entegrator.id)
+                                  ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                                  : 'bg-primary hover:bg-primary/90 text-primary-foreground'
                               }`}
                               size="sm"
-                              onClick={() => handleRevealClick(entegrator)}
+                              onClick={() => {
+                                if (matches.some(m => m.entegratorId === entegrator.id)) {
+                                  navigate('/eslesmeler');
+                                } else {
+                                  createMatch(entegrator.id, entegrator.entegrator_adi || `Entegratör ${entegrator.id.substring(0,6)}`);
+                                }
+                              }}
                             >
-                              {revealedContacts.has(entegrator.id) ? (
+                              {matches.some(m => m.entegratorId === entegrator.id) ? (
                                 <>
                                   <CheckCircle2 className="h-4 w-4" />
-                                  İletişimi Görüntüle
+                                  Eşleşildi (Sürece Git)
                                 </>
                               ) : (
                                 <>
-                                  <Eye className="h-4 w-4" />
-                                  İletişimi Gör ({getRevealCost()} Kredi)
+                                  <Building2 className="h-4 w-4" />
+                                  Eşleş ve Projeye Ekle
                                 </>
                               )}
                             </Button>
@@ -1235,7 +1243,7 @@ export default function FirmaDashboard() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Phone className="h-5 w-5 text-green-600" />
+              <Phone className="h-5 w-5 text-emerald-600" />
               İletişim Bilgileri
             </DialogTitle>
           </DialogHeader>
@@ -1282,7 +1290,7 @@ export default function FirmaDashboard() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Star className="h-5 w-5 text-amber-500" />
+              <Star className="h-5 w-5 text-accent" />
               Entegratör Değerlendirmesi
             </DialogTitle>
             <DialogDescription>
@@ -1325,7 +1333,7 @@ export default function FirmaDashboard() {
             <Button 
               onClick={submitRating}
               disabled={submittingRating}
-              className="bg-amber-500 hover:bg-amber-600"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground"
             >
               {submittingRating ? (
                 <>
@@ -1366,7 +1374,7 @@ export default function FirmaDashboard() {
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
                             key={star}
-                            className={`h-3 w-3 ${star <= comment.kalite_puan ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'}`}
+                            className={`h-3 w-3 ${star <= comment.kalite_puan ? 'fill-accent text-accent' : 'text-muted-foreground/30'}`}
                           />
                         ))}
                       </div>
@@ -1377,7 +1385,7 @@ export default function FirmaDashboard() {
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
                             key={star}
-                            className={`h-3 w-3 ${star <= comment.musteri_iliskisi_puan ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'}`}
+                            className={`h-3 w-3 ${star <= comment.musteri_iliskisi_puan ? 'fill-accent text-accent' : 'text-muted-foreground/30'}`}
                           />
                         ))}
                       </div>
@@ -1388,7 +1396,7 @@ export default function FirmaDashboard() {
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
                             key={star}
-                            className={`h-3 w-3 ${star <= comment.surec_yonetimi_puan ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/30'}`}
+                            className={`h-3 w-3 ${star <= comment.surec_yonetimi_puan ? 'fill-accent text-accent' : 'text-muted-foreground/30'}`}
                           />
                         ))}
                       </div>
@@ -1536,17 +1544,17 @@ export default function FirmaDashboard() {
             </Card>
 
             {/* Global Paket */}
-            <Card className="border-2 hover:border-amber-500 transition-colors cursor-pointer group">
+            <Card className="border-2 hover:border-accent transition-colors cursor-pointer group">
               <CardHeader className="text-center pb-2">
-                <div className="mx-auto w-12 h-12 bg-amber-500/10 rounded-full flex items-center justify-center mb-2 group-hover:bg-amber-500/20 transition-colors">
-                  <Star className="h-6 w-6 text-amber-500" />
+                <div className="mx-auto w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mb-2 group-hover:bg-accent/20 transition-colors">
+                  <Star className="h-6 w-6 text-accent" />
                 </div>
                 <CardTitle className="text-lg">Global Paket</CardTitle>
                 <p className="text-sm text-muted-foreground">Büyük işletmeler için</p>
               </CardHeader>
               <CardContent className="text-center space-y-4">
                 <div>
-                  <span className="text-3xl font-bold text-amber-500">€3,000</span>
+                  <span className="text-3xl font-bold text-accent">€3,000</span>
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   <CreditCard className="h-5 w-5 text-muted-foreground" />
@@ -1558,7 +1566,7 @@ export default function FirmaDashboard() {
                   <li>• %23 tasarruf</li>
                 </ul>
                 <Button 
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-white"
+                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
                   onClick={() => {
                     toast({
                       title: "Satın Alma",
@@ -1572,17 +1580,17 @@ export default function FirmaDashboard() {
             </Card>
 
             {/* İhale Paketi */}
-            <Card className="border-2 hover:border-purple-500 transition-colors cursor-pointer group">
+            <Card className="border-2 hover:border-primary/60 transition-colors cursor-pointer group">
               <CardHeader className="text-center pb-2">
-                <div className="mx-auto w-12 h-12 bg-purple-500/10 rounded-full flex items-center justify-center mb-2 group-hover:bg-purple-500/20 transition-colors">
-                  <Gavel className="h-6 w-6 text-purple-500" />
+                <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-2 group-hover:bg-primary/20 transition-colors">
+                  <Gavel className="h-6 w-6 text-primary/80" />
                 </div>
                 <CardTitle className="text-lg">İhale Paketi</CardTitle>
                 <p className="text-sm text-muted-foreground">İhale açmak için</p>
               </CardHeader>
               <CardContent className="text-center space-y-4">
                 <div>
-                  <span className="text-3xl font-bold text-purple-500">€2,000</span>
+                  <span className="text-3xl font-bold text-primary/80">€2,000</span>
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   <Gavel className="h-5 w-5 text-muted-foreground" />
@@ -1594,7 +1602,7 @@ export default function FirmaDashboard() {
                   <li>• Özel destek</li>
                 </ul>
                 <Button 
-                  className="w-full bg-purple-500 hover:bg-purple-600 text-white"
+                  className="w-full bg-primary/80 hover:bg-primary/90 text-primary-foreground"
                   onClick={() => {
                     toast({
                       title: "Satın Alma",

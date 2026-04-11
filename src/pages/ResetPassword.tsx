@@ -157,8 +157,8 @@ export default function ResetPassword() {
           <CardContent>
             {success ? (
               <div className="flex flex-col items-center py-6 space-y-4">
-                <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center">
-                  <CheckCircle2 className="h-8 w-8 text-green-600" />
+                <div className="h-16 w-16 rounded-full bg-emerald-100 flex items-center justify-center">
+                  <CheckCircle2 className="h-8 w-8 text-emerald-600" />
                 </div>
                 <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
               </div>

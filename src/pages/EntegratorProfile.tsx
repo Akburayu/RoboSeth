@@ -447,7 +447,7 @@ export default function EntegratorProfile() {
                   <div key={i} className="flex items-center gap-2 text-sm">
                     {item.belge ? (
                       <>
-                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                         <span className="text-foreground">{item.name}</span>
                       </>
                     ) : (

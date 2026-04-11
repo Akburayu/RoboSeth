@@ -281,25 +281,25 @@ export default function FirmaProfile() {
               <div className="space-y-2">
                 {firma.belgesi1 && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                     <span>{t('register.ticaretSicil')}</span>
                   </div>
                 )}
                 {firma.belgesi2 && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                     <span>{t('register.faaliyetBelgesi')}</span>
                   </div>
                 )}
                 {firma.belgesi3 && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                     <span>{t('register.imzaSirkuleri')}</span>
                   </div>
                 )}
                 {(firma as any).belgesi4 && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                     <span>{t('register.vergiLevhasi')}</span>
                   </div>
                 )}
