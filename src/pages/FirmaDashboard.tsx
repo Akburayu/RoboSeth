@@ -44,7 +44,8 @@ import {
   User,
   LogOut,
   Gavel,
-  Lock
+  Lock,
+  MessageSquare
 } from 'lucide-react';
 import type { Database } from '@/integrations/supabase/types';
 import { Textarea } from '@/components/ui/textarea';
@@ -231,6 +232,13 @@ export default function FirmaDashboard() {
   const [ratingEntegrator, setRatingEntegrator] = useState<Entegrator | null>(null);
   const [existingRating, setExistingRating] = useState<{ kalite: number; musteriIliskisi: number; surecYonetimi: number; yorum: string } | null>(null);
   const [ratingForm, setRatingForm] = useState<RatingFormData>({ kalite: 0, musteriIliskisi: 0, surecYonetimi: 0, yorum: '' });
+  
+  // Quick Comment State for the Comments Modal
+  const [quickComment, setQuickComment] = useState('');
+  const [submittingQuickComment, setSubmittingQuickComment] = useState(false);
+  const [showQuickRating, setShowQuickRating] = useState(false);
+  const [quickRatingForm, setQuickRatingForm] = useState<RatingFormData>({ kalite: 0, musteriIliskisi: 0, surecYonetimi: 0, yorum: '' });
+
   const [submittingRating, setSubmittingRating] = useState(false);
   
   // Comments modal state
@@ -412,9 +420,89 @@ export default function FirmaDashboard() {
     }
   };
 
-  const openCommentsModal = (entegrator: Entegrator) => {
+  const openCommentsModal = async (entegrator: Entegrator) => {
     setCommentsEntegrator(entegrator);
+    setQuickComment('');
+    setShowQuickRating(false);
+    setQuickRatingForm({ kalite: 0, musteriIliskisi: 0, surecYonetimi: 0, yorum: '' });
+
+    if (firmaId) {
+      const { data } = await supabase
+        .from('firma_ratings')
+        .select('yorum, kalite_puan, musteri_iliskisi_puan, surec_yonetimi_puan')
+        .eq('firma_id', firmaId)
+        .eq('entegrator_id', entegrator.id)
+        .maybeSingle();
+
+      if (data) {
+        // They already have a rating
+        setQuickComment(data.yorum || '');
+      } else {
+        // No rating exists, we will need to show rating stars when they try to comment
+        setShowQuickRating(true);
+      }
+    }
+    
     setCommentsModalOpen(true);
+  };
+
+  const submitQuickComment = async () => {
+    if (!firmaId || !commentsEntegrator) return;
+    if (!quickComment.trim()) {
+      toast({ title: t('common.error') || 'Hata', description: 'Lütfen bir yorum yazın.', variant: 'destructive' });
+      return;
+    }
+
+    // If they have to rate (meaning no existing rating), validate stars
+    if (showQuickRating) {
+      if (quickRatingForm.kalite === 0 || quickRatingForm.musteriIliskisi === 0 || quickRatingForm.surecYonetimi === 0) {
+        toast({ title: t('rating.incompleteRating') || 'Eksik', description: 'Yorum yapabilmek için lütfen yıldızlarla puanlama yapın.', variant: 'destructive' });
+        return;
+      }
+    }
+
+    setSubmittingQuickComment(true);
+    try {
+      const { data: existing } = await supabase
+        .from('firma_ratings')
+        .select('id')
+        .eq('firma_id', firmaId)
+        .eq('entegrator_id', commentsEntegrator.id)
+        .maybeSingle();
+
+      if (existing) {
+        const { error } = await supabase
+          .from('firma_ratings')
+          .update({ yorum: quickComment })
+          .eq('firma_id', firmaId)
+          .eq('entegrator_id', commentsEntegrator.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('firma_ratings')
+          .insert({
+            firma_id: firmaId,
+            entegrator_id: commentsEntegrator.id,
+            kalite_puan: quickRatingForm.kalite,
+            musteri_iliskisi_puan: quickRatingForm.musteriIliskisi,
+            surec_yonetimi_puan: quickRatingForm.surecYonetimi,
+            yorum: quickComment,
+          });
+        if (error) throw error;
+        setShowQuickRating(false);
+      }
+      
+      toast({ title: t('common.success') || 'Başarılı', description: 'Yorumunuz başarıyla eklendi.' });
+      fetchAllRatings();
+      setQuickComment(''); // Reset form or keep their text? Let's keep it so they see it, but we already refetch.
+      setCommentsModalOpen(false); // Optionally close, but let's keep it open to feel seamless
+      
+    } catch (error: any) {
+      console.error(error);
+      toast({ title: t('common.error') || 'Hata', description: 'Yorum kaydedilemedi.', variant: 'destructive' });
+    } finally {
+      setSubmittingQuickComment(false);
+    }
   };
 
   const openRatingModal = async (entegrator: Entegrator) => {
@@ -852,78 +940,79 @@ export default function FirmaDashboard() {
         </div>
       )}
 
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+      {/* Sub-Header / Alt Menu */}
+      <header className="bg-transparent pt-8 pb-4">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-firma">{t('dashboard.firmaTitle')}</h1>
-              <p className="text-sm text-muted-foreground">{t('dashboard.firmaSubtitle')}</p>
+              <h1 className="text-3xl font-extrabold text-primary tracking-tight">Firma Paneli</h1>
+              <p className="text-sm text-slate-500 mt-1 font-medium">{t('dashboard.firmaSubtitle')}</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               {!isGuestMode && (
                 <>
-                  <NotificationBell />
+                  <div className="flex items-center gap-1 mr-2 border-r border-slate-200 pr-4">
+                    <NotificationBell />
+                    <Button 
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => navigate('/firma/profile')}
+                      title="Profil"
+                      className="text-slate-600 hover:text-primary hover:bg-primary/5"
+                    >
+                      <User className="h-5 w-5" />
+                    </Button>
+                    <Button 
+                      variant="ghost"
+                      size="icon"
+                      onClick={async () => {
+                        await signOut();
+                        navigate('/');
+                      }}
+                      title="Çıkış Yap"
+                      className="text-slate-600 hover:text-destructive hover:bg-destructive/5"
+                    >
+                      <LogOut className="h-5 w-5" />
+                    </Button>
+                  </div>
+                  
                   <Button 
                     variant="ghost"
-                    size="icon"
-                    onClick={() => navigate('/firma/profile')}
-                    title="Profil"
-                  >
-                    <User className="h-5 w-5" />
-                  </Button>
-                  <Button 
-                    variant="ghost"
-                    size="icon"
-                    onClick={async () => {
-                      await signOut();
-                      navigate('/');
-                    }}
-                    title="Çıkış Yap"
-                  >
-                    <LogOut className="h-5 w-5" />
-                  </Button>
-                  <Button 
-                    variant="outline"
                     onClick={() => navigate('/firma/ilanlarim')}
-                    className="gap-2"
+                    className="gap-2 text-primary hover:bg-primary/5 font-medium"
                   >
                     <FileText className="h-4 w-4" />
                     İlanlarım
                   </Button>
                   <Button 
+                    variant="outline"
                     onClick={() => navigate('/firma/ilan-olustur')}
-                    className="bg-firma hover:bg-firma/90 gap-2"
+                    className="gap-2 border-primary/20 text-primary hover:bg-primary/5 font-medium"
                   >
                     <FileText className="h-4 w-4" />
                     İlan Oluştur
                   </Button>
                   <Button 
-                    onClick={() => setIhaleTuruModalOpen(true)}
                     variant="outline"
-                    className="gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                    onClick={() => setIhaleTuruModalOpen(true)}
+                    className="gap-2 border-primary/20 text-primary hover:bg-primary/5 font-medium"
                   >
                     <Gavel className="h-4 w-4" />
                     İhale Başlat
                   </Button>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-firma/10 rounded-lg border border-firma/20">
-                    <CreditCard className="h-5 w-5 text-firma" />
-                    <span className="font-semibold text-firma">{firmaCredits}</span>
-                    <span className="text-sm text-muted-foreground">Kredi</span>
+
+                  <div className="flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-full border border-primary/10 ml-2 shadow-sm">
+                    <CreditCard className="h-4 w-4 text-primary" />
+                    <span className="font-bold text-primary">{firmaCredits}</span>
+                    <span className="text-sm text-primary/80 font-medium">Kredi</span>
                   </div>
-                  <Button 
-                    onClick={() => setKrediModalOpen(true)}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
-                  >
-                    <CreditCard className="h-4 w-4" />
-                    Kredi Satın Al
-                  </Button>
                 </>
               )}
               {isGuestMode && (
                 <Button 
                   variant="ghost"
                   onClick={() => navigate('/')}
+                  className="text-primary hover:bg-primary/5"
                 >
                   Ana Sayfa
                 </Button>
@@ -1105,10 +1194,10 @@ export default function FirmaDashboard() {
                       )}
 
                       {/* CTA Buttons */}
-                      <div className="flex gap-2 mt-4">
+                      <div className="flex flex-col gap-2 mt-4">
                         {isGuestMode ? (
                           <Button 
-                            className="flex-1 gap-2"
+                            className="w-full gap-2"
                             size="sm"
                             variant="outline"
                             onClick={() => {
@@ -1125,7 +1214,7 @@ export default function FirmaDashboard() {
                         ) : (
                           <>
                             <Button 
-                              className={`flex-1 gap-2 ${
+                              className={`w-full gap-2 ${
                                 matches.some(m => m.entegratorId === entegrator.id)
                                   ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
                                   : 'bg-primary hover:bg-primary/90 text-primary-foreground'
@@ -1151,27 +1240,35 @@ export default function FirmaDashboard() {
                                 </>
                               )}
                             </Button>
-                            {entegratorRatings[entegrator.id] && entegratorRatings[entegrator.id].rating_count > 0 && (
+
+                            {/* Puan ve Yorum Butonları Ücretsiz ve Açık Hale Getirildi */}
+                            <div className="flex gap-2 w-full mt-1">
+                              <div 
+                                className="flex-1"
+                                title={!matches.some(m => m.entegratorId === entegrator.id) ? 'Sadece eşleştiğiniz ve birlikte çalıştığınız entegratörleri değerlendirebilirsiniz.' : 'Entegratörü puanla'}
+                              >
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => openRatingModal(entegrator)}
+                                  disabled={!matches.some(m => m.entegratorId === entegrator.id)}
+                                  className={`w-full gap-1.5 border-primary/20 text-xs h-8 ${!matches.some(m => m.entegratorId === entegrator.id) ? 'pointer-events-none opacity-60' : 'hover:bg-primary/5 text-primary'}`}
+                                >
+                                  <Star className="h-3.5 w-3.5" /> Puanla
+                                </Button>
+                              </div>
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => openCommentsModal(entegrator)}
-                                title="Yorumları Gör"
+                                className="flex-1 gap-1.5 border-primary/20 hover:bg-primary/5 text-primary text-xs h-8"
                               >
-                                <FileText className="h-4 w-4" />
-                                <span className="text-xs ml-1">{entegratorRatings[entegrator.id].rating_count}</span>
+                                <FileText className="h-3.5 w-3.5" /> Yorumlar 
+                                {entegratorRatings[entegrator.id] && entegratorRatings[entegrator.id].rating_count > 0 && (
+                                  <span className="ml-0.5">({entegratorRatings[entegrator.id].rating_count})</span>
+                                )}
                               </Button>
-                            )}
-                            {revealedContacts.has(entegrator.id) && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => openRatingModal(entegrator)}
-                                title="Değerlendir"
-                              >
-                                <Star className="h-4 w-4" />
-                              </Button>
-                            )}
+                            </div>
                           </>
                         )}
                       </div>
@@ -1352,80 +1449,145 @@ export default function FirmaDashboard() {
 
       {/* Comments Modal - View all ratings/comments for an entegrator */}
       <Dialog open={commentsModalOpen} onOpenChange={setCommentsModalOpen}>
-        <DialogContent className="sm:max-w-lg max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-muted-foreground" />
-              Firma Değerlendirmeleri
-            </DialogTitle>
-            <DialogDescription>
-              Bu entegratör hakkında diğer firmaların yaptığı değerlendirmeler
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="sm:max-w-xl flex flex-col max-h-[85vh] p-0">
+          <div className="p-6 pb-2 border-b">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-xl">
+                <FileText className="h-5 w-5 text-primary" />
+                Firma Değerlendirmeleri
+              </DialogTitle>
+              <DialogDescription>
+                Bu entegratör hakkında diğer firmaların yaptığı değerlendirmeler
+              </DialogDescription>
+            </DialogHeader>
+          </div>
           
-          <div className="space-y-4 py-4">
+          <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50 space-y-4">
             {commentsEntegrator && entegratorComments[commentsEntegrator.id]?.length > 0 ? (
               entegratorComments[commentsEntegrator.id].map((comment, index) => (
-                <div key={index} className="p-4 bg-muted rounded-lg space-y-3">
+                <div key={index} className="p-4 bg-background border rounded-xl shadow-sm space-y-3 transition-colors hover:border-primary/20">
                   <div className="flex flex-wrap gap-4 text-sm">
-                    <div className="flex items-center gap-1">
-                      <span className="text-muted-foreground">Kalite:</span>
+                    <div className="flex items-center gap-1.5 bg-primary/5 px-2 py-1 rounded-md">
+                      <span className="text-xs font-semibold text-primary">Kalite</span>
                       <div className="flex gap-0.5">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
                             key={star}
-                            className={`h-3 w-3 ${star <= comment.kalite_puan ? 'fill-accent text-accent' : 'text-muted-foreground/30'}`}
+                            className={`h-3 w-3 ${star <= comment.kalite_puan ? 'fill-accent text-accent' : 'text-slate-200'}`}
                           />
                         ))}
                       </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-muted-foreground">M.İlişki:</span>
+                    <div className="flex items-center gap-1.5 bg-primary/5 px-2 py-1 rounded-md">
+                      <span className="text-xs font-semibold text-primary">M.İlişki</span>
                       <div className="flex gap-0.5">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
                             key={star}
-                            className={`h-3 w-3 ${star <= comment.musteri_iliskisi_puan ? 'fill-accent text-accent' : 'text-muted-foreground/30'}`}
+                            className={`h-3 w-3 ${star <= comment.musteri_iliskisi_puan ? 'fill-accent text-accent' : 'text-slate-200'}`}
                           />
                         ))}
                       </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-muted-foreground">Süreç:</span>
+                    <div className="flex items-center gap-1.5 bg-primary/5 px-2 py-1 rounded-md">
+                      <span className="text-xs font-semibold text-primary">Süreç</span>
                       <div className="flex gap-0.5">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Star
                             key={star}
-                            className={`h-3 w-3 ${star <= comment.surec_yonetimi_puan ? 'fill-accent text-accent' : 'text-muted-foreground/30'}`}
+                            className={`h-3 w-3 ${star <= comment.surec_yonetimi_puan ? 'fill-accent text-accent' : 'text-slate-200'}`}
                           />
                         ))}
                       </div>
                     </div>
                   </div>
                   {comment.yorum && (
-                    <p className="text-sm text-foreground">{comment.yorum}</p>
+                    <p className="text-sm text-foreground/90 leading-relaxed font-medium mt-2">{comment.yorum}</p>
                   )}
-                  <p className="text-xs text-muted-foreground">
-                    {new Date(comment.created_at).toLocaleDateString('tr-TR', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
+                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border/50 text-xs text-muted-foreground">
+                    <Clock className="h-3 w-3" />
+                    <span>
+                      {new Date(comment.created_at).toLocaleDateString('tr-TR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </span>
+                  </div>
                 </div>
               ))
             ) : (
-              <p className="text-center text-muted-foreground py-4">
-                Henüz değerlendirme yapılmamış.
-              </p>
+              <div className="text-center py-8">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-3">
+                  <FileText className="h-6 w-6 text-primary/60" />
+                </div>
+                <p className="text-muted-foreground font-medium">Henüz değerlendirme yapılmamış.</p>
+                <p className="text-sm text-muted-foreground/70 mt-1">İlk yorumu siz yapın!</p>
+              </div>
             )}
           </div>
 
-          <DialogFooter>
-            <Button onClick={() => setCommentsModalOpen(false)}>
-              Kapat
-            </Button>
-          </DialogFooter>
+          {/* Yeni Yorum Alanı - Yalnızca Eşleşilmiş Entegratörlere Yorum Yapılabilir */}
+          {commentsEntegrator && matches.some(m => m.entegratorId === commentsEntegrator.id) ? (
+            <div className="border-t bg-background p-6">
+              <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs">!</span>
+                Sen de Değerlendir ve Yorum Yap
+              </h4>
+              
+              {showQuickRating && (
+                <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-3 p-3 bg-muted/40 rounded-lg border border-border">
+                  <StarRating
+                    label="Kalite"
+                    value={quickRatingForm.kalite}
+                    onChange={(v) => setQuickRatingForm(prev => ({ ...prev, kalite: v }))}
+                  />
+                  <StarRating
+                    label="Müşteri"
+                    value={quickRatingForm.musteriIliskisi}
+                    onChange={(v) => setQuickRatingForm(prev => ({ ...prev, musteriIliskisi: v }))}
+                  />
+                  <StarRating
+                    label="Süreç"
+                    value={quickRatingForm.surecYonetimi}
+                    onChange={(v) => setQuickRatingForm(prev => ({ ...prev, surecYonetimi: v }))}
+                  />
+                </div>
+              )}
+              
+              <div className="flex items-start gap-3">
+                <div className="relative flex-1">
+                  <Textarea 
+                    placeholder="Bu entegratör hakkındaki deneyimlerinizi paylaşın..." 
+                    className="resize-none min-h-[80px] bg-muted/20 border-primary/20 focus-visible:ring-primary h-full pr-4 py-3"
+                    value={quickComment}
+                    onChange={(e) => setQuickComment(e.target.value)}
+                  />
+                </div>
+                <Button 
+                  onClick={submitQuickComment} 
+                  disabled={submittingQuickComment}
+                  className="bg-primary hover:bg-primary/90 text-white h-auto py-3 px-6 shadow-md transition-all active:scale-95 flex flex-col gap-1 items-center justify-center min-w-[120px]"
+                >
+                  {submittingQuickComment ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <>
+                      <span className="font-semibold">Yorum Yap</span>
+                      <span className="text-[10px] opacity-80 uppercase tracking-widest">Gönder</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="border-t bg-muted/30 p-5 text-center">
+              <p className="text-sm text-muted-foreground font-medium flex justify-center items-center gap-2">
+                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-amber-500/10 text-amber-600 text-xs font-bold">!</span>
+                Sadece eşleştiğiniz ve birlikte çalıştığınız entegratörleri değerlendirebilirsiniz.
+              </p>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
 
