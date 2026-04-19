@@ -9,7 +9,7 @@ interface SEOHeadProps {
   canonical?: string;
 }
 
-const defaultTitle = 'EntegraTR - B2B Entegrasyon Platformu';
+const defaultTitle = 'RoboSeth | Endüstriyel B2B Otomasyon Ekosistemi';
 const defaultDescription = 'Firmalar ve entegratörleri buluşturan Türkiye\'nin en kapsamlı B2B platformu. Doğru iş ortağını bulun, projelerinizi hayata geçirin.';
 const defaultKeywords = 'entegrasyon, B2B, robot, otomasyon, kaynak, PLC, endüstriyel, firma, entegratör, ihale, teklif';
 const defaultOgImage = '/og-image.png';
@@ -22,7 +22,7 @@ export function SEOHead({
   ogType = 'website',
   canonical,
 }: SEOHeadProps) {
-  const fullTitle = title ? `${title} | EntegraTR` : defaultTitle;
+  const fullTitle = title ? `${title} | RoboSeth` : defaultTitle;
 
   return (
     <Helmet>
@@ -35,7 +35,7 @@ export function SEOHead({
       <meta property="og:description" content={description} />
       <meta property="og:type" content={ogType} />
       <meta property="og:image" content={ogImage} />
-      <meta property="og:site_name" content="EntegraTR" />
+      <meta property="og:site_name" content="RoboSeth" />
       <meta property="og:locale" content="tr_TR" />
       
       {/* Twitter */}
