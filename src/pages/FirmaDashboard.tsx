@@ -47,9 +47,9 @@ import {
   Gavel,
   Lock,
   MessageSquare,
-  Sparkles,
-  Bot,
-  Zap
+  SlidersHorizontal,
+  Server,
+  ChevronRight
 } from 'lucide-react';
 import type { Database } from '@/integrations/supabase/types';
 import { Textarea } from '@/components/ui/textarea';
@@ -1030,11 +1030,11 @@ export default function FirmaDashboard() {
               {/* AI Prompt Input */}
               <div className="relative">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-                  <Bot className="h-4 w-4 text-primary" />
+                  <Search className="h-4 w-4 text-slate-400" />
                 </div>
                 <Input
                   id="ai-search-input"
-                  placeholder="Doğal dilde yaz: ör. 'İzmir'de CNC besleme yapan, süreci hızlı yöneten bir firma lazım'"
+                  placeholder="Proje gereksinimlerini veya firma kriterlerini girin... (örn: Kocaeli bölgesinde PLC programlama ve AGV deneyimi olan firma)"
                   value={aiQuery}
                   onChange={(e) => {
                     setAiQuery(e.target.value);
@@ -1080,9 +1080,9 @@ export default function FirmaDashboard() {
                     {aiLoading ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     ) : (
-                      <Sparkles className="h-3.5 w-3.5" />
+                      <SlidersHorizontal className="h-3.5 w-3.5" />
                     )}
-                    {aiLoading ? 'Analiz ediyor...' : 'AI Eşleştir'}
+                    {aiLoading ? 'Taranıyor...' : 'Uygun Partneri Bul'}
                   </Button>
                 </div>
               </div>
@@ -1117,13 +1117,13 @@ export default function FirmaDashboard() {
               <div className="mb-6 flex flex-col items-center justify-center py-8 rounded-md border border-slate-200 bg-slate-50 gap-3">
                 <div className="relative">
                   <div className="w-12 h-12 rounded-sm bg-primary/10 flex items-center justify-center">
-                    <Sparkles className="h-6 w-6 text-primary animate-pulse" />
+                    <Server className="h-6 w-6 text-primary animate-pulse" />
                   </div>
                   <div className="absolute -inset-1 rounded-sm border-2 border-primary/40 border-t-transparent animate-spin" />
                 </div>
                 <div className="text-center">
-                  <p className="font-semibold text-slate-800">Yapay Zeka Analiz Ediyor...</p>
-                  <p className="text-sm text-slate-500 mt-1">Talebiniz değerlendiriliyor, en uygun eşleşmeler bulunuyor</p>
+                  <p className="font-semibold text-slate-800 tracking-tight">Veritabanı taranıyor...</p>
+                  <p className="text-xs text-slate-500 mt-1 font-mono">Eşleşme algoritmaları çalıştırılıyor, kriterler işleniyor</p>
                 </div>
               </div>
             )}
@@ -1133,8 +1133,8 @@ export default function FirmaDashboard() {
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="flex items-center gap-2 px-2.5 py-1 bg-primary/10 border border-primary/20 rounded-md">
-                    <Sparkles className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-sm font-semibold text-primary">AI Akıllı Eşleştirme Sonuçları</span>
+                    <Server className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-sm font-semibold text-primary tracking-tight">Eşleşme Sorgu Sonuçları</span>
                   </div>
                   <Badge variant="secondary" className="text-xs">{aiResults.length} eşleşme</Badge>
                   <button
@@ -1147,9 +1147,9 @@ export default function FirmaDashboard() {
 
                 {aiResults.length === 0 ? (
                   <Card className="p-8 text-center border-slate-200 bg-slate-50 rounded-md">
-                    <Bot className="h-9 w-9 text-primary/30 mx-auto mb-3" />
-                    <p className="font-medium text-slate-700">Eşleşme bulunamadı</p>
-                    <p className="text-sm text-muted-foreground mt-1">Farklı anahtar kelimeler deneyin: uzmanlık, şehir, sektör...</p>
+                    <Server className="h-9 w-9 text-primary/30 mx-auto mb-3" />
+                    <p className="font-medium text-slate-700">Kriterlere uyan kayıt bulunamadı</p>
+                    <p className="text-sm text-muted-foreground mt-1">Farklı parametreler deneyin: uzmanlık alanı, şehir, sektör...</p>
                   </Card>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -1158,15 +1158,14 @@ export default function FirmaDashboard() {
                         key={entegrator.id}
                         className="relative overflow-hidden border-slate-200 shadow-sm hover:border-primary/40 hover:shadow transition-all rounded-md"
                       >
-                        {/* Score badge */}
-                        <div className="absolute top-2.5 right-2.5 flex items-center gap-1 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm tracking-wide">
-                          <Zap className="h-3 w-3" />
-                          %{score}
+                        {/* Uyumluluk indeksi */}
+                        <div className="absolute top-2.5 right-2.5 font-mono text-[10px] text-primary font-bold bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded-sm tracking-tight">
+                          {(score / 100).toFixed(2)}
                         </div>
                         {/* Rank ribbon */}
                         {idx === 0 && (
-                          <div className="absolute top-0 left-0 bg-primary text-white text-[10px] font-bold px-2 py-0.5 tracking-widest uppercase">
-                            #1 EN İYİ EŞLEŞME
+                          <div className="absolute top-0 left-0 bg-primary text-white text-[10px] font-mono font-bold px-2 py-0.5 tracking-widest uppercase">
+                            [1] EN YÜKSEK UYUMLULUK
                           </div>
                         )}
 
@@ -1193,12 +1192,17 @@ export default function FirmaDashboard() {
                             </div>
                           )}
 
-                          {/* Match reason */}
+                          {/* Uyum Kriterleri — system log format */}
                           <div className="bg-slate-50 border border-slate-200 rounded-sm p-2.5 mb-3">
-                            <div className="flex items-start gap-2">
-                              <Sparkles className="h-3 w-3 text-primary mt-0.5 shrink-0" />
-                              <p className="text-xs text-slate-600 leading-relaxed">{matchReason}</p>
-                            </div>
+                            <p className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Uyum Kriterleri</p>
+                            <ul className="space-y-0.5">
+                              {matchReasonLines.map((line, i) => (
+                                <li key={i} className="flex items-start gap-1.5 text-[10px] font-mono text-slate-600 leading-relaxed">
+                                  <ChevronRight className="h-3 w-3 text-primary/50 mt-0.5 shrink-0" />
+                                  {line}
+                                </li>
+                              ))}
+                            </ul>
                           </div>
 
                           {/* Ratings row */}
@@ -1296,30 +1300,35 @@ export default function FirmaDashboard() {
                             <h3 className="font-semibold text-lg">{maskName(entegrator.entegrator_adi)}</h3>
                           </div>
                         </div>
-                        {/* Three category ratings */}
-                        <div className="flex flex-col gap-1 text-right">
-                          {entegratorRatings[entegrator.id] ? (
-                            <>
-                              <div className="flex items-center gap-1 justify-end" title="Kalite">
-                                <span className="text-xs text-muted-foreground">Kalite:</span>
-                                <Star className="h-3 w-3 fill-accent text-accent" />
-                                <span className="text-xs font-medium">{entegratorRatings[entegrator.id].kalite_avg.toFixed(1)}</span>
+                        {/* ── Puan Tablosu (sağ üst) ── */}
+                        {(() => {
+                          const dp = (entegrator as any).detayli_puanlar;
+                          const rt = entegratorRatings[entegrator.id];
+                          const k   = dp?.kalite            ?? rt?.kalite_avg;
+                          const m   = dp?.musteri_iliskisi  ?? rt?.musteri_iliskisi_avg;
+                          const s   = dp?.surec             ?? rt?.surec_yonetimi_avg;
+                          if (!k && !m && !s) return (
+                            <span className="text-[11px] text-slate-400 italic self-start">— veri yok</span>
+                          );
+                          const Row = ({ label, val }: { label: string; val?: number }) => val == null ? null : (
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="text-[13px] text-slate-500 whitespace-nowrap">{label}</span>
+                              <div className="flex items-center gap-1">
+                                <Star className="w-[14px] h-[14px] fill-sky-500 text-sky-500 shrink-0" />
+                                <span className="text-[13px] font-medium text-slate-700 tabular-nums">
+                                  {val.toFixed(1)}
+                                </span>
                               </div>
-                              <div className="flex items-center gap-1 justify-end" title="Müşteri İlişkisi">
-                                <span className="text-xs text-muted-foreground">M.İlişki:</span>
-                                <Star className="h-3 w-3 fill-accent text-accent" />
-                                <span className="text-xs font-medium">{entegratorRatings[entegrator.id].musteri_iliskisi_avg.toFixed(1)}</span>
-                              </div>
-                              <div className="flex items-center gap-1 justify-end" title="Süreç Yönetimi">
-                                <span className="text-xs text-muted-foreground">Süreç:</span>
-                                <Star className="h-3 w-3 fill-accent text-accent" />
-                                <span className="text-xs font-medium">{entegratorRatings[entegrator.id].surec_yonetimi_avg.toFixed(1)}</span>
-                              </div>
-                            </>
-                          ) : (
-                            <span className="text-xs text-muted-foreground">Henüz değerlendirme yok</span>
-                          )}
-                        </div>
+                            </div>
+                          );
+                          return (
+                            <div className="flex flex-col gap-1">
+                              <Row label="Kalite:"   val={k} />
+                              <Row label="M.İlişki:" val={m} />
+                              <Row label="Süreç:"    val={s} />
+                            </div>
+                          );
+                        })()}
                       </div>
 
                       {/* Uzmanlık */}

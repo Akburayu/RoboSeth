@@ -2,8 +2,8 @@ import type { MockEntegrator } from './mockData';
 
 export interface AIMatchResult {
   entegrator: MockEntegrator;
-  score: number;         // 0–100
-  matchReason: string;
+  score: number;          // 0–100
+  matchReasonLines: string[]; // structured criteria log lines
   matchedKeywords: string[];
 }
 
@@ -153,19 +153,50 @@ function scoreEntegrator(
   return { score: Math.min(score, 100), matchedKeywords: matched, reasons };
 }
 
-// ─── Build match reason string ────────────────────────────────────────────────
+// ─── Build match reason lines (structured log format) ────────────────────────
 
-function buildMatchReason(
+const CATEGORY_LABELS: Record<string, string> = {
+  uzmanlik:  'UZMANLIK',
+  konum:     'KONUM',
+  kalite:    'KALİTE',
+  surec:     'SÜREÇ',
+  musteri:   'MÜŞTERİ',
+  kapasite:  'KAPASİTE',
+  sektor:    'SEKTÖR',
+  referans:  'REFERANS',
+};
+
+function buildMatchReasonLines(
   entegrator: MockEntegrator,
   reasons: string[],
   score: number,
-): string {
+): string[] {
   const ent = entegrator as any;
   const yorumSayisi = (ent.yorum_listesi ?? []).length;
   const genelPuan = (ent.puan ?? 0).toFixed(1);
-  const intro = `${reasons.slice(0, 3).join('; ')}.`;
-  const suffix = ` Genel puanı ${genelPuan}/5.0 ve ${yorumSayisi} müşteri değerlendirmesi mevcut. Uyum skoru: %${score}.`;
-  return intro + suffix;
+
+  const lines: string[] = reasons.slice(0, 4).map(r => {
+    if (r.includes('uzman') || r.includes('Besleme') || r.includes('Kaynak') || r.includes('Palet') || r.includes('AGV') || r.includes('Görüntü') || r.includes('Scada') || r.includes('PLC') || r.includes('Bakım') || r.includes('Punta'))
+      return `[${CATEGORY_LABELS.uzmanlik}] ${r}`;
+    if (r.includes('bölge') || r.includes('hizmet'))
+      return `[${CATEGORY_LABELS.konum}] ${r}`;
+    if (r.includes('Kalite'))
+      return `[${CATEGORY_LABELS.kalite}] ${r}`;
+    if (r.includes('Süreç'))
+      return `[${CATEGORY_LABELS.surec}] ${r}`;
+    if (r.includes('lişki') || r.includes('Müşteri'))
+      return `[${CATEGORY_LABELS.musteri}] ${r}`;
+    if (r.includes('kapasite') || r.includes('ölçekli') || r.includes('kurumsal') || r.includes('esnek'))
+      return `[${CATEGORY_LABELS.kapasite}] ${r}`;
+    if (r.includes('sektör'))
+      return `[${CATEGORY_LABELS.sektor}] ${r}`;
+    if (r.includes('yorum') || r.includes('referans'))
+      return `[${CATEGORY_LABELS.referans}] ${r}`;
+    return r;
+  });
+
+  lines.push(`[META] Genel performans puanı: ${genelPuan}/5.00 · Müşteri referansı: ${yorumSayisi} · Uyumluluk indeksi: ${(score / 100).toFixed(2)}`);
+  return lines;
 }
 
 // ─── Public API ───────────────────────────────────────────────────────────────
@@ -184,7 +215,11 @@ export function runAIMatch(
         entegrator: e,
         score,
         matchedKeywords,
-        matchReason: buildMatchReason(e, reasons.length ? reasons : ['Genel arama kriterleriyle eşleşiyor'], score),
+        matchReasonLines: buildMatchReasonLines(
+          e,
+          reasons.length ? reasons : ['Genel arama kriterleriyle eşleşiyor'],
+          score,
+        ),
       };
     })
     .filter(r => r.score > 0)
