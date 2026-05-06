@@ -1,0 +1,102 @@
+[
+  [
+    { "k": 4.6, "m": 4.0, "s": 4.2, "text": "Kaynak robotlari devreye alinirken mekanik stabilite muazzamdi, ancak satis sonrasi destek ekiplerine ulasmak biraz zor oldu. Proje takvimi ufak tefek aksakliklara ragmen basariyla yakalandi.", "author": "Serhat K. - Uretim Muduru" },
+    { "k": 4.4, "m": 5.0, "s": 3.8, "text": "Sistem oldukca dayanikli ve firesiz calisiyor. Proje esnasinda iletisimleri cok gucluydu, her an yanimizdaydilar ama kurulum sureci bekledigimizden bir hafta uzun surdu.", "author": "Gokhan B. - Proje Yoneticisi" }
+  ],
+  [
+    { "k": 5.0, "m": 4.2, "s": 4.8, "text": "AGV filosu tam zamaninda ve sifir hata ile devreye alindi. Fabrika icindeki trafik yonetimi kusursuz. Sadece egitim dokumanlari biraz gec teslim edildi.", "author": "Ahmet T. - Lojistik Sefi" },
+    { "k": 4.8, "m": 4.6, "s": 4.2, "text": "Sistem hatasiz calisiyor, bekledigimiz verimi aldik. Ekip uyumluydu ancak yazilim tarafinda ozel taleplerimizin entegrasyonu sureci biraz yavaslatti.", "author": "Caner D. - Ar-Ge Sorumlusu" }
+  ],
+  [
+    { "k": 3.8, "m": 4.8, "s": 3.4, "text": "Scada arayuzu cok modern ve isteklerimizi aninda kodladilar. Ne var ki otomasyon panolarinin montajinda ciddi gecikmeler yasadik, saha ekibi zayifti.", "author": "Elif M. - Otomasyon Lideri" },
+    { "k": 3.4, "m": 4.2, "s": 3.0, "text": "Panolardaki kablolama isciligi daha iyi olabilirdi, bazi etiketlemeler eksikti. Her seye ragmen sikayetlerimize hizli donduler. Surec yonetimi kesinlikle gelistirilmeli.", "author": "Mehmet Y. - Elektrik Bakim Sefi" }
+  ],
+  [
+    { "k": 4.2, "m": 3.6, "s": 4.6, "text": "Hat sonu paletleme robotunun cevrim suresi tam istedigimiz gibi. Planlama mukemmeldi. Ancak sozlesme asamasindaki bazi sartlar konusunda satis ekibiyle anlasmazliklar yasadik.", "author": "Kemal S. - Satinalma Muduru" },
+    { "k": 4.8, "m": 3.4, "s": 4.4, "text": "Tasarim ve mekanik kalite tartisilmaz derecede iyi. Zamaninda teslimat yaptilar. Satis sonrasi servisten randevu almak ise su ana kadar biraz cetrefilli oldu.", "author": "Ayse K. - Isletme Muduru" }
+  ],
+  [
+    { "k": 3.0, "m": 3.8, "s": 2.8, "text": "Goruntu isleme sensorleri bazen hatali okuma yapiyor. Kalibrasyon surecinde bizi cok oyaladilar. Iletisim fena degildi ama teknik yeterlilikleri zorlandi.", "author": "Zeynep P. - Kalite Kontrol Sefi" },
+    { "k": 3.6, "m": 4.2, "s": 3.2, "text": "Sistem calisiyor ancak vaat edilen hiza ulasamadik. Iyi niyetli bir ekip, cozum icin defalarca geldiler fakat projenin toplam suresi aylarca uzadi.", "author": "Hakan E. - Uretim Muhendisi" }
+  ],
+  [
+    { "k": 4.8, "m": 4.8, "s": 4.6, "text": "CNC makine besleme otomasyonumuz kusursuz calisiyor. Bekleme sureleri sifira indi. Operatorlerle iletisimleri cok samimi ve ogreticiydi.", "author": "Fatih C. - Uretim Sorumlusu" },
+    { "k": 5.0, "m": 4.6, "s": 5.0, "text": "Harika bir vizyon kattilar. Devreye alma o kadar sorunsuzdu ki hafta sonu uretimimiz hic durmadi. Sonuna kadar tavsiye ediyorum.", "author": "Burak L. - Fabrika Direktoru" }
+  ],
+  [
+    { "k": 3.4, "m": 3.0, "s": 3.8, "text": "Kestirimci bakim sensorlerinin montaji tam vaktinde yapildi. Fakat yazilim arayuzu cok karmasik. Destek ekibine ulasmakta zaman zaman sikinti cekiyoruz.", "author": "Tugrul H. - Bakim Muhendisi" },
+    { "k": 3.8, "m": 3.4, "s": 3.6, "text": "Sensor verileri bazen tutarsizlik gosteriyor, kalite standartlarimizin biraz altinda kaldi. Ayrica faturalandirma asamasindaki iletisimleri oldukca soguktu.", "author": "Cemre T. - Teknik Mudur" }
+  ],
+  [
+    { "k": 4.4, "m": 4.6, "s": 4.2, "text": "Punta kaynak hucrelerinde oldukca tecrubeliler. Sordugumuz her soruya sabirla yanit verdiler. Sadece guvenlik citlerinin montajinda ufak bir gecikme oldu.", "author": "Okan V. - ISG Uzmani" },
+    { "k": 4.6, "m": 4.4, "s": 4.4, "text": "Hucre cok verimli calisiyor. Robot yorungeleri harika optimize edilmis. Proje yonetimi basariliydi, neredeyse hic surpriz masraf cikarmadilar.", "author": "Gulsah N. - Proje Uzmani" }
+  ],
+  [
+    { "k": 4.0, "m": 5.0, "s": 4.0, "text": "Gida paketleme hattimizda cok temiz bir is cikardilar. Hijyen standartlarina uyum mukemmeldi. Surec yonetiminde malzeme tedarikinden kaynakli kisa duraksamalar oldu.", "author": "Yasin F. - Gida Muhendisi" },
+    { "k": 4.2, "m": 4.8, "s": 4.2, "text": "Sistem tasarimi hijyenik ve yikamaya uygun. Iletisimleri her zaman seffafti. Isin bitis tarihi soz verilenden sadece birkac gun sapti, kabul edilebilir.", "author": "Ece D. - Kalite Guvence" }
+  ],
+  [
+    { "k": 3.2, "m": 3.6, "s": 3.0, "text": "Pres hatti transfer robotu kurulumunda cok zorlandilar. Sistem surekli acil stop veriyordu. Sonunda cozduler ama iletisimleri bu surecte yeterince seffaf degildi.", "author": "Dogan R. - Preshane Sefi" },
+    { "k": 3.6, "m": 3.2, "s": 3.4, "text": "Robot tasima kapasitesi sinirda secilmis, mekanik titremeler oluyor. Proje boyunca yoneticilerine ulasmakta zorlandik. Takvim epey sapti.", "author": "Bulent M. - Yatirim Muduru" }
+  ],
+  [
+    { "k": 5.0, "m": 5.0, "s": 4.8, "text": "Savunma sanayi projemizdeki yuksek gizlilik ve hassasiyet taleplerimizi harfiyen yerine getirdiler. Kusursuz bir proje yonetimi ve muazzam bir kalite.", "author": "Cengiz K. - Guvenlik Muduru" },
+    { "k": 4.8, "m": 4.8, "s": 5.0, "text": "Talasli imalat entegrasyonunda 1 mikron hassasiyetle calistilar. Ekip cok yetkin. Hicbir sorun yasamadik, teslimat bir gun bile gecikmedi.", "author": "Alper T. - CNC Sorumlusu" }
+  ],
+  [
+    { "k": 4.4, "m": 4.0, "s": 4.6, "text": "Ilac sektorundeki kutulama otomasyonunda iyi bir is cikardilar. Dokumantasyon surecleri tam zamaninda bitti. Sadece operator egitimleri biraz aceleye geldi.", "author": "Selim B. - Validasyon Uzmani" },
+    { "k": 4.6, "m": 4.2, "s": 4.4, "text": "Sistem FDA standartlarina tamamen uygun. Proje plani tikir tikir isledi. Teknik ekipleriyle iletisim bazen yavaslasa da sorunlari hep cozduler.", "author": "Merve K. - Regulasyon Muduru" }
+  ],
+  [
+    { "k": 3.6, "m": 4.6, "s": 3.8, "text": "Boya robotu kurulumunda puskurtme kalitesi baslarda sorunluydu. Ancak o kadar cok ugrastilar ve iyi niyetlilerdi ki sorunu tamamen cozene kadar fabrikadan cikmadilar.", "author": "Turgut C. - Boyahane Sefi" },
+    { "k": 3.8, "m": 4.4, "s": 3.4, "text": "Filtreleme sisteminde yapilan bir tasarim hatasi sureci biraz uzatti. Cozum odakli yaklasimlari sayesinde kriz buyumeden asildi.", "author": "Nalan G. - Cevre Muhendisi" }
+  ],
+  [
+    { "k": 4.2, "m": 3.8, "s": 4.0, "text": "Kutu dikme makinesi ile robot kol senkronizasyonu guzel. Mekanik parcalar kaliteli. Fakat yazilim revizyon taleplerimize cok gec donus yapiyorlar.", "author": "Orhan E. - Ambalaj Sefi" },
+    { "k": 4.0, "m": 3.4, "s": 4.2, "text": "Genel olarak projenin gidisatindan memnun kaldik, zamaninda teslim edildi. Ancak faturalasma ve sozlesme asamasindaki kati tutumlari biraz yorucuydu.", "author": "Didem A. - Finans Sorumlusu" }
+  ],
+  [
+    { "k": 4.8, "m": 4.6, "s": 4.8, "text": "Sifirdan kurduklari beyaz esya montaj hatti tikir tikir isliyor. Surecte bizim bile ongoremedigimiz riskleri gorup engellediler. Iletisimleri kuvvetli.", "author": "Sinan Y. - Montaj Muduru" },
+    { "k": 5.0, "m": 4.8, "s": 4.6, "text": "Mekanik toleranslar cok hassas ayarlanmis. Isin ehli bir muhendislik firmasi. Teslimat soz verilen tarihte yapildi, sonrasinda da hep destek oldular.", "author": "Riza P. - Bas Muhendis" }
+  ],
+  [
+    { "k": 3.8, "m": 4.0, "s": 3.8, "text": "Gorsel denetim istasyonu icin aydinlatma secimi bastan hatali yapildi, sonradan duzelttiler. Iletisimleri iyi olsa da planlama konusunda daha tecrubeli olmalilar.", "author": "Kaan M. - Kalite Teknisyeni" },
+    { "k": 4.0, "m": 3.6, "s": 3.4, "text": "Sistem su an stabil ama o noktaya gelene kadar epey zaman kaybettik. Saha ekibi sorularimiza bazen kacamak yanitlar verdi. Surec yonetimi ortalamaydi.", "author": "Leman T. - Proses Kontrol" }
+  ],
+  [
+    { "k": 4.6, "m": 4.8, "s": 4.4, "text": "Talasli imalat makinelerimize entegre ettikleri 7 eksenli robot harika is cikariyor. Teknik destekleri cok hizli. Kurulumda sadece kucuk mekanik puruzler yasandi.", "author": "Emre Z. - Atolye Sefi" },
+    { "k": 4.8, "m": 4.6, "s": 4.8, "text": "Zorlu bir dar alan calismasiydi ama 3D simulasyonlarla her seyi onceden cozmuslerdi. Seffaf iletisim ve zamaninda teslimat icin tesekkurler.", "author": "Koray B. - Fabrika Muduru" }
+  ],
+  [
+    { "k": 3.4, "m": 3.2, "s": 3.6, "text": "Plastik enjeksiyon makinesi robotunda tutucu (gripper) tasarimi zayifti, parcalari dusuruyordu. Geri bildirimlerimizi dikkate alip duzelttiler ama surec cok yipraticiydi.", "author": "Ugur N. - Enjeksiyon Sefi" },
+    { "k": 3.6, "m": 3.4, "s": 3.2, "text": "Cevrim sureleri istedigimiz degere cok zor ulasti. Satis muhendisleriyle proje ekibi arasinda ciddi bir kopukluk var. Teslimat 3 hafta gecikti.", "author": "Ceyda S. - Uretim Sorumlusu" }
+  ],
+  [
+    { "k": 4.2, "m": 4.4, "s": 4.8, "text": "Karton paketleme hucresinde tasarim cok kompakt ve verimli. Surec yonetimleri harika, her adimi raporladilar. Ufak tefek sensor arizalari disinda cok iyi.", "author": "Baris H. - Paketleme Lideri" },
+    { "k": 4.6, "m": 4.0, "s": 4.6, "text": "Iscilik kalitesi ust duzeyde. Devreye alma planina harfiyen uyuldu. Fakat egitim surecinde operatorlerimizin sorularina daha fazla vakit ayrilabilirdi.", "author": "Neslihan Y. - IK ve Egitim" }
+  ],
+  [
+    { "k": 5.0, "m": 4.8, "s": 5.0, "text": "Agir sanayi parcalarinin tasinmasinda kurduklari gantry sistem mukemmel. Hem surec hem kalite acisindan beklentimizin cok ustundeler. Ekip cok cana yakin.", "author": "Volkan D. - Uretim Direktoru" },
+    { "k": 4.8, "m": 5.0, "s": 4.8, "text": "Sifir is kazasi ve tam zamaninda teslimat. Is guvenligi konusundaki hassasiyetleri cok etkileyiciydi. Her aradigimizda dogrudan muhatap bulabildik.", "author": "Pinar E. - ISG Yoneticisi" }
+  ],
+  [
+    { "k": 3.0, "m": 3.4, "s": 3.0, "text": "Otomatik depolama sisteminin yaziliminda cok fazla bug vardi. Stoklar birbirine girdi. Telefonlara cikiyorlar ama cozum uretmeleri haftalar surdu.", "author": "Serdar O. - Depo Yoneticisi" },
+    { "k": 3.2, "m": 3.8, "s": 3.4, "text": "Mekanik raylarda esneme problemleri yasadik. Iletisimleri fena degil, niyetleri iyi ama proje planlamasi ve muhendislik hesaplamalari cok zayifti.", "author": "Gaye R. - Tedarik Muduru" }
+  ],
+  [
+    { "k": 4.6, "m": 4.2, "s": 4.4, "text": "Dokumhane ortaminin zor sartlarina dayanikli bir hucre kurdular. Malzeme kalitesi cok iyi. Ancak saha montaj ekibi fabrikamizin kurallarina uyumda biraz zorlandi.", "author": "Tarik C. - Dokumhane Sefi" },
+    { "k": 4.4, "m": 4.6, "s": 4.8, "text": "Projeyi soz verilen tarihten bile once teslim ettiler. Iletisimleri iyi. Calisma ortami cok tozlu olmasina ragmen sistem sorunsuz isliyor.", "author": "Suleyman K. - Bakim Muduru" }
+  ],
+  [
+    { "k": 4.0, "m": 4.8, "s": 4.0, "text": "Kablo gruplama makinesi entegrasyonunda ufak tefek puruzler oldu ama o kadar ilgililerdi ki hic sorun etmedik. Surec yonetimini daha seffaf yapabilirler.", "author": "Asli M. - Uretim Lideri" },
+    { "k": 4.2, "m": 4.6, "s": 4.2, "text": "Montaj hattimiz icin yaptiklari fiksturler gayet basarili. Ekip cok sempatik ve uyumlu. Teslimatta yasanan lojistik gecikmesini hizlica telafi ettiler.", "author": "Mesut Y. - Hat Muhendisi" }
+  ],
+  [
+    { "k": 4.8, "m": 4.6, "s": 4.8, "text": "Savunma sanayi muhimmat dolum hattini sifir hata toleransiyla tamamladilar. Surec boyunca her adimi dokumante ettiler. Gonul rahatligiyla calisabilirsiniz.", "author": "Ibrahim T. - Proje Yoneticisi" },
+    { "k": 5.0, "m": 4.8, "s": 4.6, "text": "Test asamalari son derece titizdi. Iletisim agi cok guclu, genel mudurlerine kadar ulasabildik. Planlamada sadece malzeme tedariki kaynakli ufak bir sapma oldu.", "author": "Hasan E. - Tedarik Direktoru" }
+  ],
+  [
+    { "k": 3.8, "m": 3.6, "s": 3.4, "text": "Gida sektorundeki sivi dolum makinesinde damlatma problemini haftalarca cozemediler. Iletisim zaman zaman koptu. Sonunda halledildi ama proje takvimi sasti.", "author": "Busra V. - Uretim Sorumlusu" },
+    { "k": 4.0, "m": 4.0, "s": 3.8, "text": "Sistem kalite olarak kabul edilebilir seviyede. Ancak devreye alma surecinde sahada yetkin bir amir yoktu, koordinasyonu biz saglamak zorunda kaldik.", "author": "Kenan D. - Tesis Yoneticisi" }
+  ]
+]

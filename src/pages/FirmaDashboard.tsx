@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useMatches } from '@/hooks/useMatches';
 import NotificationBell from '@/components/NotificationBell';
 import { supabase } from '@/integrations/supabase/client';
+import { runAIMatch, type AIMatchResult } from '@/lib/aiMatcher';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,12 +46,16 @@ import {
   LogOut,
   Gavel,
   Lock,
-  MessageSquare
+  MessageSquare,
+  Sparkles,
+  Bot,
+  Zap
 } from 'lucide-react';
 import type { Database } from '@/integrations/supabase/types';
 import { Textarea } from '@/components/ui/textarea';
 import { IhaleTuruModal } from '@/components/ihale/IhaleTuruModal';
 import { IhaleOlusturModal } from '@/components/ihale/IhaleOlusturModal';
+import { mockEntegratorler } from '@/lib/mockData';
 
 type Entegrator = Database['public']['Tables']['entegrator']['Row'];
 
@@ -67,6 +72,7 @@ interface RatingComment {
   surec_yonetimi_puan: number;
   yorum: string | null;
   created_at: string;
+  author?: string;
 }
 
 const FAALIYET_ALANLARI = [
@@ -179,7 +185,6 @@ interface RatingFormData {
 }
 
 interface Filters {
-  search: string;
   faaliyetAlanlari: string[];
   uzmanlikAlanlari: string[];
   sektorler: string[];
@@ -191,7 +196,6 @@ interface Filters {
 }
 
 const initialFilters: Filters = {
-  search: '',
   faaliyetAlanlari: [],
   uzmanlikAlanlari: [],
   sektorler: [],
@@ -240,6 +244,11 @@ export default function FirmaDashboard() {
   const [quickRatingForm, setQuickRatingForm] = useState<RatingFormData>({ kalite: 0, musteriIliskisi: 0, surecYonetimi: 0, yorum: '' });
 
   const [submittingRating, setSubmittingRating] = useState(false);
+
+  // AI Smart Match state
+  const [aiQuery, setAiQuery] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResults, setAiResults] = useState<AIMatchResult[] | null>(null);
   
   // Comments modal state
   const [commentsModalOpen, setCommentsModalOpen] = useState(false);
@@ -289,13 +298,9 @@ export default function FirmaDashboard() {
   const fetchEntegratorler = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('entegrator')
-        .select('*')
-        .order('puan', { ascending: false });
-
-      if (error) throw error;
-      setEntegratorler(data || []);
+      // Mock veriden yükleme
+      const sortedMock = [...mockEntegratorler].sort((a, b) => (b.puan || 0) - (a.puan || 0));
+      setEntegratorler(sortedMock as Entegrator[]);
     } catch (error: any) {
       toast({
         title: t('common.error'),
@@ -373,44 +378,29 @@ export default function FirmaDashboard() {
 
   const fetchAllRatings = async () => {
     try {
-      const { data, error } = await supabase
-        .from('firma_ratings')
-        .select('entegrator_id, kalite_puan, musteri_iliskisi_puan, surec_yonetimi_puan, yorum, created_at')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      if (!data) return;
-
-      // Calculate averages per entegrator and collect comments
-      const ratingsMap: Record<string, { kalite: number[]; musteri: number[]; surec: number[] }> = {};
+      // Mock verilerden detaylı puanları hesapla — direkt yorum_listesi'nden
+      const calculated: Record<string, EntegratorRatings> = {};
       const commentsMap: Record<string, RatingComment[]> = {};
       
-      data.forEach((r) => {
-        if (!ratingsMap[r.entegrator_id]) {
-          ratingsMap[r.entegrator_id] = { kalite: [], musteri: [], surec: [] };
-          commentsMap[r.entegrator_id] = [];
-        }
-        ratingsMap[r.entegrator_id].kalite.push(r.kalite_puan);
-        ratingsMap[r.entegrator_id].musteri.push(r.musteri_iliskisi_puan);
-        ratingsMap[r.entegrator_id].surec.push(r.surec_yonetimi_puan);
-        
-        commentsMap[r.entegrator_id].push({
-          kalite_puan: r.kalite_puan,
-          musteri_iliskisi_puan: r.musteri_iliskisi_puan,
-          surec_yonetimi_puan: r.surec_yonetimi_puan,
-          yorum: r.yorum,
-          created_at: r.created_at,
-        });
-      });
+      mockEntegratorler.forEach((e) => {
+        const yorumlar = (e as any).yorum_listesi || [];
+        commentsMap[e.id] = yorumlar;
 
-      const calculated: Record<string, EntegratorRatings> = {};
-      Object.entries(ratingsMap).forEach(([id, scores]) => {
-        calculated[id] = {
-          kalite_avg: scores.kalite.reduce((a, b) => a + b, 0) / scores.kalite.length,
-          musteri_iliskisi_avg: scores.musteri.reduce((a, b) => a + b, 0) / scores.musteri.length,
-          surec_yonetimi_avg: scores.surec.reduce((a, b) => a + b, 0) / scores.surec.length,
-          rating_count: scores.kalite.length,
-        };
+        if (yorumlar.length > 0) {
+          let totalK = 0, totalM = 0, totalS = 0;
+          yorumlar.forEach((y: RatingComment) => {
+            totalK += y.kalite_puan;
+            totalM += y.musteri_iliskisi_puan;
+            totalS += y.surec_yonetimi_puan;
+          });
+          const count = yorumlar.length;
+          calculated[e.id] = {
+            kalite_avg: Number((totalK / count).toFixed(1)),
+            musteri_iliskisi_avg: Number((totalM / count).toFixed(1)),
+            surec_yonetimi_avg: Number((totalS / count).toFixed(1)),
+            rating_count: count,
+          };
+        }
       });
 
       setEntegratorRatings(calculated);
@@ -741,15 +731,6 @@ export default function FirmaDashboard() {
 
   const filteredEntegratorler = useMemo(() => {
     return entegratorler.filter((e) => {
-      // Search filter
-      if (filters.search) {
-        const searchLower = filters.search.toLowerCase();
-        const nameMatch = e.entegrator_adi?.toLowerCase().includes(searchLower);
-        const uzmanlikMatch = e.uzmanlik_alani?.toLowerCase().includes(searchLower);
-        const faaliyetMatch = e.faaliyet_alanlari?.toLowerCase().includes(searchLower);
-        if (!nameMatch && !uzmanlikMatch && !faaliyetMatch) return false;
-      }
-
       // Faaliyet alanları filter
       if (filters.faaliyetAlanlari.length > 0) {
         const eAlanlar = e.faaliyet_alanlari?.split(', ') || [];
@@ -1044,22 +1025,72 @@ export default function FirmaDashboard() {
 
           {/* Main Content */}
           <main className="flex-1">
-            {/* Search and Mobile Filter */}
-            <div className="flex gap-4 mb-6">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            {/* AI Smart Search Bar */}
+            <div className="mb-6 space-y-3">
+              {/* AI Prompt Input */}
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                  <Bot className="h-4 w-4 text-primary" />
+                </div>
                 <Input
-                  placeholder="Entegratör ara..."
-                  value={filters.search}
-                  onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
-                  className="pl-10"
+                  id="ai-search-input"
+                  placeholder="Doğal dilde yaz: ör. 'İzmir'de CNC besleme yapan, süreci hızlı yöneten bir firma lazım'"
+                  value={aiQuery}
+                  onChange={(e) => {
+                    setAiQuery(e.target.value);
+                    if (!e.target.value.trim()) setAiResults(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && aiQuery.trim()) {
+                      setAiLoading(true);
+                      setAiResults(null);
+                      setTimeout(() => {
+                        const results = runAIMatch(aiQuery, entegratorler as any);
+                        setAiResults(results);
+                        setAiLoading(false);
+                      }, 1400);
+                    }
+                  }}
+                  className="pl-9 pr-36 h-11 text-sm border-slate-300 focus-visible:ring-primary bg-white shadow-none rounded-md"
                 />
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                  {aiResults !== null && (
+                    <button
+                      onClick={() => { setAiResults(null); setAiQuery(''); }}
+                      className="text-xs text-muted-foreground hover:text-destructive transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                  <Button
+                    id="ai-search-btn"
+                    size="sm"
+                    disabled={!aiQuery.trim() || aiLoading}
+                    onClick={() => {
+                      setAiLoading(true);
+                      setAiResults(null);
+                      setTimeout(() => {
+                        const results = runAIMatch(aiQuery, entegratorler as any);
+                        setAiResults(results);
+                        setAiLoading(false);
+                      }, 1400);
+                    }}
+                    className="gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground h-8 px-3 rounded-md text-xs font-medium"
+                  >
+                    {aiLoading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="h-3.5 w-3.5" />
+                    )}
+                    {aiLoading ? 'Analiz ediyor...' : 'AI Eşleştir'}
+                  </Button>
+                </div>
               </div>
 
-              {/* Mobile Filter Button */}
+              {/* Mobile filter button — positioned beside AI bar */}
               <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className="lg:hidden gap-2">
+                  <Button variant="outline" className="lg:hidden gap-2 h-9 mt-1">
                     <Filter className="h-4 w-4" />
                     Filtre
                     {activeFilterCount > 0 && (
@@ -1081,6 +1112,155 @@ export default function FirmaDashboard() {
               </Sheet>
             </div>
 
+            {/* ── AI LOADING STATE ── */}
+            {aiLoading && (
+              <div className="mb-6 flex flex-col items-center justify-center py-8 rounded-md border border-slate-200 bg-slate-50 gap-3">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-sm bg-primary/10 flex items-center justify-center">
+                    <Sparkles className="h-6 w-6 text-primary animate-pulse" />
+                  </div>
+                  <div className="absolute -inset-1 rounded-sm border-2 border-primary/40 border-t-transparent animate-spin" />
+                </div>
+                <div className="text-center">
+                  <p className="font-semibold text-slate-800">Yapay Zeka Analiz Ediyor...</p>
+                  <p className="text-sm text-slate-500 mt-1">Talebiniz değerlendiriliyor, en uygun eşleşmeler bulunuyor</p>
+                </div>
+              </div>
+            )}
+
+            {/* ── AI SMART MATCH RESULTS ── */}
+            {!aiLoading && aiResults !== null && (
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex items-center gap-2 px-2.5 py-1 bg-primary/10 border border-primary/20 rounded-md">
+                    <Sparkles className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-sm font-semibold text-primary">AI Akıllı Eşleştirme Sonuçları</span>
+                  </div>
+                  <Badge variant="secondary" className="text-xs">{aiResults.length} eşleşme</Badge>
+                  <button
+                    onClick={() => { setAiResults(null); setAiQuery(''); }}
+                    className="ml-auto text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                  >
+                    <X className="h-3.5 w-3.5" /> Temizle
+                  </button>
+                </div>
+
+                {aiResults.length === 0 ? (
+                  <Card className="p-8 text-center border-slate-200 bg-slate-50 rounded-md">
+                    <Bot className="h-9 w-9 text-primary/30 mx-auto mb-3" />
+                    <p className="font-medium text-slate-700">Eşleşme bulunamadı</p>
+                    <p className="text-sm text-muted-foreground mt-1">Farklı anahtar kelimeler deneyin: uzmanlık, şehir, sektör...</p>
+                  </Card>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {aiResults.map(({ entegrator, score, matchReason, matchedKeywords }, idx) => (
+                      <Card
+                        key={entegrator.id}
+                        className="relative overflow-hidden border-slate-200 shadow-sm hover:border-primary/40 hover:shadow transition-all rounded-md"
+                      >
+                        {/* Score badge */}
+                        <div className="absolute top-2.5 right-2.5 flex items-center gap-1 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm tracking-wide">
+                          <Zap className="h-3 w-3" />
+                          %{score}
+                        </div>
+                        {/* Rank ribbon */}
+                        {idx === 0 && (
+                          <div className="absolute top-0 left-0 bg-primary text-white text-[10px] font-bold px-2 py-0.5 tracking-widest uppercase">
+                            #1 EN İYİ EŞLEŞME
+                          </div>
+                        )}
+
+                        <CardContent className="p-4 pt-5">
+                          {/* Header */}
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="w-9 h-9 rounded-sm bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                              <Building2 className="h-4 w-4 text-primary" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-base leading-tight">{maskName(entegrator.entegrator_adi as string)}</h3>
+                              <p className="text-xs text-muted-foreground">{(entegrator as any).konum}</p>
+                            </div>
+                          </div>
+
+                          {/* Matched keywords */}
+                          {matchedKeywords.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mb-3">
+                              {matchedKeywords.map(kw => (
+                                <Badge key={kw} className="text-[10px] bg-primary/10 text-primary border border-primary/20 rounded-sm font-medium">
+                                  {kw}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Match reason */}
+                          <div className="bg-slate-50 border border-slate-200 rounded-sm p-2.5 mb-3">
+                            <div className="flex items-start gap-2">
+                              <Sparkles className="h-3 w-3 text-primary mt-0.5 shrink-0" />
+                              <p className="text-xs text-slate-600 leading-relaxed">{matchReason}</p>
+                            </div>
+                          </div>
+
+                          {/* Ratings row */}
+                          {entegratorRatings[entegrator.id] && (
+                            <div className="flex gap-3 text-xs text-muted-foreground mb-3">
+                              <span className="flex items-center gap-0.5">
+                                <Star className="h-3 w-3 fill-accent text-accent" />
+                                K: {entegratorRatings[entegrator.id].kalite_avg.toFixed(1)}
+                              </span>
+                              <span className="flex items-center gap-0.5">
+                                <Star className="h-3 w-3 fill-accent text-accent" />
+                                M: {entegratorRatings[entegrator.id].musteri_iliskisi_avg.toFixed(1)}
+                              </span>
+                              <span className="flex items-center gap-0.5">
+                                <Star className="h-3 w-3 fill-accent text-accent" />
+                                S: {entegratorRatings[entegrator.id].surec_yonetimi_avg.toFixed(1)}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Action buttons */}
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="flex-1 text-xs h-7 border-slate-200 text-slate-700 hover:bg-slate-50 rounded-md"
+                              onClick={() => openCommentsModal(entegrator as any)}
+                            >
+                              <MessageSquare className="h-3.5 w-3.5 mr-1" />
+                              Yorumlar ({(entegratorComments[entegrator.id] ?? []).length})
+                            </Button>
+                            {!isGuestMode && (
+                              <Button
+                                size="sm"
+                                className="flex-1 text-xs h-7 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md"
+                                onClick={() => handleRevealClick(entegrator as any)}
+                              >
+                                {revealedContacts.has(entegrator.id) ? (
+                                  <><CheckCircle2 className="h-3.5 w-3.5 mr-1" />İletişim</>  
+                                ) : (
+                                  <><Eye className="h-3.5 w-3.5 mr-1" />Göster</>  
+                                )}
+                              </Button>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+
+                <div className="mt-4 pt-3 border-t border-slate-100">
+                  <p className="text-xs text-muted-foreground text-center">
+                    Standart listeye dönmek için sonuçları temizleyin veya yukarıdaki filtreleri kullanın.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* ── STANDARD RESULTS (hidden while AI results shown) ── */}
+            {!aiLoading && aiResults === null && (
+              <>
             {/* Results Count */}
             <div className="mb-4 text-sm text-muted-foreground">
               {filteredEntegratorler.length} entegratör bulundu
@@ -1276,6 +1456,8 @@ export default function FirmaDashboard() {
                   </Card>
                 ))}
               </div>
+            )}
+            </>
             )}
           </main>
         </div>
@@ -1513,6 +1695,13 @@ export default function FirmaDashboard() {
                         day: 'numeric',
                       })}
                     </span>
+                    {comment.author && (
+                      <>
+                        <span className="mx-1">•</span>
+                        <User className="h-3 w-3" />
+                        <span>{comment.author}</span>
+                      </>
+                    )}
                   </div>
                 </div>
               ))

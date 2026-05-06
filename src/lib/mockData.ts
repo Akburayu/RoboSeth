@@ -1,0 +1,1168 @@
+import type { Database } from '@/integrations/supabase/types';
+
+type Entegrator = Database['public']['Tables']['entegrator']['Row'];
+type Firma = Database['public']['Tables']['firma']['Row'];
+
+export type MockEntegrator = Entegrator & {
+  detayli_puanlar?: {
+    kalite: number;
+    musteri_iliskisi: number;
+    surec: number;
+  };
+  yorum_listesi?: Array<{kalite_puan: number, musteri_iliskisi_puan: number, surec_yonetimi_puan: number, yorum: string, created_at: string, author?: string}>;
+};
+
+const rawEntegratorler: any[] = [
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556601',
+    entegrator_adi: 'RoboTech Otomasyon',
+    entegrator_buyuklugu: 'kucuk',
+    faaliyet_alanlari: 'Goruntu Isleme, PLC Programlama, CNC Besleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@robotech.com.tr',
+    kac_kisi: 15,
+    konum: 'Bursa, NOSAB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4.6,
+                "musteri_iliskisi_puan": 4,
+                "surec_yonetimi_puan": 4.2,
+                "yorum": "Kaynak robotlari devreye alinirken mekanik stabilite muazzamdi, ancak satis sonrasi destek ekiplerine ulasmak biraz zor oldu. Proje takvimi ufak tefek aksakliklara ragmen basariyla yakalandi.",
+                "created_at": "2026-02-02T20:32:35.395Z",
+                "author": "Serhat K. - Uretim Muduru"
+          },
+          {
+                "kalite_puan": 4.4,
+                "musteri_iliskisi_puan": 5,
+                "surec_yonetimi_puan": 3.8,
+                "yorum": "Sistem oldukca dayanikli ve firesiz calisiyor. Proje esnasinda iletisimleri cok gucluydu, her an yanimizdaydilar ama kurulum sureci bekledigimizden bir hafta uzun surdu.",
+                "created_at": "2025-07-25T09:32:18.969Z",
+                "author": "Gokhan B. - Proje Yoneticisi"
+          }
+    ],
+    referans: 'Hat Sonu Paletleme Entegrasyonu, Scada Sistemleri.',
+    sektor: 'Plastik',
+    tecrube: '19 yıl',
+    uzmanlik_alani: 'Punta Kaynak, AGV Sistemleri',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@robotech.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556602',
+    entegrator_adi: 'MechSys Endustriyel Cozumler',
+    entegrator_buyuklugu: 'buyuk',
+    faaliyet_alanlari: 'Scada Sistemleri, PLC Programlama, Hat Sonu Paletleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@mechsys.com.tr',
+    kac_kisi: 11,
+    konum: 'Istanbul, DES Sanayi',
+    yorum_listesi: [
+          {
+                "kalite_puan": 5,
+                "musteri_iliskisi_puan": 4.2,
+                "surec_yonetimi_puan": 4.8,
+                "yorum": "AGV filosu tam zamaninda ve sifir hata ile devreye alindi. Fabrika icindeki trafik yonetimi kusursuz. Sadece egitim dokumanlari biraz gec teslim edildi.",
+                "created_at": "2025-12-12T11:18:56.803Z",
+                "author": "Ahmet T. - Lojistik Sefi"
+          },
+          {
+                "kalite_puan": 4.8,
+                "musteri_iliskisi_puan": 4.6,
+                "surec_yonetimi_puan": 4.2,
+                "yorum": "Sistem hatasiz calisiyor, bekledigimiz verimi aldik. Ekip uyumluydu ancak yazilim tarafinda ozel taleplerimizin entegrasyonu sureci biraz yavaslatti.",
+                "created_at": "2025-07-17T12:25:52.609Z",
+                "author": "Caner D. - Ar-Ge Sorumlusu"
+          }
+    ],
+    referans: 'AGV Sistemleri Entegrasyonu, Robotik Kaynak.',
+    sektor: 'Gida',
+    tecrube: '9 yıl',
+    uzmanlik_alani: 'Robotik Kaynak, AGV Sistemleri',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@mechsys.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556603',
+    entegrator_adi: 'AutoLine Robotik',
+    entegrator_buyuklugu: 'kucuk',
+    faaliyet_alanlari: 'Scada Sistemleri, PLC Programlama, Punta Kaynak',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@autoline.com.tr',
+    kac_kisi: 14,
+    konum: 'Izmir, ITOB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 3.8,
+                "musteri_iliskisi_puan": 4.8,
+                "surec_yonetimi_puan": 3.4,
+                "yorum": "Scada arayuzu cok modern ve isteklerimizi aninda kodladilar. Ne var ki otomasyon panolarinin montajinda ciddi gecikmeler yasadik, saha ekibi zayifti.",
+                "created_at": "2026-02-07T11:47:10.308Z",
+                "author": "Elif M. - Otomasyon Lideri"
+          },
+          {
+                "kalite_puan": 3.4,
+                "musteri_iliskisi_puan": 4.2,
+                "surec_yonetimi_puan": 3,
+                "yorum": "Panolardaki kablolama isciligi daha iyi olabilirdi, bazi etiketlemeler eksikti. Her seye ragmen sikayetlerimize hizli donduler. Surec yonetimi kesinlikle gelistirilmeli.",
+                "created_at": "2025-06-16T05:21:26.759Z",
+                "author": "Mehmet Y. - Elektrik Bakim Sefi"
+          }
+    ],
+    referans: 'Hat Sonu Paletleme Entegrasyonu, Robotik Kaynak.',
+    sektor: 'Savunma Sanayi',
+    tecrube: '23 yıl',
+    uzmanlik_alani: 'Goruntu Isleme, PLC Programlama',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@autoline.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556604',
+    entegrator_adi: 'SmartFab Sistemleri',
+    entegrator_buyuklugu: 'orta',
+    faaliyet_alanlari: 'AGV Sistemleri, Robotik Kaynak, CNC Besleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@smartfab.com.tr',
+    kac_kisi: 142,
+    konum: 'Bursa, NOSAB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4.2,
+                "musteri_iliskisi_puan": 3.6,
+                "surec_yonetimi_puan": 4.6,
+                "yorum": "Hat sonu paletleme robotunun cevrim suresi tam istedigimiz gibi. Planlama mukemmeldi. Ancak sozlesme asamasindaki bazi sartlar konusunda satis ekibiyle anlasmazliklar yasadik.",
+                "created_at": "2026-01-30T11:32:21.920Z",
+                "author": "Kemal S. - Satinalma Muduru"
+          },
+          {
+                "kalite_puan": 4.8,
+                "musteri_iliskisi_puan": 3.4,
+                "surec_yonetimi_puan": 4.4,
+                "yorum": "Tasarim ve mekanik kalite tartisilmaz derecede iyi. Zamaninda teslimat yaptilar. Satis sonrasi servisten randevu almak ise su ana kadar biraz cetrefilli oldu.",
+                "created_at": "2025-07-30T10:59:02.786Z",
+                "author": "Ayse K. - Isletme Muduru"
+          }
+    ],
+    referans: 'Scada Sistemleri Entegrasyonu, PLC Programlama.',
+    sektor: 'Otomotiv Ana Sanayi',
+    tecrube: '14 yıl',
+    uzmanlik_alani: 'Punta Kaynak, Kestirimci Bakim',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@smartfab.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556605',
+    entegrator_adi: 'Ileri Hareket Otomasyon',
+    entegrator_buyuklugu: 'buyuk',
+    faaliyet_alanlari: 'Scada Sistemleri, PLC Programlama, Robotik Kaynak',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@ileri.com.tr',
+    kac_kisi: 70,
+    konum: 'Istanbul, DES Sanayi',
+    yorum_listesi: [
+          {
+                "kalite_puan": 3,
+                "musteri_iliskisi_puan": 3.8,
+                "surec_yonetimi_puan": 2.8,
+                "yorum": "Goruntu isleme sensorleri bazen hatali okuma yapiyor. Kalibrasyon surecinde bizi cok oyaladilar. Iletisim fena degildi ama teknik yeterlilikleri zorlandi.",
+                "created_at": "2025-12-22T10:04:27.228Z",
+                "author": "Zeynep P. - Kalite Kontrol Sefi"
+          },
+          {
+                "kalite_puan": 3.6,
+                "musteri_iliskisi_puan": 4.2,
+                "surec_yonetimi_puan": 3.2,
+                "yorum": "Sistem calisiyor ancak vaat edilen hiza ulasamadik. Iyi niyetli bir ekip, cozum icin defalarca geldiler fakat projenin toplam suresi aylarca uzadi.",
+                "created_at": "2025-06-27T09:54:13.980Z",
+                "author": "Hakan E. - Uretim Muhendisi"
+          }
+    ],
+    referans: 'Robotik Kaynak Entegrasyonu, Kestirimci Bakim.',
+    sektor: 'Otomotiv Ana Sanayi',
+    tecrube: '22 yıl',
+    uzmanlik_alani: 'CNC Besleme, Kestirimci Bakim',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@ileri.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556606',
+    entegrator_adi: 'CoreRobotics',
+    entegrator_buyuklugu: 'kucuk',
+    faaliyet_alanlari: 'Robotik Kaynak, Scada Sistemleri, Makine Besleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@corerobotics.com.tr',
+    kac_kisi: 64,
+    konum: 'Sakarya, 1. OSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4.8,
+                "musteri_iliskisi_puan": 4.8,
+                "surec_yonetimi_puan": 4.6,
+                "yorum": "CNC makine besleme otomasyonumuz kusursuz calisiyor. Bekleme sureleri sifira indi. Operatorlerle iletisimleri cok samimi ve ogreticiydi.",
+                "created_at": "2026-01-10T23:38:04.695Z",
+                "author": "Fatih C. - Uretim Sorumlusu"
+          },
+          {
+                "kalite_puan": 5,
+                "musteri_iliskisi_puan": 4.6,
+                "surec_yonetimi_puan": 5,
+                "yorum": "Harika bir vizyon kattilar. Devreye alma o kadar sorunsuzdu ki hafta sonu uretimimiz hic durmadi. Sonuna kadar tavsiye ediyorum.",
+                "created_at": "2025-06-08T02:21:50.618Z",
+                "author": "Burak L. - Fabrika Direktoru"
+          }
+    ],
+    referans: 'Hat Sonu Paletleme Entegrasyonu, Scada Sistemleri.',
+    sektor: 'Gida',
+    tecrube: '24 yıl',
+    uzmanlik_alani: 'Hat Sonu Paletleme, PLC Programlama',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@corerobotics.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556607',
+    entegrator_adi: 'Apex Otomasyon Teknolojileri',
+    entegrator_buyuklugu: 'orta',
+    faaliyet_alanlari: 'CNC Besleme, Robotik Kaynak, Kestirimci Bakim',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@apex.com.tr',
+    kac_kisi: 64,
+    konum: 'Sakarya, 1. OSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 3.4,
+                "musteri_iliskisi_puan": 3,
+                "surec_yonetimi_puan": 3.8,
+                "yorum": "Kestirimci bakim sensorlerinin montaji tam vaktinde yapildi. Fakat yazilim arayuzu cok karmasik. Destek ekibine ulasmakta zaman zaman sikinti cekiyoruz.",
+                "created_at": "2026-02-24T06:16:58.210Z",
+                "author": "Tugrul H. - Bakim Muhendisi"
+          },
+          {
+                "kalite_puan": 3.8,
+                "musteri_iliskisi_puan": 3.4,
+                "surec_yonetimi_puan": 3.6,
+                "yorum": "Sensor verileri bazen tutarsizlik gosteriyor, kalite standartlarimizin biraz altinda kaldi. Ayrica faturalandirma asamasindaki iletisimleri oldukca soguktu.",
+                "created_at": "2025-08-24T18:59:10.410Z",
+                "author": "Cemre T. - Teknik Mudur"
+          }
+    ],
+    referans: 'Punta Kaynak Entegrasyonu, AGV Sistemleri.',
+    sektor: 'Beyaz Esya',
+    tecrube: '7 yıl',
+    uzmanlik_alani: 'Robotik Kaynak, AGV Sistemleri',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@apex.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556608',
+    entegrator_adi: 'VisionTech Makine',
+    entegrator_buyuklugu: 'orta',
+    faaliyet_alanlari: 'Robotik Kaynak, Goruntu Isleme, Makine Besleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@visiontech.com.tr',
+    kac_kisi: 31,
+    konum: 'Istanbul, DES Sanayi',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4.4,
+                "musteri_iliskisi_puan": 4.6,
+                "surec_yonetimi_puan": 4.2,
+                "yorum": "Punta kaynak hucrelerinde oldukca tecrubeliler. Sordugumuz her soruya sabirla yanit verdiler. Sadece guvenlik citlerinin montajinda ufak bir gecikme oldu.",
+                "created_at": "2026-05-03T04:14:21.806Z",
+                "author": "Okan V. - ISG Uzmani"
+          },
+          {
+                "kalite_puan": 4.6,
+                "musteri_iliskisi_puan": 4.4,
+                "surec_yonetimi_puan": 4.4,
+                "yorum": "Hucre cok verimli calisiyor. Robot yorungeleri harika optimize edilmis. Proje yonetimi basariliydi, neredeyse hic surpriz masraf cikarmadilar.",
+                "created_at": "2025-07-29T01:06:05.454Z",
+                "author": "Gulsah N. - Proje Uzmani"
+          }
+    ],
+    referans: 'Goruntu Isleme Entegrasyonu, Robotik Kaynak.',
+    sektor: 'Otomotiv Yan Sanayi',
+    tecrube: '12 yıl',
+    uzmanlik_alani: 'Robotik Kaynak, AGV Sistemleri',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@visiontech.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556609',
+    entegrator_adi: 'Nova Robotik Sistemler',
+    entegrator_buyuklugu: 'buyuk',
+    faaliyet_alanlari: 'Goruntu Isleme, Scada Sistemleri, Hat Sonu Paletleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@nova.com.tr',
+    kac_kisi: 67,
+    konum: 'Kocaeli, GOSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4,
+                "musteri_iliskisi_puan": 5,
+                "surec_yonetimi_puan": 4,
+                "yorum": "Gida paketleme hattimizda cok temiz bir is cikardilar. Hijyen standartlarina uyum mukemmeldi. Surec yonetiminde malzeme tedarikinden kaynakli kisa duraksamalar oldu.",
+                "created_at": "2026-03-06T18:08:34.435Z",
+                "author": "Yasin F. - Gida Muhendisi"
+          },
+          {
+                "kalite_puan": 4.2,
+                "musteri_iliskisi_puan": 4.8,
+                "surec_yonetimi_puan": 4.2,
+                "yorum": "Sistem tasarimi hijyenik ve yikamaya uygun. Iletisimleri her zaman seffafti. Isin bitis tarihi soz verilenden sadece birkac gun sapti, kabul edilebilir.",
+                "created_at": "2025-08-14T07:03:37.101Z",
+                "author": "Ece D. - Kalite Guvence"
+          }
+    ],
+    referans: 'AGV Sistemleri Entegrasyonu, Robotik Kaynak.',
+    sektor: 'Ilac',
+    tecrube: '12 yıl',
+    uzmanlik_alani: 'Hat Sonu Paletleme, AGV Sistemleri',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@nova.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556610',
+    entegrator_adi: 'GigaMekatronik',
+    entegrator_buyuklugu: 'orta',
+    faaliyet_alanlari: 'Punta Kaynak, Robotik Kaynak, Kestirimci Bakim',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@gigamekatronik.com.tr',
+    kac_kisi: 92,
+    konum: 'Istanbul, DES Sanayi',
+    yorum_listesi: [
+          {
+                "kalite_puan": 3.2,
+                "musteri_iliskisi_puan": 3.6,
+                "surec_yonetimi_puan": 3,
+                "yorum": "Pres hatti transfer robotu kurulumunda cok zorlandilar. Sistem surekli acil stop veriyordu. Sonunda cozduler ama iletisimleri bu surecte yeterince seffaf degildi.",
+                "created_at": "2026-02-04T04:00:15.534Z",
+                "author": "Dogan R. - Preshane Sefi"
+          },
+          {
+                "kalite_puan": 3.6,
+                "musteri_iliskisi_puan": 3.2,
+                "surec_yonetimi_puan": 3.4,
+                "yorum": "Robot tasima kapasitesi sinirda secilmis, mekanik titremeler oluyor. Proje boyunca yoneticilerine ulasmakta zorlandik. Takvim epey sapti.",
+                "created_at": "2025-07-25T18:50:13.157Z",
+                "author": "Bulent M. - Yatirim Muduru"
+          }
+    ],
+    referans: 'Punta Kaynak Entegrasyonu, AGV Sistemleri.',
+    sektor: 'Otomotiv Ana Sanayi',
+    tecrube: '24 yıl',
+    uzmanlik_alani: 'Punta Kaynak, Scada Sistemleri',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@gigamekatronik.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556611',
+    entegrator_adi: 'Nodus Robotik',
+    entegrator_buyuklugu: 'orta',
+    faaliyet_alanlari: 'AGV Sistemleri, Robotik Kaynak, Hat Sonu Paletleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@nodus.com.tr',
+    kac_kisi: 121,
+    konum: 'Manisa, MOSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 5,
+                "musteri_iliskisi_puan": 5,
+                "surec_yonetimi_puan": 4.8,
+                "yorum": "Savunma sanayi projemizdeki yuksek gizlilik ve hassasiyet taleplerimizi harfiyen yerine getirdiler. Kusursuz bir proje yonetimi ve muazzam bir kalite.",
+                "created_at": "2026-04-01T19:56:33.826Z",
+                "author": "Cengiz K. - Guvenlik Muduru"
+          },
+          {
+                "kalite_puan": 4.8,
+                "musteri_iliskisi_puan": 4.8,
+                "surec_yonetimi_puan": 5,
+                "yorum": "Talasli imalat entegrasyonunda 1 mikron hassasiyetle calistilar. Ekip cok yetkin. Hicbir sorun yasamadik, teslimat bir gun bile gecikmedi.",
+                "created_at": "2025-08-03T03:57:42.845Z",
+                "author": "Alper T. - CNC Sorumlusu"
+          }
+    ],
+    referans: 'Kestirimci Bakim Entegrasyonu, Scada Sistemleri.',
+    sektor: 'Otomotiv Yan Sanayi',
+    tecrube: '7 yıl',
+    uzmanlik_alani: 'Makine Besleme, Kestirimci Bakim',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@nodus.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556612',
+    entegrator_adi: 'Optima Otomasyon',
+    entegrator_buyuklugu: 'orta',
+    faaliyet_alanlari: 'Hat Sonu Paletleme, AGV Sistemleri, PLC Programlama',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@optima.com.tr',
+    kac_kisi: 106,
+    konum: 'Sakarya, 1. OSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4.4,
+                "musteri_iliskisi_puan": 4,
+                "surec_yonetimi_puan": 4.6,
+                "yorum": "Ilac sektorundeki kutulama otomasyonunda iyi bir is cikardilar. Dokumantasyon surecleri tam zamaninda bitti. Sadece operator egitimleri biraz aceleye geldi.",
+                "created_at": "2026-01-10T05:58:02.206Z",
+                "author": "Selim B. - Validasyon Uzmani"
+          },
+          {
+                "kalite_puan": 4.6,
+                "musteri_iliskisi_puan": 4.2,
+                "surec_yonetimi_puan": 4.4,
+                "yorum": "Sistem FDA standartlarina tamamen uygun. Proje plani tikir tikir isledi. Teknik ekipleriyle iletisim bazen yavaslasa da sorunlari hep cozduler.",
+                "created_at": "2025-06-22T11:34:16.333Z",
+                "author": "Merve K. - Regulasyon Muduru"
+          }
+    ],
+    referans: 'Hat Sonu Paletleme Entegrasyonu, Punta Kaynak.',
+    sektor: 'Otomotiv Ana Sanayi',
+    tecrube: '21 yıl',
+    uzmanlik_alani: 'Scada Sistemleri, Hat Sonu Paletleme',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@optima.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556613',
+    entegrator_adi: 'CyberMekatronik',
+    entegrator_buyuklugu: 'buyuk',
+    faaliyet_alanlari: 'Robotik Kaynak, Goruntu Isleme, PLC Programlama',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@cybermekatronik.com.tr',
+    kac_kisi: 110,
+    konum: 'Gaziantep OSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 3.6,
+                "musteri_iliskisi_puan": 4.6,
+                "surec_yonetimi_puan": 3.8,
+                "yorum": "Boya robotu kurulumunda puskurtme kalitesi baslarda sorunluydu. Ancak o kadar cok ugrastilar ve iyi niyetlilerdi ki sorunu tamamen cozene kadar fabrikadan cikmadilar.",
+                "created_at": "2026-01-08T18:39:14.371Z",
+                "author": "Turgut C. - Boyahane Sefi"
+          },
+          {
+                "kalite_puan": 3.8,
+                "musteri_iliskisi_puan": 4.4,
+                "surec_yonetimi_puan": 3.4,
+                "yorum": "Filtreleme sisteminde yapilan bir tasarim hatasi sureci biraz uzatti. Cozum odakli yaklasimlari sayesinde kriz buyumeden asildi.",
+                "created_at": "2025-10-15T01:21:39.880Z",
+                "author": "Nalan G. - Cevre Muhendisi"
+          }
+    ],
+    referans: 'Robotik Kaynak Entegrasyonu, Punta Kaynak.',
+    sektor: 'Beyaz Esya',
+    tecrube: '3 yıl',
+    uzmanlik_alani: 'PLC Programlama, CNC Besleme',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@cybermekatronik.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556614',
+    entegrator_adi: 'ProLine Sistem',
+    entegrator_buyuklugu: 'buyuk',
+    faaliyet_alanlari: 'Kestirimci Bakim, Robotik Kaynak, Goruntu Isleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@proline.com.tr',
+    kac_kisi: 108,
+    konum: 'Sakarya, 1. OSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4.2,
+                "musteri_iliskisi_puan": 3.8,
+                "surec_yonetimi_puan": 4,
+                "yorum": "Kutu dikme makinesi ile robot kol senkronizasyonu guzel. Mekanik parcalar kaliteli. Fakat yazilim revizyon taleplerimize cok gec donus yapiyorlar.",
+                "created_at": "2026-04-18T01:26:58.260Z",
+                "author": "Orhan E. - Ambalaj Sefi"
+          },
+          {
+                "kalite_puan": 4,
+                "musteri_iliskisi_puan": 3.4,
+                "surec_yonetimi_puan": 4.2,
+                "yorum": "Genel olarak projenin gidisatindan memnun kaldik, zamaninda teslim edildi. Ancak faturalasma ve sozlesme asamasindaki kati tutumlari biraz yorucuydu.",
+                "created_at": "2025-11-09T22:43:30.216Z",
+                "author": "Didem A. - Finans Sorumlusu"
+          }
+    ],
+    referans: 'Scada Sistemleri Entegrasyonu, PLC Programlama.',
+    sektor: 'Beyaz Esya',
+    tecrube: '5 yıl',
+    uzmanlik_alani: 'Makine Besleme, CNC Besleme',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@proline.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556615',
+    entegrator_adi: 'Kinetik Endustriyel',
+    entegrator_buyuklugu: 'kucuk',
+    faaliyet_alanlari: 'Kestirimci Bakim, AGV Sistemleri, Hat Sonu Paletleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@kinetik.com.tr',
+    kac_kisi: 131,
+    konum: 'Ankara, OSTIM',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4.8,
+                "musteri_iliskisi_puan": 4.6,
+                "surec_yonetimi_puan": 4.8,
+                "yorum": "Sifirdan kurduklari beyaz esya montaj hatti tikir tikir isliyor. Surecte bizim bile ongoremedigimiz riskleri gorup engellediler. Iletisimleri kuvvetli.",
+                "created_at": "2026-01-03T13:06:15.888Z",
+                "author": "Sinan Y. - Montaj Muduru"
+          },
+          {
+                "kalite_puan": 5,
+                "musteri_iliskisi_puan": 4.8,
+                "surec_yonetimi_puan": 4.6,
+                "yorum": "Mekanik toleranslar cok hassas ayarlanmis. Isin ehli bir muhendislik firmasi. Teslimat soz verilen tarihte yapildi, sonrasinda da hep destek oldular.",
+                "created_at": "2025-06-16T11:02:43.723Z",
+                "author": "Riza P. - Bas Muhendis"
+          }
+    ],
+    referans: 'AGV Sistemleri Entegrasyonu, Goruntu Isleme.',
+    sektor: 'Savunma Sanayi',
+    tecrube: '11 yıl',
+    uzmanlik_alani: 'Robotik Kaynak, PLC Programlama',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@kinetik.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556616',
+    entegrator_adi: 'Nexus Makine',
+    entegrator_buyuklugu: 'kucuk',
+    faaliyet_alanlari: 'Goruntu Isleme, PLC Programlama, Makine Besleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@nexus.com.tr',
+    kac_kisi: 157,
+    konum: 'Manisa, MOSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 3.8,
+                "musteri_iliskisi_puan": 4,
+                "surec_yonetimi_puan": 3.8,
+                "yorum": "Gorsel denetim istasyonu icin aydinlatma secimi bastan hatali yapildi, sonradan duzelttiler. Iletisimleri iyi olsa da planlama konusunda daha tecrubeli olmalilar.",
+                "created_at": "2026-05-03T10:42:09.775Z",
+                "author": "Kaan M. - Kalite Teknisyeni"
+          },
+          {
+                "kalite_puan": 4,
+                "musteri_iliskisi_puan": 3.6,
+                "surec_yonetimi_puan": 3.4,
+                "yorum": "Sistem su an stabil ama o noktaya gelene kadar epey zaman kaybettik. Saha ekibi sorularimiza bazen kacamak yanitlar verdi. Surec yonetimi ortalamaydi.",
+                "created_at": "2025-07-17T17:43:04.989Z",
+                "author": "Leman T. - Proses Kontrol"
+          }
+    ],
+    referans: 'Kestirimci Bakim Entegrasyonu, Robotik Kaynak.',
+    sektor: 'Metal Isleme',
+    tecrube: '13 yıl',
+    uzmanlik_alani: 'Makine Besleme, AGV Sistemleri',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@nexus.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556617',
+    entegrator_adi: 'Aura Robotik',
+    entegrator_buyuklugu: 'kucuk',
+    faaliyet_alanlari: 'PLC Programlama, Makine Besleme, Goruntu Isleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@aura.com.tr',
+    kac_kisi: 69,
+    konum: 'Kocaeli, GOSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4.6,
+                "musteri_iliskisi_puan": 4.8,
+                "surec_yonetimi_puan": 4.4,
+                "yorum": "Talasli imalat makinelerimize entegre ettikleri 7 eksenli robot harika is cikariyor. Teknik destekleri cok hizli. Kurulumda sadece kucuk mekanik puruzler yasandi.",
+                "created_at": "2025-11-15T08:14:20.974Z",
+                "author": "Emre Z. - Atolye Sefi"
+          },
+          {
+                "kalite_puan": 4.8,
+                "musteri_iliskisi_puan": 4.6,
+                "surec_yonetimi_puan": 4.8,
+                "yorum": "Zorlu bir dar alan calismasiydi ama 3D simulasyonlarla her seyi onceden cozmuslerdi. Seffaf iletisim ve zamaninda teslimat icin tesekkurler.",
+                "created_at": "2025-05-25T02:12:42.334Z",
+                "author": "Koray B. - Fabrika Muduru"
+          }
+    ],
+    referans: 'Makine Besleme Entegrasyonu, Goruntu Isleme.',
+    sektor: 'Otomotiv Ana Sanayi',
+    tecrube: '4 yıl',
+    uzmanlik_alani: 'Makine Besleme, Robotik Kaynak',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@aura.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556618',
+    entegrator_adi: 'Sentetik Otomasyon',
+    entegrator_buyuklugu: 'kucuk',
+    faaliyet_alanlari: 'Scada Sistemleri, AGV Sistemleri, CNC Besleme',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@sentetik.com.tr',
+    kac_kisi: 117,
+    konum: 'Istanbul, DES Sanayi',
+    yorum_listesi: [
+          {
+                "kalite_puan": 3.4,
+                "musteri_iliskisi_puan": 3.2,
+                "surec_yonetimi_puan": 3.6,
+                "yorum": "Plastik enjeksiyon makinesi robotunda tutucu (gripper) tasarimi zayifti, parcalari dusuruyordu. Geri bildirimlerimizi dikkate alip duzelttiler ama surec cok yipraticiydi.",
+                "created_at": "2026-05-02T21:52:47.660Z",
+                "author": "Ugur N. - Enjeksiyon Sefi"
+          },
+          {
+                "kalite_puan": 3.6,
+                "musteri_iliskisi_puan": 3.4,
+                "surec_yonetimi_puan": 3.2,
+                "yorum": "Cevrim sureleri istedigimiz degere cok zor ulasti. Satis muhendisleriyle proje ekibi arasinda ciddi bir kopukluk var. Teslimat 3 hafta gecikti.",
+                "created_at": "2025-07-27T12:27:25.981Z",
+                "author": "Ceyda S. - Uretim Sorumlusu"
+          }
+    ],
+    referans: 'Punta Kaynak Entegrasyonu, Kestirimci Bakim.',
+    sektor: 'Otomotiv Ana Sanayi',
+    tecrube: '10 yıl',
+    uzmanlik_alani: 'Scada Sistemleri, CNC Besleme',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@sentetik.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556619',
+    entegrator_adi: 'Vektor Kontrol Sistemleri',
+    entegrator_buyuklugu: 'buyuk',
+    faaliyet_alanlari: 'Punta Kaynak, Goruntu Isleme, PLC Programlama',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@vektor.com.tr',
+    kac_kisi: 90,
+    konum: 'Sakarya, 1. OSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4.2,
+                "musteri_iliskisi_puan": 4.4,
+                "surec_yonetimi_puan": 4.8,
+                "yorum": "Karton paketleme hucresinde tasarim cok kompakt ve verimli. Surec yonetimleri harika, her adimi raporladilar. Ufak tefek sensor arizalari disinda cok iyi.",
+                "created_at": "2026-02-09T17:40:05.756Z",
+                "author": "Baris H. - Paketleme Lideri"
+          },
+          {
+                "kalite_puan": 4.6,
+                "musteri_iliskisi_puan": 4,
+                "surec_yonetimi_puan": 4.6,
+                "yorum": "Iscilik kalitesi ust duzeyde. Devreye alma planina harfiyen uyuldu. Fakat egitim surecinde operatorlerimizin sorularina daha fazla vakit ayrilabilirdi.",
+                "created_at": "2025-07-26T02:47:05.396Z",
+                "author": "Neslihan Y. - IK ve Egitim"
+          }
+    ],
+    referans: 'Robotik Kaynak Entegrasyonu, Hat Sonu Paletleme.',
+    sektor: 'Gida',
+    tecrube: '5 yıl',
+    uzmanlik_alani: 'Goruntu Isleme, PLC Programlama',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@vektor.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556620',
+    entegrator_adi: 'Zenith Mekatronik',
+    entegrator_buyuklugu: 'orta',
+    faaliyet_alanlari: 'Punta Kaynak, Robotik Kaynak, AGV Sistemleri',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@zenith.com.tr',
+    kac_kisi: 12,
+    konum: 'Istanbul, DES Sanayi',
+    yorum_listesi: [
+          {
+                "kalite_puan": 5,
+                "musteri_iliskisi_puan": 4.8,
+                "surec_yonetimi_puan": 5,
+                "yorum": "Agir sanayi parcalarinin tasinmasinda kurduklari gantry sistem mukemmel. Hem surec hem kalite acisindan beklentimizin cok ustundeler. Ekip cok cana yakin.",
+                "created_at": "2025-11-23T19:50:34.869Z",
+                "author": "Volkan D. - Uretim Direktoru"
+          },
+          {
+                "kalite_puan": 4.8,
+                "musteri_iliskisi_puan": 5,
+                "surec_yonetimi_puan": 4.8,
+                "yorum": "Sifir is kazasi ve tam zamaninda teslimat. Is guvenligi konusundaki hassasiyetleri cok etkileyiciydi. Her aradigimizda dogrudan muhatap bulabildik.",
+                "created_at": "2025-07-09T08:20:35.074Z",
+                "author": "Pinar E. - ISG Yoneticisi"
+          }
+    ],
+    referans: 'Scada Sistemleri Entegrasyonu, Makine Besleme.',
+    sektor: 'Plastik',
+    tecrube: '17 yıl',
+    uzmanlik_alani: 'Goruntu Isleme, Makine Besleme',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@zenith.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556621',
+    entegrator_adi: 'Omega Endustriyel',
+    entegrator_buyuklugu: 'orta',
+    faaliyet_alanlari: 'Kestirimci Bakim, Scada Sistemleri, PLC Programlama',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@omega.com.tr',
+    kac_kisi: 124,
+    konum: 'Bursa, NOSAB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 3,
+                "musteri_iliskisi_puan": 3.4,
+                "surec_yonetimi_puan": 3,
+                "yorum": "Otomatik depolama sisteminin yaziliminda cok fazla bug vardi. Stoklar birbirine girdi. Telefonlara cikiyorlar ama cozum uretmeleri haftalar surdu.",
+                "created_at": "2026-03-13T06:18:40.090Z",
+                "author": "Serdar O. - Depo Yoneticisi"
+          },
+          {
+                "kalite_puan": 3.2,
+                "musteri_iliskisi_puan": 3.8,
+                "surec_yonetimi_puan": 3.4,
+                "yorum": "Mekanik raylarda esneme problemleri yasadik. Iletisimleri fena degil, niyetleri iyi ama proje planlamasi ve muhendislik hesaplamalari cok zayifti.",
+                "created_at": "2025-10-06T17:36:53.236Z",
+                "author": "Gaye R. - Tedarik Muduru"
+          }
+    ],
+    referans: 'Punta Kaynak Entegrasyonu, CNC Besleme.',
+    sektor: 'Plastik',
+    tecrube: '4 yıl',
+    uzmanlik_alani: 'Goruntu Isleme, Scada Sistemleri',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@omega.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556622',
+    entegrator_adi: 'Lojik Robotik',
+    entegrator_buyuklugu: 'orta',
+    faaliyet_alanlari: 'Scada Sistemleri, PLC Programlama, Robotik Kaynak',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@lojik.com.tr',
+    kac_kisi: 72,
+    konum: 'Ankara, OSTIM',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4.6,
+                "musteri_iliskisi_puan": 4.2,
+                "surec_yonetimi_puan": 4.4,
+                "yorum": "Dokumhane ortaminin zor sartlarina dayanikli bir hucre kurdular. Malzeme kalitesi cok iyi. Ancak saha montaj ekibi fabrikamizin kurallarina uyumda biraz zorlandi.",
+                "created_at": "2026-04-13T04:46:51.756Z",
+                "author": "Tarik C. - Dokumhane Sefi"
+          },
+          {
+                "kalite_puan": 4.4,
+                "musteri_iliskisi_puan": 4.6,
+                "surec_yonetimi_puan": 4.8,
+                "yorum": "Projeyi soz verilen tarihten bile once teslim ettiler. Iletisimleri iyi. Calisma ortami cok tozlu olmasina ragmen sistem sorunsuz isliyor.",
+                "created_at": "2025-07-27T08:01:26.737Z",
+                "author": "Suleyman K. - Bakim Muduru"
+          }
+    ],
+    referans: 'Goruntu Isleme Entegrasyonu, Hat Sonu Paletleme.',
+    sektor: 'Ilac',
+    tecrube: '14 yıl',
+    uzmanlik_alani: 'Makine Besleme, Robotik Kaynak',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@lojik.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556623',
+    entegrator_adi: 'Spektrum Otomasyon',
+    entegrator_buyuklugu: 'orta',
+    faaliyet_alanlari: 'Scada Sistemleri, AGV Sistemleri, Robotik Kaynak',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@spektrum.com.tr',
+    kac_kisi: 62,
+    konum: 'Sakarya, 1. OSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4,
+                "musteri_iliskisi_puan": 4.8,
+                "surec_yonetimi_puan": 4,
+                "yorum": "Kablo gruplama makinesi entegrasyonunda ufak tefek puruzler oldu ama o kadar ilgililerdi ki hic sorun etmedik. Surec yonetimini daha seffaf yapabilirler.",
+                "created_at": "2025-12-23T12:01:43.970Z",
+                "author": "Asli M. - Uretim Lideri"
+          },
+          {
+                "kalite_puan": 4.2,
+                "musteri_iliskisi_puan": 4.6,
+                "surec_yonetimi_puan": 4.2,
+                "yorum": "Montaj hattimiz icin yaptiklari fiksturler gayet basarili. Ekip cok sempatik ve uyumlu. Teslimatta yasanan lojistik gecikmesini hizlica telafi ettiler.",
+                "created_at": "2025-11-10T07:25:34.294Z",
+                "author": "Mesut Y. - Hat Muhendisi"
+          }
+    ],
+    referans: 'Robotik Kaynak Entegrasyonu, Hat Sonu Paletleme.',
+    sektor: 'Gida',
+    tecrube: '10 yıl',
+    uzmanlik_alani: 'Scada Sistemleri, CNC Besleme',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@spektrum.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556624',
+    entegrator_adi: 'Dinamik Proses',
+    entegrator_buyuklugu: 'orta',
+    faaliyet_alanlari: 'Robotik Kaynak, PLC Programlama, Punta Kaynak',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@dinamik.com.tr',
+    kac_kisi: 109,
+    konum: 'Manisa, MOSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 4.8,
+                "musteri_iliskisi_puan": 4.6,
+                "surec_yonetimi_puan": 4.8,
+                "yorum": "Savunma sanayi muhimmat dolum hattini sifir hata toleransiyla tamamladilar. Surec boyunca her adimi dokumante ettiler. Gonul rahatligiyla calisabilirsiniz.",
+                "created_at": "2026-03-02T18:58:12.099Z",
+                "author": "Ibrahim T. - Proje Yoneticisi"
+          },
+          {
+                "kalite_puan": 5,
+                "musteri_iliskisi_puan": 4.8,
+                "surec_yonetimi_puan": 4.6,
+                "yorum": "Test asamalari son derece titizdi. Iletisim agi cok guclu, genel mudurlerine kadar ulasabildik. Planlamada sadece malzeme tedariki kaynakli ufak bir sapma oldu.",
+                "created_at": "2025-06-30T20:24:21.363Z",
+                "author": "Hasan E. - Tedarik Direktoru"
+          }
+    ],
+    referans: 'Hat Sonu Paletleme Entegrasyonu, Makine Besleme.',
+    sektor: 'Gida',
+    tecrube: '24 yıl',
+    uzmanlik_alani: 'Goruntu Isleme, Kestirimci Bakim',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@dinamik.com.tr',
+    user_id: null,
+    yorumlar: null,
+  },
+  {
+    id: 'e1a1b1c1-1111-2222-3333-444455556625',
+    entegrator_adi: 'Pulsar Entegrasyon',
+    entegrator_buyuklugu: 'buyuk',
+    faaliyet_alanlari: 'PLC Programlama, Robotik Kaynak, Scada Sistemleri',
+    hizmet_verilen_iller: 'Tüm Türkiye',
+    iletisim_sosyal_medya: 'info@pulsar.com.tr',
+    kac_kisi: 10,
+    konum: 'Manisa, MOSB',
+    yorum_listesi: [
+          {
+                "kalite_puan": 3.8,
+                "musteri_iliskisi_puan": 3.6,
+                "surec_yonetimi_puan": 3.4,
+                "yorum": "Gida sektorundeki sivi dolum makinesinde damlatma problemini haftalarca cozemediler. Iletisim zaman zaman koptu. Sonunda halledildi ama proje takvimi sasti.",
+                "created_at": "2025-11-14T12:36:09.762Z",
+                "author": "Busra V. - Uretim Sorumlusu"
+          },
+          {
+                "kalite_puan": 4,
+                "musteri_iliskisi_puan": 4,
+                "surec_yonetimi_puan": 3.8,
+                "yorum": "Sistem kalite olarak kabul edilebilir seviyede. Ancak devreye alma surecinde sahada yetkin bir amir yoktu, koordinasyonu biz saglamak zorunda kaldik.",
+                "created_at": "2025-09-14T20:53:26.459Z",
+                "author": "Kenan D. - Tesis Yoneticisi"
+          }
+    ],
+    referans: 'Robotik Kaynak Entegrasyonu, Goruntu Isleme.',
+    sektor: 'Savunma Sanayi',
+    tecrube: '18 yıl',
+    uzmanlik_alani: 'Scada Sistemleri, PLC Programlama',
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'info@pulsar.com.tr',
+    user_id: null,
+    yorumlar: null,
+  }
+];
+
+const calculateAverages = (yorumlar: any[]) => {
+  if (!yorumlar || yorumlar.length === 0) {
+    return { kalite: 0, musteri_iliskisi: 0, surec: 0, genel: 0 };
+  }
+  
+  let totalK = 0, totalM = 0, totalS = 0;
+  yorumlar.forEach(y => {
+    totalK += y.kalite_puan;
+    totalM += y.musteri_iliskisi_puan;
+    totalS += y.surec_yonetimi_puan;
+  });
+  
+  const count = yorumlar.length;
+  const kalite = Number((totalK / count).toFixed(1));
+  const musteri_iliskisi = Number((totalM / count).toFixed(1));
+  const surec = Number((totalS / count).toFixed(1));
+  const genel = Number(((kalite + musteri_iliskisi + surec) / 3).toFixed(1));
+  
+  return { kalite, musteri_iliskisi, surec, genel };
+};
+
+export const mockEntegratorler: MockEntegrator[] = rawEntegratorler.map(ent => {
+  const avgs = calculateAverages(ent.yorum_listesi || []);
+  return {
+    ...ent,
+    puan: avgs.genel,
+    detayli_puanlar: {
+      kalite: avgs.kalite,
+      musteri_iliskisi: avgs.musteri_iliskisi,
+      surec: avgs.surec
+    }
+  } as MockEntegrator;
+});
+
+export const mockFirmalar: Firma[] = [
+  {
+    id: 'f2b2c2d2-1111-2222-3333-444455556601',
+    firma_adi: 'Anatolia Otomotiv A.Ş.',
+    firma_olcegi: 'buyuk',
+    firma_tanitim_yazisi: 'Otomotiv ana sanayi için yüksek hassasiyetli şasi ve gövde parçaları üreten köklü bir kuruluş.',
+    kredi: 150,
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    belgesi4: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'satinalma@anatoliaotomotiv.com',
+    user_id: null,
+  },
+  {
+    id: 'f2b2c2d2-1111-2222-3333-444455556602',
+    firma_adi: 'Başaran Gıda Sanayi',
+    firma_olcegi: 'orta',
+    firma_tanitim_yazisi: 'Atıştırmalık ürünler ve unlu mamuller üreten, günde 100 ton kapasiteli üretim tesisi.',
+    kredi: 80,
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: null,
+    belgesi4: null,
+    created_at: new Date().toISOString(),
+    email: 'info@basarangida.com',
+    user_id: null,
+  },
+  {
+    id: 'f2b2c2d2-1111-2222-3333-444455556603',
+    firma_adi: 'Demirkan Metal İşleme',
+    firma_olcegi: 'kucuk',
+    firma_tanitim_yazisi: 'CNC torna ve freze işlemleriyle savunma sanayi ve otomotiv sektörüne talaşlı imalat hizmeti veriyoruz.',
+    kredi: 30,
+    belgesi1: 'onaylandi',
+    belgesi2: null,
+    belgesi3: null,
+    belgesi4: null,
+    created_at: new Date().toISOString(),
+    email: 'iletisim@demirkanmetal.com',
+    user_id: null,
+  },
+  {
+    id: 'f2b2c2d2-1111-2222-3333-444455556604',
+    firma_adi: 'YurtPlastik Ambalaj',
+    firma_olcegi: 'orta',
+    firma_tanitim_yazisi: 'Endüstriyel plastik palet ve taşıma kutuları üretiminde öncü.',
+    kredi: 50,
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    belgesi4: null,
+    created_at: new Date().toISOString(),
+    email: 'info@yurtplastik.com.tr',
+    user_id: null,
+  },
+  {
+    id: 'f2b2c2d2-1111-2222-3333-444455556605',
+    firma_adi: 'Ege Elektronik Üretim',
+    firma_olcegi: 'buyuk',
+    firma_tanitim_yazisi: 'Tüketici elektroniği, PCB dizgi ve test süreçlerinde yüksek teknoloji altyapısına sahip üretim merkezi.',
+    kredi: 120,
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    belgesi4: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'satinalma@egeelektronik.com',
+    user_id: null,
+  },
+  {
+    id: 'f2b2c2d2-1111-2222-3333-444455556606',
+    firma_adi: 'Güven İlaç Sanayi',
+    firma_olcegi: 'global',
+    firma_tanitim_yazisi: 'Uluslararası standartlarda steril ilaç üretimi yapan global vizyona sahip sağlık firması.',
+    kredi: 500,
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    belgesi4: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'tender@guvenilac.com.tr',
+    user_id: null,
+  },
+  {
+    id: 'f2b2c2d2-1111-2222-3333-444455556607',
+    firma_adi: 'Zirve Beyaz Eşya',
+    firma_olcegi: 'buyuk',
+    firma_tanitim_yazisi: 'Ankastre fırın, ocak ve davlumbaz üretiminde Türkiye pazarının parlayan yıldızı.',
+    kredi: 90,
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    belgesi4: null,
+    created_at: new Date().toISOString(),
+    email: 'info@zirvebeyazesya.com',
+    user_id: null,
+  },
+  {
+    id: 'f2b2c2d2-1111-2222-3333-444455556608',
+    firma_adi: 'Marmara Havacılık',
+    firma_olcegi: 'buyuk',
+    firma_tanitim_yazisi: 'Havacılık yapısal parçaları için kompozit ve alüminyum alaşımlı komponent üretimi.',
+    kredi: 200,
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    belgesi4: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'supplychain@marmarahavacilik.com',
+    user_id: null,
+  },
+  {
+    id: 'f2b2c2d2-1111-2222-3333-444455556609',
+    firma_adi: 'ÇelikKutu Ambalaj',
+    firma_olcegi: 'kucuk',
+    firma_tanitim_yazisi: 'Metal teneke kutu üretiminde butik ve hızlı çözümler sunan üretim atölyesi.',
+    kredi: 15,
+    belgesi1: 'onaylandi',
+    belgesi2: null,
+    belgesi3: null,
+    belgesi4: null,
+    created_at: new Date().toISOString(),
+    email: 'info@celikkutu.com',
+    user_id: null,
+  },
+  {
+    id: 'f2b2c2d2-1111-2222-3333-444455556610',
+    firma_adi: 'Asya Savunma Sistemleri',
+    firma_olcegi: 'orta',
+    firma_tanitim_yazisi: 'Zırhlı araç sistemleri için alt parçalar üreten, milli teknoloji hamlesi destekçisi.',
+    kredi: 60,
+    belgesi1: 'onaylandi',
+    belgesi2: 'onaylandi',
+    belgesi3: 'onaylandi',
+    belgesi4: 'onaylandi',
+    created_at: new Date().toISOString(),
+    email: 'ihale@asyasavunma.com',
+    user_id: null,
+  }
+];
