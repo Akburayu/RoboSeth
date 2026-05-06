@@ -49,7 +49,10 @@ import {
   Users,
   Lock,
   Shield,
-  Eye
+  Eye,
+  Star,
+  Target,
+  TrendingUp as TrendingUpIcon
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -531,6 +534,160 @@ export default function EntegratorDashboard() {
       </header>
 
       <div className="container mx-auto px-4 py-6">
+
+        {/* ── KPI Üst Şeridi (4'lü) ── */}
+        {!isGuestMode && (
+          <>
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 mb-6">
+
+              {/* Kart 1 — Profil Görüntülenme */}
+              <div className="bg-white border border-slate-200 shadow-sm rounded-lg p-5 flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Profil Görüntülenme</span>
+                  <div className="w-8 h-8 rounded-md bg-slate-100 flex items-center justify-center">
+                    <Eye className="h-4 w-4 text-slate-500" />
+                  </div>
+                </div>
+                <span className="text-3xl font-bold text-slate-800 tabular-nums leading-none">142</span>
+                <div className="flex items-center gap-1 text-xs text-emerald-600 font-medium">
+                  <TrendingUpIcon className="h-3.5 w-3.5" />
+                  <span>Geçen haftaya göre ↑ %12</span>
+                </div>
+              </div>
+
+              {/* Kart 2 — Bekleyen Fırsatlar */}
+              <div className="bg-white border border-slate-200 shadow-sm rounded-lg p-5 flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Bekleyen Fırsatlar</span>
+                  <div className="w-8 h-8 rounded-md bg-amber-50 border border-amber-200 flex items-center justify-center">
+                    <Briefcase className="h-4 w-4 text-amber-500" />
+                  </div>
+                </div>
+                <div className="flex items-end gap-2">
+                  <span className="text-3xl font-bold text-amber-500 tabular-nums leading-none">3</span>
+                  <span className="inline-flex items-center px-1.5 py-0.5 mb-0.5 rounded-sm text-[10px] font-bold bg-amber-100 text-amber-700 border border-amber-200 uppercase tracking-wide">Acil</span>
+                </div>
+                <span className="text-xs text-slate-400">Yanıt bekleyen ilanlar</span>
+              </div>
+
+              {/* Kart 3 — Kazanılan Projeler */}
+              <div className="bg-white border border-slate-200 shadow-sm rounded-lg p-5 flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Kazanılan Projeler</span>
+                  <div className="w-8 h-8 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center">
+                    <Award className="h-4 w-4 text-primary" />
+                  </div>
+                </div>
+                <span className="text-3xl font-bold text-primary tabular-nums leading-none">12</span>
+                <span className="text-xs text-slate-400">Bu yıl tamamlanan eşleşme</span>
+              </div>
+
+              {/* Kart 4 — Profil Skoru */}
+              <div className="bg-white border-2 border-primary/30 shadow-sm rounded-lg p-5 flex flex-col gap-2 ring-1 ring-primary/10">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Profil Skoru</span>
+                  <div className="w-8 h-8 rounded-md bg-sky-50 border border-sky-200 flex items-center justify-center">
+                    <Target className="h-4 w-4 text-sky-500" />
+                  </div>
+                </div>
+                <span className="text-3xl font-bold text-slate-800 tabular-nums leading-none">%72</span>
+                <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                  <div className="h-full bg-primary rounded-full transition-all duration-700" style={{ width: '72%' }} />
+                </div>
+                <button
+                  onClick={() => navigate('/entegrator/profile')}
+                  className="text-xs font-medium text-primary hover:text-primary/80 hover:underline text-left transition-colors mt-0.5"
+                >
+                  Profili Tamamla →
+                </button>
+              </div>
+
+            </div>
+
+            {/* ── Aktif Fırsatlar (Lead Listesi) ── */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h2 className="text-base font-semibold text-slate-800 tracking-tight">Platformdaki Aktif Fırsatlar</h2>
+                  <p className="text-xs text-slate-400 mt-0.5">Kimliği gizli müşteri firmalarının proje talepleri</p>
+                </div>
+                <span className="text-xs text-slate-400 font-mono">3 fırsat listelendi</span>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                {[
+                  { no: 104, sektor: 'Otomotiv', sehir: 'Bursa, NOSAB', baslik: 'Kaynak Hücresi Otomasyonu', butce: '1.5M – 2M TL', saat: 48, kirmizi: true },
+                  { no: 117, sektor: 'Gıda',     sehir: 'İzmir, Kemalpaşa', baslik: 'Hat Sonu Paletleme Sistemi', butce: '800K – 1.2M TL', saat: 72, kirmizi: false },
+                  { no: 129, sektor: 'Savunma',  sehir: 'Ankara, OSTİM',    baslik: 'Lazer Kesim Entegrasyonu', butce: '3M – 5M TL',   saat: 24, kirmizi: true },
+                ].map((firsat) => (
+                  <div
+                    key={firsat.no}
+                    className="flex items-center gap-4 bg-white border border-slate-200 shadow-sm rounded-md px-5 py-4 hover:border-primary/30 hover:shadow transition-all"
+                  >
+                    {/* Gizli Kimlik */}
+                    <div className="flex items-center gap-3 shrink-0 w-44">
+                      <div className="w-10 h-10 rounded-sm bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
+                        <Lock className="h-4 w-4 text-slate-400" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-primary leading-tight">Gizli Firma #{firsat.no}</p>
+                        <p className="text-[11px] text-slate-400 mt-0.5 select-none blur-[3px] pointer-events-none">Örnek A.Ş.</p>
+                      </div>
+                    </div>
+
+                    <div className="w-px h-10 bg-slate-100 shrink-0" />
+
+                    {/* Proje Bilgileri */}
+                    <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0">
+                      <span className="text-sm font-semibold text-slate-700 truncate max-w-[200px]">{firsat.baslik}</span>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-sm text-[11px] font-medium bg-sky-50 text-primary border border-sky-200">{firsat.sektor}</span>
+                      <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
+                        <MapPin className="h-3 w-3 text-slate-400" />{firsat.sehir}
+                      </span>
+                    </div>
+
+                    {/* Bütçe İpucu */}
+                    <div className="flex flex-col items-end shrink-0 w-32">
+                      <span className="text-[10px] text-slate-400 uppercase tracking-wide font-semibold">Bütçe</span>
+                      <span className="text-sm font-semibold text-slate-700 tabular-nums">{firsat.butce}</span>
+                    </div>
+
+                    <div className="w-px h-10 bg-slate-100 shrink-0" />
+
+                    {/* Aciliyet */}
+                    <div className={`flex items-center gap-1 shrink-0 w-36 text-xs font-semibold ${firsat.kirmizi ? 'text-red-500' : 'text-amber-500'}`}>
+                      <Clock className="h-3.5 w-3.5 shrink-0" />
+                      Kapanmasına {firsat.saat} saat kaldı
+                    </div>
+
+                    <div className="w-px h-10 bg-slate-100 shrink-0" />
+
+                    {/* Aksiyon */}
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Button
+                        size="sm"
+                        className="h-8 text-xs bg-primary hover:bg-primary/90 text-white gap-1.5 px-3"
+                        onClick={() => toast({ title: 'İlgin kaydedildi', description: `Firma #${firsat.no} için teklifiniz gönderildi.` })}
+                      >
+                        <Send className="h-3.5 w-3.5" />
+                        İlgileniyorum
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 text-xs border-slate-200 text-slate-500 hover:bg-slate-50 px-3"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                        Reddet
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
         {/* Search and Filters */}
         <div className="space-y-4 mb-6">
           <div className="flex gap-4">

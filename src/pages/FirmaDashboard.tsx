@@ -49,7 +49,8 @@ import {
   MessageSquare,
   SlidersHorizontal,
   Server,
-  ChevronRight
+  ChevronRight,
+  ShieldCheck
 } from 'lucide-react';
 import type { Database } from '@/integrations/supabase/types';
 import { Textarea } from '@/components/ui/textarea';
@@ -1045,9 +1046,15 @@ export default function FirmaDashboard() {
                       setAiLoading(true);
                       setAiResults(null);
                       setTimeout(() => {
-                        const results = runAIMatch(aiQuery, entegratorler as any);
-                        setAiResults(results);
-                        setAiLoading(false);
+                        try {
+                          const results = runAIMatch(aiQuery, entegratorler as any);
+                          setAiResults(Array.isArray(results) ? results : []);
+                        } catch (err) {
+                          console.error('[AI Match] Enter key error:', err);
+                          setAiResults([]);
+                        } finally {
+                          setAiLoading(false);
+                        }
                       }, 1400);
                     }
                   }}
@@ -1070,9 +1077,15 @@ export default function FirmaDashboard() {
                       setAiLoading(true);
                       setAiResults(null);
                       setTimeout(() => {
-                        const results = runAIMatch(aiQuery, entegratorler as any);
-                        setAiResults(results);
-                        setAiLoading(false);
+                        try {
+                          const results = runAIMatch(aiQuery, entegratorler as any);
+                          setAiResults(Array.isArray(results) ? results : []);
+                        } catch (err) {
+                          console.error('[AI Match] Button error:', err);
+                          setAiResults([]);
+                        } finally {
+                          setAiLoading(false);
+                        }
                       }, 1400);
                     }}
                     className="gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground h-8 px-3 rounded-md text-xs font-medium"
@@ -1152,8 +1165,8 @@ export default function FirmaDashboard() {
                     <p className="text-sm text-muted-foreground mt-1">Farklı parametreler deneyin: uzmanlık alanı, şehir, sektör...</p>
                   </Card>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {aiResults.map(({ entegrator, score, matchReason, matchedKeywords }, idx) => (
+                  <div className="flex flex-col gap-3">
+                    {aiResults.map(({ entegrator, score, matchReasonLines, matchedKeywords }, idx) => (
                       <Card
                         key={entegrator.id}
                         className="relative overflow-hidden border-slate-200 shadow-sm hover:border-primary/40 hover:shadow transition-all rounded-md"
@@ -1182,9 +1195,9 @@ export default function FirmaDashboard() {
                           </div>
 
                           {/* Matched keywords */}
-                          {matchedKeywords.length > 0 && (
+                          {(matchedKeywords ?? []).length > 0 && (
                             <div className="flex flex-wrap gap-1 mb-3">
-                              {matchedKeywords.map(kw => (
+                              {(matchedKeywords ?? []).map(kw => (
                                 <Badge key={kw} className="text-[10px] bg-primary/10 text-primary border border-primary/20 rounded-sm font-medium">
                                   {kw}
                                 </Badge>
@@ -1193,17 +1206,19 @@ export default function FirmaDashboard() {
                           )}
 
                           {/* Uyum Kriterleri — system log format */}
-                          <div className="bg-slate-50 border border-slate-200 rounded-sm p-2.5 mb-3">
-                            <p className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Uyum Kriterleri</p>
-                            <ul className="space-y-0.5">
-                              {matchReasonLines.map((line, i) => (
-                                <li key={i} className="flex items-start gap-1.5 text-[10px] font-mono text-slate-600 leading-relaxed">
-                                  <ChevronRight className="h-3 w-3 text-primary/50 mt-0.5 shrink-0" />
+                          {(matchReasonLines ?? []).length > 0 && (
+                          <div className="bg-slate-50 border border-slate-200 rounded-sm p-3 mb-3">
+                            <p className="text-sm font-semibold text-slate-700 tracking-wide mb-2">Uyum Kriterleri</p>
+                            <ul className="space-y-1.5">
+                              {(matchReasonLines ?? []).map((line, i) => (
+                                <li key={i} className="flex items-start gap-1.5 text-[13px] font-mono text-slate-700 leading-relaxed">
+                                  <ChevronRight className="h-3.5 w-3.5 text-primary/50 mt-0.5 shrink-0" />
                                   {line}
                                 </li>
                               ))}
                             </ul>
                           </div>
+                          )}
 
                           {/* Ratings row */}
                           {entegratorRatings[entegrator.id] && (
@@ -1283,187 +1298,178 @@ export default function FirmaDashboard() {
                 </Button>
               </Card>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {filteredEntegratorler.map((entegrator) => (
-                  <Card 
-                    key={entegrator.id} 
-                    className="hover:shadow-lg transition-shadow cursor-pointer border-firma/10 hover:border-firma/30"
-                  >
-                    <CardContent className="p-5">
-                      {/* Header with masked name and ratings */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-entegrator/20 to-entegrator/40 flex items-center justify-center">
-                            <Building2 className="h-6 w-6 text-entegrator" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-lg">{maskName(entegrator.entegrator_adi)}</h3>
-                          </div>
+              <div className="flex flex-col gap-3">
+                {filteredEntegratorler.map((entegrator, rowIdx) => {
+                  const dp = (entegrator as any).detayli_puanlar;
+                  const rt = entegratorRatings[entegrator.id];
+                  const scoreK = dp?.kalite           ?? rt?.kalite_avg;
+                  const scoreM = dp?.musteri_iliskisi ?? rt?.musteri_iliskisi_avg;
+                  const scoreS = dp?.surec            ?? rt?.surec_yonetimi_avg;
+                  const genel  = scoreK != null && scoreM != null && scoreS != null
+                    ? ((scoreK + scoreM + scoreS) / 3)
+                    : null;
+                  const isMatched = matches.some(m => m.entegratorId === entegrator.id);
+                  const reviewCount = entegratorRatings[entegrator.id]?.rating_count ?? (entegrator as any).yorum_listesi?.length ?? 0;
+                  const uzmanliklar = entegrator.uzmanlik_alani?.split(', ') ?? [];
+
+                  return (
+                    <div
+                      key={entegrator.id}
+                      className="flex items-center gap-4 bg-white border border-slate-200 shadow-sm rounded-md px-5 py-4 hover:border-primary/30 hover:shadow transition-all"
+                    >
+                      {/* ── 1. Gizli Kimlik ── */}
+                      <div className="flex items-center gap-3 shrink-0 w-48">
+                        <div className="w-10 h-10 rounded-sm bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
+                          <Lock className="h-4 w-4 text-slate-400" />
                         </div>
-                        {/* ── Puan Tablosu (sağ üst) ── */}
-                        {(() => {
-                          const dp = (entegrator as any).detayli_puanlar;
-                          const rt = entegratorRatings[entegrator.id];
-                          const k   = dp?.kalite            ?? rt?.kalite_avg;
-                          const m   = dp?.musteri_iliskisi  ?? rt?.musteri_iliskisi_avg;
-                          const s   = dp?.surec             ?? rt?.surec_yonetimi_avg;
-                          if (!k && !m && !s) return (
-                            <span className="text-[11px] text-slate-400 italic self-start">— veri yok</span>
-                          );
-                          const Row = ({ label, val }: { label: string; val?: number }) => val == null ? null : (
-                            <div className="flex items-center justify-between gap-3">
-                              <span className="text-[13px] text-slate-500 whitespace-nowrap">{label}</span>
-                              <div className="flex items-center gap-1">
-                                <Star className="w-[14px] h-[14px] fill-sky-500 text-sky-500 shrink-0" />
-                                <span className="text-[13px] font-medium text-slate-700 tabular-nums">
-                                  {val.toFixed(1)}
-                                </span>
-                              </div>
-                            </div>
-                          );
-                          return (
-                            <div className="flex flex-col gap-1">
-                              <Row label="Kalite:"   val={k} />
-                              <Row label="M.İlişki:" val={m} />
-                              <Row label="Süreç:"    val={s} />
-                            </div>
-                          );
-                        })()}
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-primary leading-tight truncate">
+                            Gizli Entegratör #{String(rowIdx + 1).padStart(2, '0')}
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5 select-none blur-[3px] pointer-events-none">
+                            {entegrator.entegrator_adi}
+                          </p>
+                        </div>
                       </div>
 
-                      {/* Uzmanlık */}
-                      {entegrator.uzmanlik_alani && (
-                        <div className="mb-3">
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
-                            <Award className="h-3 w-3" />
-                            Uzmanlık
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {entegrator.uzmanlik_alani.split(', ').slice(0, 3).map((u, i) => (
-                              <Badge key={i} variant="secondary" className="text-xs">
-                                {u}
-                              </Badge>
-                            ))}
-                            {entegrator.uzmanlik_alani.split(', ').length > 3 && (
-                              <Badge variant="secondary" className="text-xs">
-                                +{entegrator.uzmanlik_alani.split(', ').length - 3}
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                      {/* ── Dikey Ayırıcı ── */}
+                      <div className="w-px h-10 bg-slate-100 shrink-0" />
 
-                      {/* Info Row */}
-                      <div className="flex flex-wrap gap-3 text-xs text-muted-foreground mb-3">
-                        {entegrator.tecrube && (
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {entegrator.tecrube}
-                          </div>
+                      {/* ── 2. Uzmanlık Badge'leri ── */}
+                      <div className="flex flex-wrap gap-1.5 flex-1 min-w-0">
+                        {uzmanliklar.slice(0, 3).map((u, i) => (
+                          <span
+                            key={i}
+                            className="inline-flex items-center px-2 py-0.5 rounded-sm text-[11px] font-medium bg-sky-50 text-primary border border-sky-200"
+                          >
+                            {u}
+                          </span>
+                        ))}
+                        {uzmanliklar.length > 3 && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-sm text-[11px] font-medium bg-slate-100 text-slate-500 border border-slate-200">
+                            +{uzmanliklar.length - 3}
+                          </span>
                         )}
-                        {entegrator.kac_kisi && (
-                          <div className="flex items-center gap-1">
-                            <Users className="h-3 w-3" />
-                            {entegrator.kac_kisi} kişi
-                          </div>
-                        )}
-                        {entegrator.konum && (
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-3 w-3" />
-                            {entegrator.konum}
-                          </div>
+                        {entegrator.sektor && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-sm text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                            {entegrator.sektor}
+                          </span>
                         )}
                       </div>
 
-                      {/* Referans - truncated */}
-                      {entegrator.referans && (
-                        <p className="text-xs text-muted-foreground line-clamp-2 border-t pt-3 mt-3">
-                          {entegrator.referans}
-                        </p>
+                      {/* ── 3. Lokasyon ── */}
+                      {entegrator.konum && (
+                        <div className="flex items-center gap-1 text-[12px] text-slate-500 shrink-0 w-36">
+                          <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                          <span className="truncate">{entegrator.konum}</span>
+                        </div>
                       )}
 
-                      {/* CTA Buttons */}
-                      <div className="flex flex-col gap-2 mt-4">
+                      {/* ── 4. Doğrulanmış Rozet ── */}
+                      <div className="flex flex-col items-center gap-0.5 shrink-0 w-16">
+                        <ShieldCheck className="h-5 w-5 text-emerald-500" />
+                        <span className="text-[10px] text-emerald-600 font-medium leading-none">Doğrulanmış</span>
+                      </div>
+
+                      {/* ── 5. Puan Paneli ── */}
+                      <div className="flex flex-col items-end shrink-0 w-24">
+                        {genel != null ? (
+                          <>
+                            <span className="text-xl font-bold text-slate-800 tabular-nums leading-none">
+                              {genel.toFixed(1)}
+                            </span>
+                            <div className="flex items-center gap-0.5 mt-0.5">
+                              {[1,2,3,4,5].map(i => (
+                                <Star
+                                  key={i}
+                                  className={`w-3 h-3 shrink-0 ${
+                                    i <= Math.round(genel)
+                                      ? 'fill-sky-500 text-sky-500'
+                                      : 'fill-slate-200 text-slate-200'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <span className="text-[10px] text-slate-400 mt-0.5">{reviewCount} değerlendirme</span>
+                          </>
+                        ) : (
+                          <span className="text-[11px] text-slate-400 italic">— veri yok</span>
+                        )}
+                      </div>
+
+                      {/* ── Dikey Ayırıcı ── */}
+                      <div className="w-px h-10 bg-slate-100 shrink-0" />
+
+                      {/* ── 6. Aksiyon Butonları ── */}
+                      <div className="flex flex-col gap-1.5 shrink-0 w-36">
                         {isGuestMode ? (
-                          <Button 
-                            className="w-full gap-2"
+                          <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => {
-                              toast({
-                                title: 'Üyelik Gerekli',
-                                description: 'Eşleşme işlemi için üye olmanız gerekmektedir.',
-                              });
-                              navigate('/');
-                            }}
+                            className="h-8 text-xs border-primary text-primary hover:bg-primary/5 gap-1.5 w-full"
+                            onClick={() => { toast({ title: 'Üyelik Gerekli', description: 'Eşleşme için üye olmanız gerekiyor.' }); navigate('/'); }}
                           >
-                            <Lock className="h-4 w-4" />
-                            Eşleş (Üyelik Gerekli)
+                            <Lock className="h-3.5 w-3.5" />
+                            Üye Ol
                           </Button>
                         ) : (
                           <>
-                            <Button 
-                              className={`w-full gap-2 ${
-                                matches.some(m => m.entegratorId === entegrator.id)
-                                  ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
-                                  : 'bg-primary hover:bg-primary/90 text-primary-foreground'
-                              }`}
+                            <Button
                               size="sm"
+                              variant="outline"
+                              className={`h-8 text-xs gap-1.5 w-full ${
+                                isMatched
+                                  ? 'border-emerald-500 text-emerald-600 hover:bg-emerald-50'
+                                  : 'border-primary text-primary hover:bg-primary/5'
+                              }`}
                               onClick={() => {
-                                if (matches.some(m => m.entegratorId === entegrator.id)) {
-                                  navigate('/eslesmeler');
-                                } else {
-                                  createMatch(entegrator.id, entegrator.entegrator_adi || `Entegratör ${entegrator.id.substring(0,6)}`);
-                                }
+                                if (isMatched) navigate('/eslesmeler');
+                                else createMatch(entegrator.id, entegrator.entegrator_adi || `Entegratör ${entegrator.id.substring(0,6)}`);
                               }}
                             >
-                              {matches.some(m => m.entegratorId === entegrator.id) ? (
-                                <>
-                                  <CheckCircle2 className="h-4 w-4" />
-                                  Eşleşildi (Sürece Git)
-                                </>
-                              ) : (
-                                <>
-                                  <Building2 className="h-4 w-4" />
-                                  Eşleş ve Projeye Ekle
-                                </>
-                              )}
+                              {isMatched
+                                ? <><CheckCircle2 className="h-3.5 w-3.5" />Sürece Git</>
+                                : <><Building2 className="h-3.5 w-3.5" />Eşleş</>}
                             </Button>
-
-                            {/* Puan ve Yorum Butonları Ücretsiz ve Açık Hale Getirildi */}
-                            <div className="flex gap-2 w-full mt-1">
-                              <div 
-                                className="flex-1"
-                                title={!matches.some(m => m.entegratorId === entegrator.id) ? 'Sadece eşleştiğiniz ve birlikte çalıştığınız entegratörleri değerlendirebilirsiniz.' : 'Entegratörü puanla'}
+                            <div className="flex gap-1">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="flex-1 h-7 text-[10px] border-slate-200 text-slate-600 hover:bg-slate-50 gap-1 px-2"
+                                onClick={() => openCommentsModal(entegrator)}
                               >
+                                <FileText className="h-3 w-3" />
+                                Yorumlar
+                                {reviewCount > 0 && <span>({reviewCount})</span>}
+                              </Button>
+                              <div className={`relative group/rate ${!isMatched ? 'cursor-not-allowed opacity-60' : ''}`}>
+                                {!isMatched && (
+                                  <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/rate:block z-50">
+                                    <div className="bg-slate-800 text-white text-[11px] rounded-md px-2.5 py-1.5 whitespace-nowrap shadow-lg">
+                                      Sadece projeye eklenip eşleşilen entegratörler değerlendirilebilir.
+                                    </div>
+                                    <div className="flex justify-center">
+                                      <span className="border-4 border-transparent border-t-slate-800 block" />
+                                    </div>
+                                  </div>
+                                )}
                                 <Button
-                                  variant="outline"
                                   size="sm"
+                                  variant="outline"
+                                  disabled={!isMatched}
+                                  className="h-7 text-[10px] border-slate-200 text-slate-600 hover:bg-slate-50 gap-1 px-2 disabled:pointer-events-none"
                                   onClick={() => openRatingModal(entegrator)}
-                                  disabled={!matches.some(m => m.entegratorId === entegrator.id)}
-                                  className={`w-full gap-1.5 border-primary/20 text-xs h-8 ${!matches.some(m => m.entegratorId === entegrator.id) ? 'pointer-events-none opacity-60' : 'hover:bg-primary/5 text-primary'}`}
                                 >
-                                  <Star className="h-3.5 w-3.5" /> Puanla
+                                  <Star className="h-3 w-3" />
                                 </Button>
                               </div>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => openCommentsModal(entegrator)}
-                                className="flex-1 gap-1.5 border-primary/20 hover:bg-primary/5 text-primary text-xs h-8"
-                              >
-                                <FileText className="h-3.5 w-3.5" /> Yorumlar 
-                                {entegratorRatings[entegrator.id] && entegratorRatings[entegrator.id].rating_count > 0 && (
-                                  <span className="ml-0.5">({entegratorRatings[entegrator.id].rating_count})</span>
-                                )}
-                              </Button>
                             </div>
                           </>
                         )}
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                    </div>
+                  );
+                })}
               </div>
             )}
             </>
@@ -1654,70 +1660,53 @@ export default function FirmaDashboard() {
           </div>
           
           <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50 space-y-4">
-            {commentsEntegrator && entegratorComments[commentsEntegrator.id]?.length > 0 ? (
-              entegratorComments[commentsEntegrator.id].map((comment, index) => (
-                <div key={index} className="p-4 bg-background border rounded-xl shadow-sm space-y-3 transition-colors hover:border-primary/20">
-                  <div className="flex flex-wrap gap-4 text-sm">
-                    <div className="flex items-center gap-1.5 bg-primary/5 px-2 py-1 rounded-md">
-                      <span className="text-xs font-semibold text-primary">Kalite</span>
-                      <div className="flex gap-0.5">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-3 w-3 ${star <= comment.kalite_puan ? 'fill-accent text-accent' : 'text-slate-200'}`}
-                          />
-                        ))}
+            {commentsEntegrator && entegratorComments[commentsEntegrator.id]?.length > 0 ? (() => {
+              const allComments = entegratorComments[commentsEntegrator.id];
+              const visibleComments = allComments.slice(0, 2);
+              const hiddenCount = allComments.length - 2;
+              const isMatched = matches.some(m => m.entegratorId === commentsEntegrator?.id);
+              const CommentCard = ({ comment, index }: { comment: any; index: number }) => (
+                <div key={index} className="p-4 bg-background border rounded-md shadow-sm space-y-3 hover:border-primary/20 transition-colors">
+                  <div className="flex flex-wrap gap-3 text-sm">
+                    {[{label:'Kalite', val:comment.kalite_puan},{label:'M.İlişki',val:comment.musteri_iliskisi_puan},{label:'Süreç',val:comment.surec_yonetimi_puan}].map(({label,val}) => (
+                      <div key={label} className="flex items-center gap-1.5 bg-primary/5 px-2 py-1 rounded-md">
+                        <span className="text-xs font-semibold text-primary">{label}</span>
+                        <div className="flex gap-0.5">{[1,2,3,4,5].map(s=>(
+                          <Star key={s} className={`h-3 w-3 ${s<=val?'fill-accent text-accent':'text-slate-200'}`}/>
+                        ))}</div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-1.5 bg-primary/5 px-2 py-1 rounded-md">
-                      <span className="text-xs font-semibold text-primary">M.İlişki</span>
-                      <div className="flex gap-0.5">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-3 w-3 ${star <= comment.musteri_iliskisi_puan ? 'fill-accent text-accent' : 'text-slate-200'}`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1.5 bg-primary/5 px-2 py-1 rounded-md">
-                      <span className="text-xs font-semibold text-primary">Süreç</span>
-                      <div className="flex gap-0.5">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-3 w-3 ${star <= comment.surec_yonetimi_puan ? 'fill-accent text-accent' : 'text-slate-200'}`}
-                          />
-                        ))}
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                  {comment.yorum && (
-                    <p className="text-sm text-foreground/90 leading-relaxed font-medium mt-2">{comment.yorum}</p>
-                  )}
-                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border/50 text-xs text-muted-foreground">
-                    <Clock className="h-3 w-3" />
-                    <span>
-                      {new Date(comment.created_at).toLocaleDateString('tr-TR', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                    </span>
-                    {comment.author && (
-                      <>
-                        <span className="mx-1">•</span>
-                        <User className="h-3 w-3" />
-                        <span>{comment.author}</span>
-                      </>
-                    )}
+                  {comment.yorum && <p className="text-sm text-foreground/90 leading-relaxed font-medium mt-2">{comment.yorum}</p>}
+                  <div className="flex items-center gap-2 pt-2 border-t border-border/50 text-xs text-muted-foreground">
+                    <Clock className="h-3 w-3"/>
+                    <span>{new Date(comment.created_at).toLocaleDateString('tr-TR',{year:'numeric',month:'long',day:'numeric'})}</span>
+                    {comment.author && <><span className="mx-1">•</span><User className="h-3 w-3"/><span>{comment.author}</span></>}
                   </div>
                 </div>
-              ))
-            ) : (
+              );
+              return (
+                <>
+                  {visibleComments.map((comment, index) => <CommentCard key={index} comment={comment} index={index} />)}
+                  {hiddenCount > 0 && !isMatched && (
+                    <div className="relative rounded-md overflow-hidden border border-slate-200 min-h-[100px]">
+                      <div className="p-4 bg-slate-50 space-y-2 blur-sm select-none pointer-events-none" aria-hidden>
+                        <div className="flex gap-2"><div className="h-4 w-20 bg-slate-200 rounded"/><div className="h-4 w-16 bg-slate-200 rounded"/></div>
+                        <div className="h-3 w-full bg-slate-200 rounded"/><div className="h-3 w-4/5 bg-slate-200 rounded"/><div className="h-3 w-3/5 bg-slate-200 rounded"/>
+                      </div>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-white/70 backdrop-blur-[2px]">
+                        <Lock className="h-5 w-5 text-primary"/>
+                        <p className="text-sm font-medium text-primary text-center px-4">+{hiddenCount} yorumu daha görmek için eşleşme sağlayın.</p>
+                      </div>
+                    </div>
+                  )}
+                  {hiddenCount > 0 && isMatched && allComments.slice(2).map((comment, index) => <CommentCard key={index+2} comment={comment} index={index+2} />)}
+                </>
+              );
+            })() : (
               <div className="text-center py-8">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-3">
-                  <FileText className="h-6 w-6 text-primary/60" />
+                  <FileText className="h-6 w-6 text-primary/60"/>
                 </div>
                 <p className="text-muted-foreground font-medium">Henüz değerlendirme yapılmamış.</p>
                 <p className="text-sm text-muted-foreground/70 mt-1">İlk yorumu siz yapın!</p>

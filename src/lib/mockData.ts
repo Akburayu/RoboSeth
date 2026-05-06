@@ -27,7 +27,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.6,
                 "musteri_iliskisi_puan": 4,
                 "surec_yonetimi_puan": 4.2,
-                "yorum": "Kaynak robotlari devreye alinirken mekanik stabilite muazzamdi, ancak satis sonrasi destek ekiplerine ulasmak biraz zor oldu. Proje takvimi ufak tefek aksakliklara ragmen basariyla yakalandi.",
+                "yorum": "Robotik kaynak hücresi devreye alınırken ilk hafta ark sapmıyor, kaynak dikis kalitesi spesifikasyonun üstünde (±0.3µm). Parametreleri telefonla anlatıldı, daha iyi belgeleme beklerdik.",
                 "created_at": "2026-02-02T20:32:35.395Z",
                 "author": "Serhat K. - Uretim Muduru"
           },
@@ -35,7 +35,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.4,
                 "musteri_iliskisi_puan": 5,
                 "surec_yonetimi_puan": 3.8,
-                "yorum": "Sistem oldukca dayanikli ve firesiz calisiyor. Proje esnasinda iletisimleri cok gucluydu, her an yanimizdaydilar ama kurulum sureci bekledigimizden bir hafta uzun surdu.",
+                "yorum": "SCADA sisteminde üretim verisi 4 saniye gecikmeli akmıştı; Siemens S7-1500 tarafında byte offset hatası tespit edildi. Üretici bunu düzeltmeden teslim etti ama remote destek 2 saatte çözdü.",
                 "created_at": "2025-07-25T09:32:18.969Z",
                 "author": "Gokhan B. - Proje Yoneticisi"
           }
@@ -66,7 +66,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 5,
                 "musteri_iliskisi_puan": 4.2,
                 "surec_yonetimi_puan": 4.8,
-                "yorum": "AGV filosu tam zamaninda ve sifir hata ile devreye alindi. Fabrika icindeki trafik yonetimi kusursuz. Sadece egitim dokumanlari biraz gec teslim edildi.",
+                "yorum": "Hat sonu paletleme hızı saatte 1 200 kutuda kaldı, teklifteki 1 400 hedefine ulaşılamadı. Mekanik yeniden çalişılarak 6 haftada hedef yakalandı, geçikme can sıktı.",
                 "created_at": "2025-12-12T11:18:56.803Z",
                 "author": "Ahmet T. - Lojistik Sefi"
           },
@@ -74,7 +74,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.8,
                 "musteri_iliskisi_puan": 4.6,
                 "surec_yonetimi_puan": 4.2,
-                "yorum": "Sistem hatasiz calisiyor, bekledigimiz verimi aldik. Ekip uyumluydu ancak yazilim tarafinda ozel taleplerimizin entegrasyonu sureci biraz yavaslatti.",
+                "yorum": "AGV filosu 18 aracın tümü zamanlamaya uydu, depo trafik algoritması yerinde yazıldı. Devreye alma sürecinde hiç durmaksızın üretim devam etti — çok başarılı bir planlama.",
                 "created_at": "2025-07-17T12:25:52.609Z",
                 "author": "Caner D. - Ar-Ge Sorumlusu"
           }
@@ -105,7 +105,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.8,
                 "musteri_iliskisi_puan": 4.8,
                 "surec_yonetimi_puan": 3.4,
-                "yorum": "Scada arayuzu cok modern ve isteklerimizi aninda kodladilar. Ne var ki otomasyon panolarinin montajinda ciddi gecikmeler yasadik, saha ekibi zayifti.",
+                "yorum": "Görüntü işleme sistemine 0.05µm ince hata tespiti görevi verildi. Testlerde %99.2 doğru sonuç alındı, ancak kamera tutucusu tıtreme yapıyordu; çelik levha eklenerek çözüldü.",
                 "created_at": "2026-02-07T11:47:10.308Z",
                 "author": "Elif M. - Otomasyon Lideri"
           },
@@ -113,7 +113,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.4,
                 "musteri_iliskisi_puan": 4.2,
                 "surec_yonetimi_puan": 3,
-                "yorum": "Panolardaki kablolama isciligi daha iyi olabilirdi, bazi etiketlemeler eksikti. Her seye ragmen sikayetlerimize hizli donduler. Surec yonetimi kesinlikle gelistirilmeli.",
+                "yorum": "PLC programı hattı yeniden yazılırken 3 farklı Omron ünitesi tek merkezi haberleşmeye bağlanmalıydı. Protokol dönüşümü başlangıçta sorun çıkardı, son haliyle çok temiz çalışıyor.",
                 "created_at": "2025-06-16T05:21:26.759Z",
                 "author": "Mehmet Y. - Elektrik Bakim Sefi"
           }
@@ -144,7 +144,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.2,
                 "musteri_iliskisi_puan": 3.6,
                 "surec_yonetimi_puan": 4.6,
-                "yorum": "Hat sonu paletleme robotunun cevrim suresi tam istedigimiz gibi. Planlama mukemmeldi. Ancak sozlesme asamasindaki bazi sartlar konusunda satis ekibiyle anlasmazliklar yasadik.",
+                "yorum": "Kestirimci bakım modülü 3 ayda toplam 9 planlanmamış duruluyor önledi. Titreşim sensörleri doğru yerleştirilmiş, analitik panel operatif açıdan anlaşılır.",
                 "created_at": "2026-01-30T11:32:21.920Z",
                 "author": "Kemal S. - Satinalma Muduru"
           },
@@ -152,7 +152,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.8,
                 "musteri_iliskisi_puan": 3.4,
                 "surec_yonetimi_puan": 4.4,
-                "yorum": "Tasarim ve mekanik kalite tartisilmaz derecede iyi. Zamaninda teslimat yaptilar. Satis sonrasi servisten randevu almak ise su ana kadar biraz cetrefilli oldu.",
+                "yorum": "Punta kaynak robotunda ilk 200 parcada merkezleme sapması oluştu. Firma hızlı araya girdi ve fixture toleransını sıfırlamakla çözdü; bu hızdaki yanıt takdire şayan.",
                 "created_at": "2025-07-30T10:59:02.786Z",
                 "author": "Ayse K. - Isletme Muduru"
           }
@@ -183,7 +183,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3,
                 "musteri_iliskisi_puan": 3.8,
                 "surec_yonetimi_puan": 2.8,
-                "yorum": "Goruntu isleme sensorleri bazen hatali okuma yapiyor. Kalibrasyon surecinde bizi cok oyaladilar. Iletisim fena degildi ama teknik yeterlilikleri zorlandi.",
+                "yorum": "Konveyör hız eşitlemesi otomotiv hattı ciklü zamanlarıyla eşleştirildi. Mekanik montaj hatasız, ama elektrik şemalama belgeleri geçici CAD olarak kaldı — as-built bekliyoruz.",
                 "created_at": "2025-12-22T10:04:27.228Z",
                 "author": "Zeynep P. - Kalite Kontrol Sefi"
           },
@@ -191,7 +191,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.6,
                 "musteri_iliskisi_puan": 4.2,
                 "surec_yonetimi_puan": 3.2,
-                "yorum": "Sistem calisiyor ancak vaat edilen hiza ulasamadik. Iyi niyetli bir ekip, cozum icin defalarca geldiler fakat projenin toplam suresi aylarca uzadi.",
+                "yorum": "Makine besleme ünitesi 14” liğer döküm parçaları için optimize edildi. İlk 300 çevrimde düşenme çıkışı sıfıra indi; kapasite garantisi eksiksiz yerine getirildi.",
                 "created_at": "2025-06-27T09:54:13.980Z",
                 "author": "Hakan E. - Uretim Muhendisi"
           }
@@ -222,7 +222,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.8,
                 "musteri_iliskisi_puan": 4.8,
                 "surec_yonetimi_puan": 4.6,
-                "yorum": "CNC makine besleme otomasyonumuz kusursuz calisiyor. Bekleme sureleri sifira indi. Operatorlerle iletisimleri cok samimi ve ogreticiydi.",
+                "yorum": "Savunma sanayi parçası lazer kesim entegrasyonu NATO sertifikası gerektirdi. Tüm dokümantasyon tam ve zamanında teslim edildi, müfettiş denetiminde sıfır bulgu.",
                 "created_at": "2026-01-10T23:38:04.695Z",
                 "author": "Fatih C. - Uretim Sorumlusu"
           },
@@ -230,7 +230,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 5,
                 "musteri_iliskisi_puan": 4.6,
                 "surec_yonetimi_puan": 5,
-                "yorum": "Harika bir vizyon kattilar. Devreye alma o kadar sorunsuzdu ki hafta sonu uretimimiz hic durmadi. Sonuna kadar tavsiye ediyorum.",
+                "yorum": "Gıda paketleme hattında ISO 22000 hijyen gereksinimleri nedeniyle robot bileşenleri paslanmaz çelik kaplamaya dönüştürüldü. Üretici bu konuda deneyimli ve önerisi isabetli çıktı.",
                 "created_at": "2025-06-08T02:21:50.618Z",
                 "author": "Burak L. - Fabrika Direktoru"
           }
@@ -261,7 +261,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.4,
                 "musteri_iliskisi_puan": 3,
                 "surec_yonetimi_puan": 3.8,
-                "yorum": "Kestirimci bakim sensorlerinin montaji tam vaktinde yapildi. Fakat yazilim arayuzu cok karmasik. Destek ekibine ulasmakta zaman zaman sikinti cekiyoruz.",
+                "yorum": "Tekstil fabrikasında boyahane lojistiği için AGV güzergaıhı yazan yazılım dinamik engel algılaması yüzünden 2 kez yeniden çaltıldı. Sonunda stabil ancak daha erken test edilebilirdi.",
                 "created_at": "2026-02-24T06:16:58.210Z",
                 "author": "Tugrul H. - Bakim Muhendisi"
           },
@@ -269,7 +269,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.8,
                 "musteri_iliskisi_puan": 3.4,
                 "surec_yonetimi_puan": 3.6,
-                "yorum": "Sensor verileri bazen tutarsizlik gosteriyor, kalite standartlarimizin biraz altinda kaldi. Ayrica faturalandirma asamasindaki iletisimleri oldukca soguktu.",
+                "yorum": "CNC tezgah besleme robotu 4 eksenli, 18 kg yük aldı. Yükleme döngüsü 8 saniye — teklifteki 9 saniyenin altında. Önerilen yakılaştirma çıkış konumu mükemmel çalıştı.",
                 "created_at": "2025-08-24T18:59:10.410Z",
                 "author": "Cemre T. - Teknik Mudur"
           }
@@ -300,7 +300,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.4,
                 "musteri_iliskisi_puan": 4.6,
                 "surec_yonetimi_puan": 4.2,
-                "yorum": "Punta kaynak hucrelerinde oldukca tecrubeliler. Sordugumuz her soruya sabirla yanit verdiler. Sadece guvenlik citlerinin montajinda ufak bir gecikme oldu.",
+                "yorum": "İlaç ambalaj hattında süreklilik önemliydi; firma gece shift’iyle devreye aldı. Hipersteril oda sertifikası aldıkça prosedEr adlandı düşürmüştü ama düzeltti.",
                 "created_at": "2026-05-03T04:14:21.806Z",
                 "author": "Okan V. - ISG Uzmani"
           },
@@ -308,7 +308,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.6,
                 "musteri_iliskisi_puan": 4.4,
                 "surec_yonetimi_puan": 4.4,
-                "yorum": "Hucre cok verimli calisiyor. Robot yorungeleri harika optimize edilmis. Proje yonetimi basariliydi, neredeyse hic surpriz masraf cikarmadilar.",
+                "yorum": "Elektronik kart test otomasyon sistemi ıskalası fabrikasına kuruldu. Vision tarafı çalışıyor ancak raporlama modülü kaçınması gereken false-positive üretiyor, güncelleme bekliyor.",
                 "created_at": "2025-07-29T01:06:05.454Z",
                 "author": "Gulsah N. - Proje Uzmani"
           }
@@ -339,7 +339,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4,
                 "musteri_iliskisi_puan": 5,
                 "surec_yonetimi_puan": 4,
-                "yorum": "Gida paketleme hattimizda cok temiz bir is cikardilar. Hijyen standartlarina uyum mukemmeldi. Surec yonetiminde malzeme tedarikinden kaynakli kisa duraksamalar oldu.",
+                "yorum": "Plastik enjeksiyon tezgahının robot araçlığı sprue kesici entegrasyonu beklenmedik vakum başarısızlığına uğradi. Tasarimi revize ettiler, kalite daha iyi.",
                 "created_at": "2026-03-06T18:08:34.435Z",
                 "author": "Yasin F. - Gida Muhendisi"
           },
@@ -347,7 +347,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.2,
                 "musteri_iliskisi_puan": 4.8,
                 "surec_yonetimi_puan": 4.2,
-                "yorum": "Sistem tasarimi hijyenik ve yikamaya uygun. Iletisimleri her zaman seffafti. Isin bitis tarihi soz verilenden sadece birkac gun sapti, kabul edilebilir.",
+                "yorum": "Metal bükme ve presleme hücresinde servo kaynaklı parça poz pozlaması çok hassas. 6 saat mühendisin saha desteği ile yapılandırma tamamlandı.",
                 "created_at": "2025-08-14T07:03:37.101Z",
                 "author": "Ece D. - Kalite Guvence"
           }
@@ -378,7 +378,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.2,
                 "musteri_iliskisi_puan": 3.6,
                 "surec_yonetimi_puan": 3,
-                "yorum": "Pres hatti transfer robotu kurulumunda cok zorlandilar. Sistem surekli acil stop veriyordu. Sonunda cozduler ama iletisimleri bu surecte yeterince seffaf degildi.",
+                "yorum": "Depo otomasyon sisteminde RF barkod okuyucu şeridsği firmware hatası kaynaklı çökme yaşıyordu. Firmware güncellemesi sonrası kesintisiz çalıştı.",
                 "created_at": "2026-02-04T04:00:15.534Z",
                 "author": "Dogan R. - Preshane Sefi"
           },
@@ -386,7 +386,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.6,
                 "musteri_iliskisi_puan": 3.2,
                 "surec_yonetimi_puan": 3.4,
-                "yorum": "Robot tasima kapasitesi sinirda secilmis, mekanik titremeler oluyor. Proje boyunca yoneticilerine ulasmakta zorlandik. Takvim epey sapti.",
+                "yorum": "Ambalaj hattı robot pnomatik sistemi yeni çift-katlı valf grubuyla yenilendi. Gücü düşükken yavaslayan kol sorunu çözüldü; verimlilik %18 arttı.",
                 "created_at": "2025-07-25T18:50:13.157Z",
                 "author": "Bulent M. - Yatirim Muduru"
           }
@@ -417,7 +417,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 5,
                 "musteri_iliskisi_puan": 5,
                 "surec_yonetimi_puan": 4.8,
-                "yorum": "Savunma sanayi projemizdeki yuksek gizlilik ve hassasiyet taleplerimizi harfiyen yerine getirdiler. Kusursuz bir proje yonetimi ve muazzam bir kalite.",
+                "yorum": "Otomotiv karoser kaynak hattı entegrasyonunda jig toleransı ±0.1 mm'ye düşürüldü. 3 yeni robot kola ek olarak mevcut 5 kol da yeniden kalibre edildi, hepsi tek oturumda.",
                 "created_at": "2026-04-01T19:56:33.826Z",
                 "author": "Cengiz K. - Guvenlik Muduru"
           },
@@ -425,7 +425,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.8,
                 "musteri_iliskisi_puan": 4.8,
                 "surec_yonetimi_puan": 5,
-                "yorum": "Talasli imalat entegrasyonunda 1 mikron hassasiyetle calistilar. Ekip cok yetkin. Hicbir sorun yasamadik, teslimat bir gun bile gecikmedi.",
+                "yorum": "Härterei fırın sıcaklık SCADA izleme sistemi kuruldu. Alarm eşiği yanlış ayarlanmıştı, ilk haftada gerçek alarm olmayan tetikleme oluştu ama hızlı düzeldi.",
                 "created_at": "2025-08-03T03:57:42.845Z",
                 "author": "Alper T. - CNC Sorumlusu"
           }
@@ -456,7 +456,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.4,
                 "musteri_iliskisi_puan": 4,
                 "surec_yonetimi_puan": 4.6,
-                "yorum": "Ilac sektorundeki kutulama otomasyonunda iyi bir is cikardilar. Dokumantasyon surecleri tam zamaninda bitti. Sadece operator egitimleri biraz aceleye geldi.",
+                "yorum": "Gıda düzültme ve küpürdatma hattında vision sistemi renk bazlı kusur tespiti yapıyor. Performans beklenenden iyi; erken teslim bile gerçekleşti.",
                 "created_at": "2026-01-10T05:58:02.206Z",
                 "author": "Selim B. - Validasyon Uzmani"
           },
@@ -464,7 +464,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.6,
                 "musteri_iliskisi_puan": 4.2,
                 "surec_yonetimi_puan": 4.4,
-                "yorum": "Sistem FDA standartlarina tamamen uygun. Proje plani tikir tikir isledi. Teknik ekipleriyle iletisim bazen yavaslasa da sorunlari hep cozduler.",
+                "yorum": "Proje boyunca gerçek zamanlı haftalık ilerleme raporu alındı. Bazı raporlar veri eksikti ama hafta içinde tamamlandı.",
                 "created_at": "2025-06-22T11:34:16.333Z",
                 "author": "Merve K. - Regulasyon Muduru"
           }
@@ -495,7 +495,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.6,
                 "musteri_iliskisi_puan": 4.6,
                 "surec_yonetimi_puan": 3.8,
-                "yorum": "Boya robotu kurulumunda puskurtme kalitesi baslarda sorunluydu. Ancak o kadar cok ugrastilar ve iyi niyetlilerdi ki sorunu tamamen cozene kadar fabrikadan cikmadilar.",
+                "yorum": "Robot yeniden programlama sürecinde üretim 6 saat durdu, planıanan 4 saat yerine. Ek mesai bedeli tazmin edilmedi; sözleşme nettir.",
                 "created_at": "2026-01-08T18:39:14.371Z",
                 "author": "Turgut C. - Boyahane Sefi"
           },
@@ -503,7 +503,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.8,
                 "musteri_iliskisi_puan": 4.4,
                 "surec_yonetimi_puan": 3.4,
-                "yorum": "Filtreleme sisteminde yapilan bir tasarim hatasi sureci biraz uzatti. Cozum odakli yaklasimlari sayesinde kriz buyumeden asildi.",
+                "yorum": "Devreye alma sonrası ilk ayda 3 kez teknik ekip sahıya geldi. Her defasında sorunu uzaktan da çözebilirlerdi ama yerinde çözmeyi tercih ettiler.",
                 "created_at": "2025-10-15T01:21:39.880Z",
                 "author": "Nalan G. - Cevre Muhendisi"
           }
@@ -534,7 +534,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.2,
                 "musteri_iliskisi_puan": 3.8,
                 "surec_yonetimi_puan": 4,
-                "yorum": "Kutu dikme makinesi ile robot kol senkronizasyonu guzel. Mekanik parcalar kaliteli. Fakat yazilim revizyon taleplerimize cok gec donus yapiyorlar.",
+                "yorum": "Hat durma süresi ilk çeyrekte %2.1'den %0.4'e indi. En büyük katkı konveyör senkronizasyon iyileştirmesinden geldi.",
                 "created_at": "2026-04-18T01:26:58.260Z",
                 "author": "Orhan E. - Ambalaj Sefi"
           },
@@ -542,7 +542,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4,
                 "musteri_iliskisi_puan": 3.4,
                 "surec_yonetimi_puan": 4.2,
-                "yorum": "Genel olarak projenin gidisatindan memnun kaldik, zamaninda teslim edildi. Ancak faturalasma ve sozlesme asamasindaki kati tutumlari biraz yorucuydu.",
+                "yorum": "Üretim sırasında hattan geçen ilk 1000 parça sıfır hurda ile tamamlandı. Bazı hizalama ayarı gerekti ama sonunda mükemmel.",
                 "created_at": "2025-11-09T22:43:30.216Z",
                 "author": "Didem A. - Finans Sorumlusu"
           }
@@ -573,7 +573,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.8,
                 "musteri_iliskisi_puan": 4.6,
                 "surec_yonetimi_puan": 4.8,
-                "yorum": "Sifirdan kurduklari beyaz esya montaj hatti tikir tikir isliyor. Surecte bizim bile ongoremedigimiz riskleri gorup engellediler. Iletisimleri kuvvetli.",
+                "yorum": "Sistem devreye alırken eski PLC ile yeni SCADA arasındaki Modbus haberleşmesi çaklıyordu. Çözüm bir hafta sürdü ama çok kalıcı.",
                 "created_at": "2026-01-03T13:06:15.888Z",
                 "author": "Sinan Y. - Montaj Muduru"
           },
@@ -581,7 +581,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 5,
                 "musteri_iliskisi_puan": 4.8,
                 "surec_yonetimi_puan": 4.6,
-                "yorum": "Mekanik toleranslar cok hassas ayarlanmis. Isin ehli bir muhendislik firmasi. Teslimat soz verilen tarihte yapildi, sonrasinda da hep destek oldular.",
+                "yorum": "Robot yolunu yeniden öğrenmeden önce simlasön çallıştırıldı, sahıda hiç çarpışma olmadı.",
                 "created_at": "2025-06-16T11:02:43.723Z",
                 "author": "Riza P. - Bas Muhendis"
           }
@@ -612,7 +612,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.8,
                 "musteri_iliskisi_puan": 4,
                 "surec_yonetimi_puan": 3.8,
-                "yorum": "Gorsel denetim istasyonu icin aydinlatma secimi bastan hatali yapildi, sonradan duzelttiler. Iletisimleri iyi olsa da planlama konusunda daha tecrubeli olmalilar.",
+                "yorum": "Konveyör bantları gıda standartlarına uygun malzemeyle değiştirildi. Bant ek kalitesi beklentinin üstünde.",
                 "created_at": "2026-05-03T10:42:09.775Z",
                 "author": "Kaan M. - Kalite Teknisyeni"
           },
@@ -620,7 +620,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4,
                 "musteri_iliskisi_puan": 3.6,
                 "surec_yonetimi_puan": 3.4,
-                "yorum": "Sistem su an stabil ama o noktaya gelene kadar epey zaman kaybettik. Saha ekibi sorularimiza bazen kacamak yanitlar verdi. Surec yonetimi ortalamaydi.",
+                "yorum": "Güvenlik çiti lazer perdesiyle entegre edildi. İlk testlerde tetikleme gecikmesi standartın altındaydı; yeniden ayarlandı.",
                 "created_at": "2025-07-17T17:43:04.989Z",
                 "author": "Leman T. - Proses Kontrol"
           }
@@ -651,7 +651,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.6,
                 "musteri_iliskisi_puan": 4.8,
                 "surec_yonetimi_puan": 4.4,
-                "yorum": "Talasli imalat makinelerimize entegre ettikleri 7 eksenli robot harika is cikariyor. Teknik destekleri cok hizli. Kurulumda sadece kucuk mekanik puruzler yasandi.",
+                "yorum": "Servo motor parametreleri fabıça sahaya gelip yerinde optimize etti. Ekstra gidip gelme hem zaman hem bizçin çaba harcattı ama sonunda sert çalıştı.",
                 "created_at": "2025-11-15T08:14:20.974Z",
                 "author": "Emre Z. - Atolye Sefi"
           },
@@ -659,7 +659,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.8,
                 "musteri_iliskisi_puan": 4.6,
                 "surec_yonetimi_puan": 4.8,
-                "yorum": "Zorlu bir dar alan calismasiydi ama 3D simulasyonlarla her seyi onceden cozmuslerdi. Seffaf iletisim ve zamaninda teslimat icin tesekkurler.",
+                "yorum": "Fabrikasımızdaki pres beslemede vakum kavrama basıncı tutarsız çıkıyordu; valf temizlenerek çözüldü, takip çok hızlıydı.",
                 "created_at": "2025-05-25T02:12:42.334Z",
                 "author": "Koray B. - Fabrika Muduru"
           }
@@ -690,7 +690,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.4,
                 "musteri_iliskisi_puan": 3.2,
                 "surec_yonetimi_puan": 3.6,
-                "yorum": "Plastik enjeksiyon makinesi robotunda tutucu (gripper) tasarimi zayifti, parcalari dusuruyordu. Geri bildirimlerimizi dikkate alip duzelttiler ama surec cok yipraticiydi.",
+                "yorum": "Robot teach kolunu operatTür eğitimleri çok yeterliydi. 5 operatTtür aynı gün sertifika aldı.",
                 "created_at": "2026-05-02T21:52:47.660Z",
                 "author": "Ugur N. - Enjeksiyon Sefi"
           },
@@ -698,7 +698,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.6,
                 "musteri_iliskisi_puan": 3.4,
                 "surec_yonetimi_puan": 3.2,
-                "yorum": "Cevrim sureleri istedigimiz degere cok zor ulasti. Satis muhendisleriyle proje ekibi arasinda ciddi bir kopukluk var. Teslimat 3 hafta gecikti.",
+                "yorum": "Depo AGV filosuna engel tanıma kamera montajı yapıldı. Sıcak-respot sorunu neden iki hafta geçikmeye yol açtı açıklanmadı.",
                 "created_at": "2025-07-27T12:27:25.981Z",
                 "author": "Ceyda S. - Uretim Sorumlusu"
           }
@@ -729,7 +729,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.2,
                 "musteri_iliskisi_puan": 4.4,
                 "surec_yonetimi_puan": 4.8,
-                "yorum": "Karton paketleme hucresinde tasarim cok kompakt ve verimli. Surec yonetimleri harika, her adimi raporladilar. Ufak tefek sensor arizalari disinda cok iyi.",
+                "yorum": "PLC kodunda deadlock durumu başlangıçta gözden kaçmıştı, 500. döngüde tetiklendi. Firmware güncellemesiyle düzeldi.",
                 "created_at": "2026-02-09T17:40:05.756Z",
                 "author": "Baris H. - Paketleme Lideri"
           },
@@ -737,7 +737,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.6,
                 "musteri_iliskisi_puan": 4,
                 "surec_yonetimi_puan": 4.6,
-                "yorum": "Iscilik kalitesi ust duzeyde. Devreye alma planina harfiyen uyuldu. Fakat egitim surecinde operatorlerimizin sorularina daha fazla vakit ayrilabilirdi.",
+                "yorum": "Hat sonu sargı makinesi entegrasyonunda kablo yuvarlak boru çarpışma sorunu vardı. Mekanigin düşünmediği bir detay ama çabuk çözdüler.",
                 "created_at": "2025-07-26T02:47:05.396Z",
                 "author": "Neslihan Y. - IK ve Egitim"
           }
@@ -768,7 +768,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 5,
                 "musteri_iliskisi_puan": 4.8,
                 "surec_yonetimi_puan": 5,
-                "yorum": "Agir sanayi parcalarinin tasinmasinda kurduklari gantry sistem mukemmel. Hem surec hem kalite acisindan beklentimizin cok ustundeler. Ekip cok cana yakin.",
+                "yorum": "Galvaniz kaplı bandırma hattında sıvı seviye sensörü yanlış konumlanmıştı. Pozisyon değiştirildi, artık sapma yok.",
                 "created_at": "2025-11-23T19:50:34.869Z",
                 "author": "Volkan D. - Uretim Direktoru"
           },
@@ -776,7 +776,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.8,
                 "musteri_iliskisi_puan": 5,
                 "surec_yonetimi_puan": 4.8,
-                "yorum": "Sifir is kazasi ve tam zamaninda teslimat. Is guvenligi konusundaki hassasiyetleri cok etkileyiciydi. Her aradigimizda dogrudan muhatap bulabildik.",
+                "yorum": "Robotik palet sargacı 100 devrimde gerilim aşımı alıyordu. Motor sürücsü PID ayarı düzelttikten sonra sorunsuz.",
                 "created_at": "2025-07-09T08:20:35.074Z",
                 "author": "Pinar E. - ISG Yoneticisi"
           }
@@ -807,7 +807,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3,
                 "musteri_iliskisi_puan": 3.4,
                 "surec_yonetimi_puan": 3,
-                "yorum": "Otomatik depolama sisteminin yaziliminda cok fazla bug vardi. Stoklar birbirine girdi. Telefonlara cikiyorlar ama cozum uretmeleri haftalar surdu.",
+                "yorum": "Kestirimci bakım yazılımı bulut entegrasyonu çok düzülçe yapıldı; ekibimiz kendi öngörüsel modelini ekleyebiliyor.",
                 "created_at": "2026-03-13T06:18:40.090Z",
                 "author": "Serdar O. - Depo Yoneticisi"
           },
@@ -815,7 +815,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.2,
                 "musteri_iliskisi_puan": 3.8,
                 "surec_yonetimi_puan": 3.4,
-                "yorum": "Mekanik raylarda esneme problemleri yasadik. Iletisimleri fena degil, niyetleri iyi ama proje planlamasi ve muhendislik hesaplamalari cok zayifti.",
+                "yorum": "Sistem kabul testlerinde tüm KPI'lar ilk denemede geçildi. Çok az entegratör bunu başarır.",
                 "created_at": "2025-10-06T17:36:53.236Z",
                 "author": "Gaye R. - Tedarik Muduru"
           }
@@ -846,7 +846,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.6,
                 "musteri_iliskisi_puan": 4.2,
                 "surec_yonetimi_puan": 4.4,
-                "yorum": "Dokumhane ortaminin zor sartlarina dayanikli bir hucre kurdular. Malzeme kalitesi cok iyi. Ancak saha montaj ekibi fabrikamizin kurallarina uyumda biraz zorlandi.",
+                "yorum": "Hattın fizibilite aşamasından devreye almaya kadar çok iyi dokümantasyon sağladılar. Eski entegratörümüze göre çok daha kurumsal.",
                 "created_at": "2026-04-13T04:46:51.756Z",
                 "author": "Tarik C. - Dokumhane Sefi"
           },
@@ -854,7 +854,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.4,
                 "musteri_iliskisi_puan": 4.6,
                 "surec_yonetimi_puan": 4.8,
-                "yorum": "Projeyi soz verilen tarihten bile once teslim ettiler. Iletisimleri iyi. Calisma ortami cok tozlu olmasina ragmen sistem sorunsuz isliyor.",
+                "yorum": "Robot yerleşim planı ilk taslakta fabrika trafik akışını bloke ediyordu. Revize teklif hızlı geldi, akış düzeltildi.",
                 "created_at": "2025-07-27T08:01:26.737Z",
                 "author": "Suleyman K. - Bakim Muduru"
           }
@@ -885,7 +885,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4,
                 "musteri_iliskisi_puan": 4.8,
                 "surec_yonetimi_puan": 4,
-                "yorum": "Kablo gruplama makinesi entegrasyonunda ufak tefek puruzler oldu ama o kadar ilgililerdi ki hic sorun etmedik. Surec yonetimini daha seffaf yapabilirler.",
+                "yorum": "Vizyonla desteklenen çıktı sıralama sistemi aydInlatma düzenine duyarlı olduğundan gece shift’inde hata oranları yüksekti. LED armatTtür eklenerek çözüldü.",
                 "created_at": "2025-12-23T12:01:43.970Z",
                 "author": "Asli M. - Uretim Lideri"
           },
@@ -893,7 +893,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.2,
                 "musteri_iliskisi_puan": 4.6,
                 "surec_yonetimi_puan": 4.2,
-                "yorum": "Montaj hattimiz icin yaptiklari fiksturler gayet basarili. Ekip cok sempatik ve uyumlu. Teslimatta yasanan lojistik gecikmesini hizlica telafi ettiler.",
+                "yorum": "Siemens TIA Portal üzerinde yazılan blok kütpühanesi çok modTtüleer; başka hatlarımızda da kullanmayı planlIyoruz.",
                 "created_at": "2025-11-10T07:25:34.294Z",
                 "author": "Mesut Y. - Hat Muhendisi"
           }
@@ -924,7 +924,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4.8,
                 "musteri_iliskisi_puan": 4.6,
                 "surec_yonetimi_puan": 4.8,
-                "yorum": "Savunma sanayi muhimmat dolum hattini sifir hata toleransiyla tamamladilar. Surec boyunca her adimi dokumante ettiler. Gonul rahatligiyla calisabilirsiniz.",
+                "yorum": "Makına talkımı çarpışma senaryolarını offline simülasıyon ile önceden yönettiler. Sahada hiç surpriz olmadı.",
                 "created_at": "2026-03-02T18:58:12.099Z",
                 "author": "Ibrahim T. - Proje Yoneticisi"
           },
@@ -932,7 +932,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 5,
                 "musteri_iliskisi_puan": 4.8,
                 "surec_yonetimi_puan": 4.6,
-                "yorum": "Test asamalari son derece titizdi. Iletisim agi cok guclu, genel mudurlerine kadar ulasabildik. Planlamada sadece malzeme tedariki kaynakli ufak bir sapma oldu.",
+                "yorum": "Toz-geçirmez kabınetten çıkan ısı birikimine karşı havalandırma tasarlanırken proje ekibi ortam ısısını ölçmedi. Sonradan fan eklendi.",
                 "created_at": "2025-06-30T20:24:21.363Z",
                 "author": "Hasan E. - Tedarik Direktoru"
           }
@@ -963,7 +963,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 3.8,
                 "musteri_iliskisi_puan": 3.6,
                 "surec_yonetimi_puan": 3.4,
-                "yorum": "Gida sektorundeki sivi dolum makinesinde damlatma problemini haftalarca cozemediler. Iletisim zaman zaman koptu. Sonunda halledildi ama proje takvimi sasti.",
+                "yorum": "Hassas montaj hücresi ışık korumalı kafes gerektirdi. Proje süresine eklendi ve yasal uyumluluk sağlandı.",
                 "created_at": "2025-11-14T12:36:09.762Z",
                 "author": "Busra V. - Uretim Sorumlusu"
           },
@@ -971,7 +971,7 @@ const rawEntegratorler: any[] = [
                 "kalite_puan": 4,
                 "musteri_iliskisi_puan": 4,
                 "surec_yonetimi_puan": 3.8,
-                "yorum": "Sistem kalite olarak kabul edilebilir seviyede. Ancak devreye alma surecinde sahada yetkin bir amir yoktu, koordinasyonu biz saglamak zorunda kaldik.",
+                "yorum": "OPC-UA veri köprüsü kurulumı ilk gün çalıştı. MES entegrasyonu sıfır sorunla tamamlandı — beklentinin üzerindeydi.",
                 "created_at": "2025-09-14T20:53:26.459Z",
                 "author": "Kenan D. - Tesis Yoneticisi"
           }
@@ -1002,7 +1002,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.8,
             "musteri_iliskisi_puan": 4.5,
             "surec_yonetimi_puan": 4.7,
-            "yorum": "Robotik kaynak hücresinin mekanik kalitesi beklentilerimizin ötesindeydi. Devreye alma sürecinde mühendisleri sahada 7/24 destek verdi.",
+            "yorum": "Mobil HMI üzerinden alarm yönetimi ilk versiyonda iOS'ta düzgün görünmTtüyordu. Bir günce ile düzeldi, ciddi bir sorun değildi.",
             "created_at": "2025-11-10T08:20:00.000Z",
             "author": "Kadir A. - Üretim Direktörü"
       },
@@ -1010,7 +1010,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.6,
             "musteri_iliskisi_puan": 4.8,
             "surec_yonetimi_puan": 4.4,
-            "yorum": "İletişim mükemmeldi, her aşamada gelişme raporu aldık. Ufak bir kablo yeniden yönlendirme gecikmesi dışında proje takvime uydu.",
+            "yorum": "Robotun tool değişim istasyonu çok dar boşlukla yerleştirilmişti; tüç bakım teknisıyeni ulaşamIyordu. Revize edildi.",
             "created_at": "2025-08-22T14:10:00.000Z",
             "author": "Emre S. - Proje Yöneticisi"
       }
@@ -1041,7 +1041,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.8,
             "musteri_iliskisi_puan": 3.5,
             "surec_yonetimi_puan": 3.2,
-            "yorum": "AGV güzergah optimizasyonu defalarca revize edilmek zorunda kalındı. Saha ekibi deneyimliydi ama proje yönetiminde ciddi boşluklar vardı.",
+            "yorum": "Teslim sonrası 30 günüç keşüirim bakım ziyareti planlandı ve eksiksiz yapıldı. Çok az entegratör bu anlayışlı.",
             "created_at": "2025-09-05T09:00:00.000Z",
             "author": "Fatih Y. - Lojistik Müdürü"
       },
@@ -1049,7 +1049,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4,
             "musteri_iliskisi_puan": 3.8,
             "surec_yonetimi_puan": 3.5,
-            "yorum": "Sistem sonunda istikrarlı çalışmaya başladı. Başlangıçtaki sorunlar çözüldükten sonra verimlilik hedefimize ulaştık.",
+            "yorum": "Programlama ekibi farklı kod tabanları başlangIçta versiyon uyuşmazlığı yaşıyordu. Git yapılandırmasından sonra takım entegrasyonu çok daha iyi.",
             "created_at": "2025-12-01T11:30:00.000Z",
             "author": "Selin T. - Tesis Yöneticisi"
       },
@@ -1057,7 +1057,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.2,
             "musteri_iliskisi_puan": 4,
             "surec_yonetimi_puan": 3.8,
-            "yorum": "Teknik ekip bilgiliydi ancak raporlama döngüsü netleşene kadar zaman kaybedildi. Uzun vadede doğru bir seçimdi.",
+            "yorum": "Paletleme robotu paket ağırlığı dengesizliklerini telafi eden dinamik tutucu vardı. Saha testleri mükkemmel geçti.",
             "created_at": "2026-01-15T16:45:00.000Z",
             "author": "Mert K. - Operasyon Şefi"
       }
@@ -1088,7 +1088,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 5,
             "musteri_iliskisi_puan": 4.9,
             "surec_yonetimi_puan": 5,
-            "yorum": "Scada sistemi sıfır hata ile devreye alındı. Canlı izleme paneli fabrikamızın en kritik yatırımlarından biri haline geldi.",
+            "yorum": "Kestirimci bakım sensTörleri makine titresim ölçümleri ile sinyal frekans analizi birleştiriyor. Çok ilerici bir yaklaşım, fabrikamızın arIza maliyeti %30 azaldı.",
             "created_at": "2025-07-18T10:00:00.000Z",
             "author": "Alp D. - Fabrika Müdürü"
       },
@@ -1096,7 +1096,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.9,
             "musteri_iliskisi_puan": 5,
             "surec_yonetimi_puan": 4.8,
-            "yorum": "Kestirimci bakım modülü sayesinde 3 ayda toplam 12 planlanmamış duruş önlendi. Yatırımın geri dönüşü 6 ayda gerçekleşti.",
+            "yorum": "Elektriksel panel yazılımın öteki bölümTünden yapılan ısı iletimi kesimi hesaplanmamıştı; üretici alternatif montaj düzenlemesi önerdi.",
             "created_at": "2025-10-30T07:55:00.000Z",
             "author": "Berna Ç. - Bakım Direktörü"
       }
@@ -1127,7 +1127,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.3,
             "musteri_iliskisi_puan": 4.6,
             "surec_yonetimi_puan": 4.1,
-            "yorum": "Paletleme robotunun kol hassasiyeti gıda standartlarını rahatlıkla karşıladı. Kurulum sonrası eğitim süreci oldukça kapsamlıydı.",
+            "yorum": "Kalıp transferi robotu tüm özelliğiyle devreye alındı, ama kullanıcı el kitabı Türkçe versiyonu gelecek ay gelecek.",
             "created_at": "2025-06-12T13:20:00.000Z",
             "author": "Hüseyin Y. - Kalite Şefi"
       },
@@ -1135,7 +1135,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.5,
             "musteri_iliskisi_puan": 4.3,
             "surec_yonetimi_puan": 4.2,
-            "yorum": "Hat sonu paketleme kapasitemiz %40 arttı. Proje biraz uzasa da mühendislik kalitesi takdire şayandı.",
+            "yorum": "Alarm yönetimi felsefesi çok iyi tasarlanmış; kritik alarmlar birincil sınıfta, bilgi alarmları üçüncü sınıfta gruplanmış.",
             "created_at": "2025-04-08T08:30:00.000Z",
             "author": "Zeynep A. - Üretim Müdürü"
       }
@@ -1166,7 +1166,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.5,
             "musteri_iliskisi_puan": 3,
             "surec_yonetimi_puan": 3.2,
-            "yorum": "Makine besleme sisteminde ilk aylarda yüksek fire oranı yaşandı. Revizyon sonrası düzeldi ama süreç sancılıydı.",
+            "yorum": "Robotik kaynak hücresi devreye alınırken ilk hafta ark sapmıyor, kaynak dikis kalitesi spesifikasyonun üstünde (±0.3µm). Parametreleri telefonla anlatıldı, daha iyi belgeleme beklerdik.",
             "created_at": "2026-02-20T09:15:00.000Z",
             "author": "Cenk B. - Mühendis"
       },
@@ -1174,7 +1174,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.8,
             "musteri_iliskisi_puan": 3.5,
             "surec_yonetimi_puan": 3,
-            "yorum": "Proje teslim tarihi iki kez ertelendi. Sonuç iş görür ama beklentilerimizin altında kaldı.",
+            "yorum": "SCADA sisteminde üretim verisi 4 saniye gecikmeli akmıştı; Siemens S7-1500 tarafında byte offset hatası tespit edildi. Üretici bunu düzeltmeden teslim etti ama remote destek 2 saatte çözdü.",
             "created_at": "2026-03-10T14:00:00.000Z",
             "author": "Oya M. - Satın Alma Müdürü"
       }
@@ -1205,7 +1205,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.7,
             "musteri_iliskisi_puan": 4.4,
             "surec_yonetimi_puan": 4.6,
-            "yorum": "Görüntü işleme sistemi 0.01mm toleransı yakalıyor. Savunma sanayi gereksinimlerimiz için birebir uygun.",
+            "yorum": "Hat sonu paletleme hızı saatte 1 200 kutuda kaldı, teklifteki 1 400 hedefine ulaşılamadı. Mekanik yeniden çalişılarak 6 haftada hedef yakalandı, geçikme can sıktı.",
             "created_at": "2025-05-22T11:00:00.000Z",
             "author": "Sercan D. - Kalite Direktörü"
       },
@@ -1213,7 +1213,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.5,
             "musteri_iliskisi_puan": 4.6,
             "surec_yonetimi_puan": 4.3,
-            "yorum": "Entegrasyon sürecinde doküman yönetimi çok profesyoneldi. Her revizyon izlenebilir ve onaylı şekilde işlendi.",
+            "yorum": "AGV filosu 18 aracın tümü zamanlamaya uydu, depo trafik algoritması yerinde yazıldı. Devreye alma sürecinde hiç durmaksızın üretim devam etti — çok başarılı bir planlama.",
             "created_at": "2025-08-14T15:30:00.000Z",
             "author": "Nilgün T. - Proje Koordinatörü"
       }
@@ -1244,7 +1244,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.1,
             "musteri_iliskisi_puan": 4.4,
             "surec_yonetimi_puan": 3.9,
-            "yorum": "PLC programlama tarafı sağlamdı, ancak HMI arayüzü operatör eğitimi gerektirdi. Sonuçta verimlilik artışı gerçekleşti.",
+            "yorum": "Görüntü işleme sistemine 0.05µm ince hata tespiti görevi verildi. Testlerde %99.2 doğru sonuç alındı, ancak kamera tutucusu tıtreme yapıyordu; çelik levha eklenerek çözüldü.",
             "created_at": "2025-12-05T10:45:00.000Z",
             "author": "Ahmet K. - Shift Amiri"
       },
@@ -1252,7 +1252,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.3,
             "musteri_iliskisi_puan": 4.2,
             "surec_yonetimi_puan": 4,
-            "yorum": "Destek ekibi sorulara hızlı dönüş yaptı. Yedek parça tedariki zaman zaman gecikse de operasyon durmadı.",
+            "yorum": "PLC programı hattı yeniden yazılırken 3 farklı Omron ünitesi tek merkezi haberleşmeye bağlanmalıydı. Protokol dönüşümü başlangıçta sorun çıkardı, son haliyle çok temiz çalışıyor.",
             "created_at": "2026-01-28T08:00:00.000Z",
             "author": "Leyla S. - Bakım Şefi"
       }
@@ -1283,7 +1283,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.9,
             "musteri_iliskisi_puan": 5,
             "surec_yonetimi_puan": 4.8,
-            "yorum": "Tekstil hattındaki robot programlama teslimi zamanında ve eksiksiz yapıldı. Üretim verimliliğimiz ilk haftada %25 arttı.",
+            "yorum": "Kestirimci bakım modülü 3 ayda toplam 9 planlanmamış duruluyor önledi. Titreşim sensörleri doğru yerleştirilmiş, analitik panel operatif açıdan anlaşılır.",
             "created_at": "2025-03-18T07:30:00.000Z",
             "author": "Çetin A. - Genel Müdür"
       },
@@ -1291,7 +1291,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.8,
             "musteri_iliskisi_puan": 4.7,
             "surec_yonetimi_puan": 4.9,
-            "yorum": "Proje yönetimi olağanüstüydü. MS Project bazlı ilerleme raporları her Pazartesi masaydaydı.",
+            "yorum": "Punta kaynak robotunda ilk 200 parcada merkezleme sapması oluştu. Firma hızlı araya girdi ve fixture toleransını sıfırlamakla çözdü; bu hızdaki yanıt takdire şayan.",
             "created_at": "2025-07-07T09:00:00.000Z",
             "author": "Pınar Y. - Operasyon Direktörü"
       }
@@ -1322,7 +1322,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.6,
             "musteri_iliskisi_puan": 4,
             "surec_yonetimi_puan": 3.4,
-            "yorum": "Ark kaynak hücresi işlevsel ama kaynak parametrelerini optimize etmek bizim ekibimize kaldı. Devreye alma desteği yetersizdi.",
+            "yorum": "Konveyör hız eşitlemesi otomotiv hattı ciklü zamanlarıyla eşleştirildi. Mekanik montaj hatasız, ama elektrik şemalama belgeleri geçici CAD olarak kaldı — as-built bekliyoruz.",
             "created_at": "2026-01-05T13:00:00.000Z",
             "author": "Gürkan D. - Kaynak Şefi"
       },
@@ -1330,7 +1330,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.9,
             "musteri_iliskisi_puan": 4.1,
             "surec_yonetimi_puan": 3.7,
-            "yorum": "İletişim iyiydi ama teslimatta eksik bileşenler vardı. Tamamlanması 3 hafta ek süre aldı.",
+            "yorum": "Makine besleme ünitesi 14” liğer döküm parçaları için optimize edildi. İlk 300 çevrimde düşenme çıkışı sıfıra indi; kapasite garantisi eksiksiz yerine getirildi.",
             "created_at": "2026-02-14T10:30:00.000Z",
             "author": "Esin Ç. - Tedarik Zinciri Müdürü"
       }
@@ -1361,7 +1361,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.6,
             "musteri_iliskisi_puan": 4.3,
             "surec_yonetimi_puan": 4.5,
-            "yorum": "Konveyör ve paletleme entegrasyonu sorunsuz gerçekleşti. Özellikle yazılım tarafındaki çözümleri çok esnekti.",
+            "yorum": "Savunma sanayi parçası lazer kesim entegrasyonu NATO sertifikası gerektirdi. Tüm dokümantasyon tam ve zamanında teslim edildi, müfettiş denetiminde sıfır bulgu.",
             "created_at": "2025-09-25T14:00:00.000Z",
             "author": "Barış T. - Sistem Entegrasyon Müdürü"
       },
@@ -1369,7 +1369,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.4,
             "musteri_iliskisi_puan": 4.5,
             "surec_yonetimi_puan": 4.3,
-            "yorum": "Test ve kabul aşamaları titizlikle yürütüldü. Tesis geçiş süreci minimum üretim kaybıyla tamamlandı.",
+            "yorum": "Gıda paketleme hattında ISO 22000 hijyen gereksinimleri nedeniyle robot bileşenleri paslanmaz çelik kaplamaya dönüştürüldü. Üretici bu konuda deneyimli ve önerisi isabetli çıktı.",
             "created_at": "2025-11-30T16:00:00.000Z",
             "author": "Sinem A. - Kalite Güvence Direktörü"
       }
@@ -1400,7 +1400,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.8,
             "musteri_iliskisi_puan": 4.5,
             "surec_yonetimi_puan": 4.7,
-            "yorum": "Robotik kaynak hücresinin mekanik kalitesi beklentilerimizin ötesindeydi. Devreye alma sürecinde mühendisleri sahada 7/24 destek verdi.",
+            "yorum": "Tekstil fabrikasında boyahane lojistiği için AGV güzergaıhı yazan yazılım dinamik engel algılaması yüzünden 2 kez yeniden çaltıldı. Sonunda stabil ancak daha erken test edilebilirdi.",
             "created_at": "2025-11-10T08:20:00.000Z",
             "author": "Kadir A. - Üretim Direktörü"
       },
@@ -1408,7 +1408,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.6,
             "musteri_iliskisi_puan": 4.8,
             "surec_yonetimi_puan": 4.4,
-            "yorum": "İletişim mükemmeldi, her aşamada gelişme raporu aldık. Ufak bir kablo yeniden yönlendirme gecikmesi dışında proje takvime uydu.",
+            "yorum": "CNC tezgah besleme robotu 4 eksenli, 18 kg yük aldı. Yükleme döngüsü 8 saniye — teklifteki 9 saniyenin altında. Önerilen yakılaştirma çıkış konumu mükemmel çalıştı.",
             "created_at": "2025-08-22T14:10:00.000Z",
             "author": "Emre S. - Proje Yöneticisi"
       }
@@ -1439,7 +1439,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.8,
             "musteri_iliskisi_puan": 3.5,
             "surec_yonetimi_puan": 3.2,
-            "yorum": "AGV güzergah optimizasyonu defalarca revize edilmek zorunda kalındı. Saha ekibi deneyimliydi ama proje yönetiminde ciddi boşluklar vardı.",
+            "yorum": "İlaç ambalaj hattında süreklilik önemliydi; firma gece shift’iyle devreye aldı. Hipersteril oda sertifikası aldıkça prosedEr adlandı düşürmüştü ama düzeltti.",
             "created_at": "2025-09-05T09:00:00.000Z",
             "author": "Fatih Y. - Lojistik Müdürü"
       },
@@ -1447,7 +1447,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4,
             "musteri_iliskisi_puan": 3.8,
             "surec_yonetimi_puan": 3.5,
-            "yorum": "Sistem sonunda istikrarlı çalışmaya başladı. Başlangıçtaki sorunlar çözüldükten sonra verimlilik hedefimize ulaştık.",
+            "yorum": "Elektronik kart test otomasyon sistemi ıskalası fabrikasına kuruldu. Vision tarafı çalışıyor ancak raporlama modülü kaçınması gereken false-positive üretiyor, güncelleme bekliyor.",
             "created_at": "2025-12-01T11:30:00.000Z",
             "author": "Selin T. - Tesis Yöneticisi"
       },
@@ -1455,7 +1455,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.2,
             "musteri_iliskisi_puan": 4,
             "surec_yonetimi_puan": 3.8,
-            "yorum": "Teknik ekip bilgiliydi ancak raporlama döngüsü netleşene kadar zaman kaybedildi. Uzun vadede doğru bir seçimdi.",
+            "yorum": "Plastik enjeksiyon tezgahının robot araçlığı sprue kesici entegrasyonu beklenmedik vakum başarısızlığına uğradi. Tasarimi revize ettiler, kalite daha iyi.",
             "created_at": "2026-01-15T16:45:00.000Z",
             "author": "Mert K. - Operasyon Şefi"
       }
@@ -1486,7 +1486,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 5,
             "musteri_iliskisi_puan": 4.9,
             "surec_yonetimi_puan": 5,
-            "yorum": "Scada sistemi sıfır hata ile devreye alındı. Canlı izleme paneli fabrikamızın en kritik yatırımlarından biri haline geldi.",
+            "yorum": "Metal bükme ve presleme hücresinde servo kaynaklı parça poz pozlaması çok hassas. 6 saat mühendisin saha desteği ile yapılandırma tamamlandı.",
             "created_at": "2025-07-18T10:00:00.000Z",
             "author": "Alp D. - Fabrika Müdürü"
       },
@@ -1494,7 +1494,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.9,
             "musteri_iliskisi_puan": 5,
             "surec_yonetimi_puan": 4.8,
-            "yorum": "Kestirimci bakım modülü sayesinde 3 ayda toplam 12 planlanmamış duruş önlendi. Yatırımın geri dönüşü 6 ayda gerçekleşti.",
+            "yorum": "Depo otomasyon sisteminde RF barkod okuyucu şeridsği firmware hatası kaynaklı çökme yaşıyordu. Firmware güncellemesi sonrası kesintisiz çalıştı.",
             "created_at": "2025-10-30T07:55:00.000Z",
             "author": "Berna Ç. - Bakım Direktörü"
       }
@@ -1525,7 +1525,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.3,
             "musteri_iliskisi_puan": 4.6,
             "surec_yonetimi_puan": 4.1,
-            "yorum": "Paletleme robotunun kol hassasiyeti gıda standartlarını rahatlıkla karşıladı. Kurulum sonrası eğitim süreci oldukça kapsamlıydı.",
+            "yorum": "Ambalaj hattı robot pnomatik sistemi yeni çift-katlı valf grubuyla yenilendi. Gücü düşükken yavaslayan kol sorunu çözüldü; verimlilik %18 arttı.",
             "created_at": "2025-06-12T13:20:00.000Z",
             "author": "Hüseyin Y. - Kalite Şefi"
       },
@@ -1533,7 +1533,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.5,
             "musteri_iliskisi_puan": 4.3,
             "surec_yonetimi_puan": 4.2,
-            "yorum": "Hat sonu paketleme kapasitemiz %40 arttı. Proje biraz uzasa da mühendislik kalitesi takdire şayandı.",
+            "yorum": "Otomotiv karoser kaynak hattı entegrasyonunda jig toleransı ±0.1 mm'ye düşürüldü. 3 yeni robot kola ek olarak mevcut 5 kol da yeniden kalibre edildi, hepsi tek oturumda.",
             "created_at": "2025-04-08T08:30:00.000Z",
             "author": "Zeynep A. - Üretim Müdürü"
       }
@@ -1564,7 +1564,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.5,
             "musteri_iliskisi_puan": 3,
             "surec_yonetimi_puan": 3.2,
-            "yorum": "Makine besleme sisteminde ilk aylarda yüksek fire oranı yaşandı. Revizyon sonrası düzeldi ama süreç sancılıydı.",
+            "yorum": "Härterei fırın sıcaklık SCADA izleme sistemi kuruldu. Alarm eşiği yanlış ayarlanmıştı, ilk haftada gerçek alarm olmayan tetikleme oluştu ama hızlı düzeldi.",
             "created_at": "2026-02-20T09:15:00.000Z",
             "author": "Cenk B. - Mühendis"
       },
@@ -1572,7 +1572,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.8,
             "musteri_iliskisi_puan": 3.5,
             "surec_yonetimi_puan": 3,
-            "yorum": "Proje teslim tarihi iki kez ertelendi. Sonuç iş görür ama beklentilerimizin altında kaldı.",
+            "yorum": "Gıda düzültme ve küpürdatma hattında vision sistemi renk bazlı kusur tespiti yapıyor. Performans beklenenden iyi; erken teslim bile gerçekleşti.",
             "created_at": "2026-03-10T14:00:00.000Z",
             "author": "Oya M. - Satın Alma Müdürü"
       }
@@ -1603,7 +1603,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.7,
             "musteri_iliskisi_puan": 4.4,
             "surec_yonetimi_puan": 4.6,
-            "yorum": "Görüntü işleme sistemi 0.01mm toleransı yakalıyor. Savunma sanayi gereksinimlerimiz için birebir uygun.",
+            "yorum": "Proje boyunca gerçek zamanlı haftalık ilerleme raporu alındı. Bazı raporlar veri eksikti ama hafta içinde tamamlandı.",
             "created_at": "2025-05-22T11:00:00.000Z",
             "author": "Sercan D. - Kalite Direktörü"
       },
@@ -1611,7 +1611,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.5,
             "musteri_iliskisi_puan": 4.6,
             "surec_yonetimi_puan": 4.3,
-            "yorum": "Entegrasyon sürecinde doküman yönetimi çok profesyoneldi. Her revizyon izlenebilir ve onaylı şekilde işlendi.",
+            "yorum": "Robot yeniden programlama sürecinde üretim 6 saat durdu, planıanan 4 saat yerine. Ek mesai bedeli tazmin edilmedi; sözleşme nettir.",
             "created_at": "2025-08-14T15:30:00.000Z",
             "author": "Nilgün T. - Proje Koordinatörü"
       }
@@ -1642,7 +1642,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.1,
             "musteri_iliskisi_puan": 4.4,
             "surec_yonetimi_puan": 3.9,
-            "yorum": "PLC programlama tarafı sağlamdı, ancak HMI arayüzü operatör eğitimi gerektirdi. Sonuçta verimlilik artışı gerçekleşti.",
+            "yorum": "Devreye alma sonrası ilk ayda 3 kez teknik ekip sahıya geldi. Her defasında sorunu uzaktan da çözebilirlerdi ama yerinde çözmeyi tercih ettiler.",
             "created_at": "2025-12-05T10:45:00.000Z",
             "author": "Ahmet K. - Shift Amiri"
       },
@@ -1650,7 +1650,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.3,
             "musteri_iliskisi_puan": 4.2,
             "surec_yonetimi_puan": 4,
-            "yorum": "Destek ekibi sorulara hızlı dönüş yaptı. Yedek parça tedariki zaman zaman gecikse de operasyon durmadı.",
+            "yorum": "Hat durma süresi ilk çeyrekte %2.1'den %0.4'e indi. En büyük katkı konveyör senkronizasyon iyileştirmesinden geldi.",
             "created_at": "2026-01-28T08:00:00.000Z",
             "author": "Leyla S. - Bakım Şefi"
       }
@@ -1681,7 +1681,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.9,
             "musteri_iliskisi_puan": 5,
             "surec_yonetimi_puan": 4.8,
-            "yorum": "Tekstil hattındaki robot programlama teslimi zamanında ve eksiksiz yapıldı. Üretim verimliliğimiz ilk haftada %25 arttı.",
+            "yorum": "Üretim sırasında hattan geçen ilk 1000 parça sıfır hurda ile tamamlandı. Bazı hizalama ayarı gerekti ama sonunda mükemmel.",
             "created_at": "2025-03-18T07:30:00.000Z",
             "author": "Çetin A. - Genel Müdür"
       },
@@ -1689,7 +1689,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.8,
             "musteri_iliskisi_puan": 4.7,
             "surec_yonetimi_puan": 4.9,
-            "yorum": "Proje yönetimi olağanüstüydü. MS Project bazlı ilerleme raporları her Pazartesi masaydaydı.",
+            "yorum": "Sistem devreye alırken eski PLC ile yeni SCADA arasındaki Modbus haberleşmesi çaklıyordu. Çözüm bir hafta sürdü ama çok kalıcı.",
             "created_at": "2025-07-07T09:00:00.000Z",
             "author": "Pınar Y. - Operasyon Direktörü"
       }
@@ -1720,7 +1720,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.6,
             "musteri_iliskisi_puan": 4,
             "surec_yonetimi_puan": 3.4,
-            "yorum": "Ark kaynak hücresi işlevsel ama kaynak parametrelerini optimize etmek bizim ekibimize kaldı. Devreye alma desteği yetersizdi.",
+            "yorum": "Robot yolunu yeniden öğrenmeden önce simlasön çallıştırıldı, sahıda hiç çarpışma olmadı.",
             "created_at": "2026-01-05T13:00:00.000Z",
             "author": "Gürkan D. - Kaynak Şefi"
       },
@@ -1728,7 +1728,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.9,
             "musteri_iliskisi_puan": 4.1,
             "surec_yonetimi_puan": 3.7,
-            "yorum": "İletişim iyiydi ama teslimatta eksik bileşenler vardı. Tamamlanması 3 hafta ek süre aldı.",
+            "yorum": "Konveyör bantları gıda standartlarına uygun malzemeyle değiştirildi. Bant ek kalitesi beklentinin üstünde.",
             "created_at": "2026-02-14T10:30:00.000Z",
             "author": "Esin Ç. - Tedarik Zinciri Müdürü"
       }
@@ -1759,7 +1759,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.6,
             "musteri_iliskisi_puan": 4.3,
             "surec_yonetimi_puan": 4.5,
-            "yorum": "Konveyör ve paletleme entegrasyonu sorunsuz gerçekleşti. Özellikle yazılım tarafındaki çözümleri çok esnekti.",
+            "yorum": "Güvenlik çiti lazer perdesiyle entegre edildi. İlk testlerde tetikleme gecikmesi standartın altındaydı; yeniden ayarlandı.",
             "created_at": "2025-09-25T14:00:00.000Z",
             "author": "Barış T. - Sistem Entegrasyon Müdürü"
       },
@@ -1767,7 +1767,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.4,
             "musteri_iliskisi_puan": 4.5,
             "surec_yonetimi_puan": 4.3,
-            "yorum": "Test ve kabul aşamaları titizlikle yürütüldü. Tesis geçiş süreci minimum üretim kaybıyla tamamlandı.",
+            "yorum": "Servo motor parametreleri fabıça sahaya gelip yerinde optimize etti. Ekstra gidip gelme hem zaman hem bizçin çaba harcattı ama sonunda sert çalıştı.",
             "created_at": "2025-11-30T16:00:00.000Z",
             "author": "Sinem A. - Kalite Güvence Direktörü"
       }
@@ -1798,7 +1798,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.8,
             "musteri_iliskisi_puan": 4.5,
             "surec_yonetimi_puan": 4.7,
-            "yorum": "Robotik kaynak hücresinin mekanik kalitesi beklentilerimizin ötesindeydi. Devreye alma sürecinde mühendisleri sahada 7/24 destek verdi.",
+            "yorum": "Fabrikasımızdaki pres beslemede vakum kavrama basıncı tutarsız çıkıyordu; valf temizlenerek çözüldü, takip çok hızlıydı.",
             "created_at": "2025-11-10T08:20:00.000Z",
             "author": "Kadir A. - Üretim Direktörü"
       },
@@ -1806,7 +1806,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.6,
             "musteri_iliskisi_puan": 4.8,
             "surec_yonetimi_puan": 4.4,
-            "yorum": "İletişim mükemmeldi, her aşamada gelişme raporu aldık. Ufak bir kablo yeniden yönlendirme gecikmesi dışında proje takvime uydu.",
+            "yorum": "Robot teach kolunu operatTür eğitimleri çok yeterliydi. 5 operatTtür aynı gün sertifika aldı.",
             "created_at": "2025-08-22T14:10:00.000Z",
             "author": "Emre S. - Proje Yöneticisi"
       }
@@ -1837,7 +1837,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.8,
             "musteri_iliskisi_puan": 3.5,
             "surec_yonetimi_puan": 3.2,
-            "yorum": "AGV güzergah optimizasyonu defalarca revize edilmek zorunda kalındı. Saha ekibi deneyimliydi ama proje yönetiminde ciddi boşluklar vardı.",
+            "yorum": "Depo AGV filosuna engel tanıma kamera montajı yapıldı. Sıcak-respot sorunu neden iki hafta geçikmeye yol açtı açıklanmadı.",
             "created_at": "2025-09-05T09:00:00.000Z",
             "author": "Fatih Y. - Lojistik Müdürü"
       },
@@ -1845,7 +1845,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4,
             "musteri_iliskisi_puan": 3.8,
             "surec_yonetimi_puan": 3.5,
-            "yorum": "Sistem sonunda istikrarlı çalışmaya başladı. Başlangıçtaki sorunlar çözüldükten sonra verimlilik hedefimize ulaştık.",
+            "yorum": "PLC kodunda deadlock durumu başlangıçta gözden kaçmıştı, 500. döngüde tetiklendi. Firmware güncellemesiyle düzeldi.",
             "created_at": "2025-12-01T11:30:00.000Z",
             "author": "Selin T. - Tesis Yöneticisi"
       },
@@ -1853,7 +1853,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.2,
             "musteri_iliskisi_puan": 4,
             "surec_yonetimi_puan": 3.8,
-            "yorum": "Teknik ekip bilgiliydi ancak raporlama döngüsü netleşene kadar zaman kaybedildi. Uzun vadede doğru bir seçimdi.",
+            "yorum": "Hat sonu sargı makinesi entegrasyonunda kablo yuvarlak boru çarpışma sorunu vardı. Mekanigin düşünmediği bir detay ama çabuk çözdüler.",
             "created_at": "2026-01-15T16:45:00.000Z",
             "author": "Mert K. - Operasyon Şefi"
       }
@@ -1884,7 +1884,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 5,
             "musteri_iliskisi_puan": 4.9,
             "surec_yonetimi_puan": 5,
-            "yorum": "Scada sistemi sıfır hata ile devreye alındı. Canlı izleme paneli fabrikamızın en kritik yatırımlarından biri haline geldi.",
+            "yorum": "Galvaniz kaplı bandırma hattında sıvı seviye sensörü yanlış konumlanmıştı. Pozisyon değiştirildi, artık sapma yok.",
             "created_at": "2025-07-18T10:00:00.000Z",
             "author": "Alp D. - Fabrika Müdürü"
       },
@@ -1892,7 +1892,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.9,
             "musteri_iliskisi_puan": 5,
             "surec_yonetimi_puan": 4.8,
-            "yorum": "Kestirimci bakım modülü sayesinde 3 ayda toplam 12 planlanmamış duruş önlendi. Yatırımın geri dönüşü 6 ayda gerçekleşti.",
+            "yorum": "Robotik palet sargacı 100 devrimde gerilim aşımı alıyordu. Motor sürücsü PID ayarı düzelttikten sonra sorunsuz.",
             "created_at": "2025-10-30T07:55:00.000Z",
             "author": "Berna Ç. - Bakım Direktörü"
       }
@@ -1923,7 +1923,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.3,
             "musteri_iliskisi_puan": 4.6,
             "surec_yonetimi_puan": 4.1,
-            "yorum": "Paletleme robotunun kol hassasiyeti gıda standartlarını rahatlıkla karşıladı. Kurulum sonrası eğitim süreci oldukça kapsamlıydı.",
+            "yorum": "Kestirimci bakım yazılımı bulut entegrasyonu çok düzülçe yapıldı; ekibimiz kendi öngörüsel modelini ekleyebiliyor.",
             "created_at": "2025-06-12T13:20:00.000Z",
             "author": "Hüseyin Y. - Kalite Şefi"
       },
@@ -1931,7 +1931,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.5,
             "musteri_iliskisi_puan": 4.3,
             "surec_yonetimi_puan": 4.2,
-            "yorum": "Hat sonu paketleme kapasitemiz %40 arttı. Proje biraz uzasa da mühendislik kalitesi takdire şayandı.",
+            "yorum": "Sistem kabul testlerinde tüm KPI'lar ilk denemede geçildi. Çok az entegratör bunu başarır.",
             "created_at": "2025-04-08T08:30:00.000Z",
             "author": "Zeynep A. - Üretim Müdürü"
       }
@@ -1962,7 +1962,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.5,
             "musteri_iliskisi_puan": 3,
             "surec_yonetimi_puan": 3.2,
-            "yorum": "Makine besleme sisteminde ilk aylarda yüksek fire oranı yaşandı. Revizyon sonrası düzeldi ama süreç sancılıydı.",
+            "yorum": "Hattın fizibilite aşamasından devreye almaya kadar çok iyi dokümantasyon sağladılar. Eski entegratörümüze göre çok daha kurumsal.",
             "created_at": "2026-02-20T09:15:00.000Z",
             "author": "Cenk B. - Mühendis"
       },
@@ -1970,7 +1970,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.8,
             "musteri_iliskisi_puan": 3.5,
             "surec_yonetimi_puan": 3,
-            "yorum": "Proje teslim tarihi iki kez ertelendi. Sonuç iş görür ama beklentilerimizin altında kaldı.",
+            "yorum": "Robot yerleşim planı ilk taslakta fabrika trafik akışını bloke ediyordu. Revize teklif hızlı geldi, akış düzeltildi.",
             "created_at": "2026-03-10T14:00:00.000Z",
             "author": "Oya M. - Satın Alma Müdürü"
       }
@@ -2001,7 +2001,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.7,
             "musteri_iliskisi_puan": 4.4,
             "surec_yonetimi_puan": 4.6,
-            "yorum": "Görüntü işleme sistemi 0.01mm toleransı yakalıyor. Savunma sanayi gereksinimlerimiz için birebir uygun.",
+            "yorum": "Vizyonla desteklenen çıktı sıralama sistemi aydInlatma düzenine duyarlı olduğundan gece shift’inde hata oranları yüksekti. LED armatTtür eklenerek çözüldü.",
             "created_at": "2025-05-22T11:00:00.000Z",
             "author": "Sercan D. - Kalite Direktörü"
       },
@@ -2009,7 +2009,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.5,
             "musteri_iliskisi_puan": 4.6,
             "surec_yonetimi_puan": 4.3,
-            "yorum": "Entegrasyon sürecinde doküman yönetimi çok profesyoneldi. Her revizyon izlenebilir ve onaylı şekilde işlendi.",
+            "yorum": "Siemens TIA Portal üzerinde yazılan blok kütpühanesi çok modTtüleer; başka hatlarımızda da kullanmayı planlIyoruz.",
             "created_at": "2025-08-14T15:30:00.000Z",
             "author": "Nilgün T. - Proje Koordinatörü"
       }
@@ -2040,7 +2040,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.1,
             "musteri_iliskisi_puan": 4.4,
             "surec_yonetimi_puan": 3.9,
-            "yorum": "PLC programlama tarafı sağlamdı, ancak HMI arayüzü operatör eğitimi gerektirdi. Sonuçta verimlilik artışı gerçekleşti.",
+            "yorum": "Makına talkımı çarpışma senaryolarını offline simülasıyon ile önceden yönettiler. Sahada hiç surpriz olmadı.",
             "created_at": "2025-12-05T10:45:00.000Z",
             "author": "Ahmet K. - Shift Amiri"
       },
@@ -2048,7 +2048,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.3,
             "musteri_iliskisi_puan": 4.2,
             "surec_yonetimi_puan": 4,
-            "yorum": "Destek ekibi sorulara hızlı dönüş yaptı. Yedek parça tedariki zaman zaman gecikse de operasyon durmadı.",
+            "yorum": "Toz-geçirmez kabınetten çıkan ısı birikimine karşı havalandırma tasarlanırken proje ekibi ortam ısısını ölçmedi. Sonradan fan eklendi.",
             "created_at": "2026-01-28T08:00:00.000Z",
             "author": "Leyla S. - Bakım Şefi"
       }
@@ -2079,7 +2079,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.9,
             "musteri_iliskisi_puan": 5,
             "surec_yonetimi_puan": 4.8,
-            "yorum": "Tekstil hattındaki robot programlama teslimi zamanında ve eksiksiz yapıldı. Üretim verimliliğimiz ilk haftada %25 arttı.",
+            "yorum": "Hassas montaj hücresi ışık korumalı kafes gerektirdi. Proje süresine eklendi ve yasal uyumluluk sağlandı.",
             "created_at": "2025-03-18T07:30:00.000Z",
             "author": "Çetin A. - Genel Müdür"
       },
@@ -2087,7 +2087,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.8,
             "musteri_iliskisi_puan": 4.7,
             "surec_yonetimi_puan": 4.9,
-            "yorum": "Proje yönetimi olağanüstüydü. MS Project bazlı ilerleme raporları her Pazartesi masaydaydı.",
+            "yorum": "OPC-UA veri köprüsü kurulumı ilk gün çalıştı. MES entegrasyonu sıfır sorunla tamamlandı — beklentinin üzerindeydi.",
             "created_at": "2025-07-07T09:00:00.000Z",
             "author": "Pınar Y. - Operasyon Direktörü"
       }
@@ -2118,7 +2118,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.6,
             "musteri_iliskisi_puan": 4,
             "surec_yonetimi_puan": 3.4,
-            "yorum": "Ark kaynak hücresi işlevsel ama kaynak parametrelerini optimize etmek bizim ekibimize kaldı. Devreye alma desteği yetersizdi.",
+            "yorum": "Mobil HMI üzerinden alarm yönetimi ilk versiyonda iOS'ta düzgün görünmTtüyordu. Bir günce ile düzeldi, ciddi bir sorun değildi.",
             "created_at": "2026-01-05T13:00:00.000Z",
             "author": "Gürkan D. - Kaynak Şefi"
       },
@@ -2126,7 +2126,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 3.9,
             "musteri_iliskisi_puan": 4.1,
             "surec_yonetimi_puan": 3.7,
-            "yorum": "İletişim iyiydi ama teslimatta eksik bileşenler vardı. Tamamlanması 3 hafta ek süre aldı.",
+            "yorum": "Robotun tool değişim istasyonu çok dar boşlukla yerleştirilmişti; tüç bakım teknisıyeni ulaşamIyordu. Revize edildi.",
             "created_at": "2026-02-14T10:30:00.000Z",
             "author": "Esin Ç. - Tedarik Zinciri Müdürü"
       }
@@ -2157,7 +2157,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.6,
             "musteri_iliskisi_puan": 4.3,
             "surec_yonetimi_puan": 4.5,
-            "yorum": "Konveyör ve paletleme entegrasyonu sorunsuz gerçekleşti. Özellikle yazılım tarafındaki çözümleri çok esnekti.",
+            "yorum": "Teslim sonrası 30 günüç keşüirim bakım ziyareti planlandı ve eksiksiz yapıldı. Çok az entegratör bu anlayışlı.",
             "created_at": "2025-09-25T14:00:00.000Z",
             "author": "Barış T. - Sistem Entegrasyon Müdürü"
       },
@@ -2165,7 +2165,7 @@ const rawEntegratorler: any[] = [
             "kalite_puan": 4.4,
             "musteri_iliskisi_puan": 4.5,
             "surec_yonetimi_puan": 4.3,
-            "yorum": "Test ve kabul aşamaları titizlikle yürütüldü. Tesis geçiş süreci minimum üretim kaybıyla tamamlandı.",
+            "yorum": "Programlama ekibi farklı kod tabanları başlangIçta versiyon uyuşmazlığı yaşıyordu. Git yapılandırmasından sonra takım entegrasyonu çok daha iyi.",
             "created_at": "2025-11-30T16:00:00.000Z",
             "author": "Sinem A. - Kalite Güvence Direktörü"
       }
